@@ -395,6 +395,50 @@ body{
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:#2a2a40;border-radius:2px}
+.hidden{display:none!important}
+
+/* ─── TAB BAR ─── */
+.tab-bar{display:flex;gap:6px;padding:8px 0 2px}
+.tab-pill{
+  background:var(--bg3);border:1.5px solid var(--border);border-radius:20px;
+  color:var(--dim);cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:1px;
+  padding:5px 14px;text-transform:uppercase;
+  transition:border-color .15s,color .15s,background .15s;
+}
+.tab-pill.active{background:var(--red);border-color:var(--red);color:#fff}
+
+/* ─── MY CAR ─── */
+.helmet-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:4px}
+.helmet-swatch{
+  aspect-ratio:1;border-radius:50%;
+  border:2.5px solid var(--border);cursor:pointer;
+  transition:border-color .15s,transform .1s;
+}
+.helmet-swatch:hover{transform:scale(1.1)}
+.helmet-swatch.sel{border-color:var(--text);border-width:3px}
+.car-input{font-size:18px;padding:10px 14px}
+.livery-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.livery-btn{
+  background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:var(--rs);cursor:pointer;
+  padding:0 0 8px;overflow:hidden;
+  transition:border-color .15s;text-align:center;
+}
+.livery-btn:hover{border-color:#555}
+.livery-btn.sel{border-color:var(--red)}
+.livery-preview{height:48px;width:100%;margin-bottom:6px}
+.livery-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;
+  letter-spacing:1px;color:var(--text);text-transform:uppercase;
+}
+
+/* ─── GRAVE EVENT ─── */
+.ev-card.grave{border-color:#444}
+.ev-card.grave .ev-cat{color:var(--dim)}
+.ev-card.grave .ev-icon{filter:grayscale(1)}
 </style>
 </head>
 <body>
@@ -425,6 +469,7 @@ body{
     <div id="stats-sec"></div>
     <div id="events-sec"></div>
     <div id="log-sec"></div>
+    <div id="car-sec" class="hidden"></div>
   </div>
   <div id="bottom-bar">
     <button id="race-btn" onclick="raceTheSeason()" disabled>
@@ -455,7 +500,8 @@ const NATS = [
   {f:'🇺🇸',n:'American'},{f:'🇯🇵',n:'Japanese'},{f:'🇦🇹',n:'Austrian'},
   {f:'🇧🇪',n:'Belgian'},{f:'🇦🇷',n:'Argentine'},{f:'🇿🇦',n:'South African'},
   {f:'🇩🇰',n:'Danish'},{f:'🇸🇪',n:'Swedish'},{f:'🇳🇿',n:'New Zealander'},
-  {f:'🇨🇴',n:'Colombian'},{f:'🇹🇭',n:'Thai'},{f:'🇮🇳',n:'Indian'}
+  {f:'🇨🇴',n:'Colombian'},{f:'🇹🇭',n:'Thai'},{f:'🇮🇳',n:'Indian'},
+  {f:'🇮🇪',n:'Ireland'}
 ];
 
 const NICKNAMES = [
@@ -651,6 +697,43 @@ const EVENTS = [
     {text:'Trust the engineer',          fx:{Consistency:+4,Pace:+3,Morale:+3}},
     {text:'Go conservative',             fx:{Consistency:+2,Pace:-1}},
     {text:'Override with your instinct', fx:{Pace:+6,Consistency:-5,Reputation:-2}}
+  ]},
+  // NEW EVENTS
+  {id:'e22',cat:'Contract',icon:'🚪',title:'Lost Your Seat',
+   desc:'A rival signs with your team mid-season. You\'re out. The paddock is already talking.',
+   choices:[
+    {text:'Fight it publicly — this isn\'t over', fx:{Reputation:+5,Morale:-8},  freeAgent:true},
+    {text:'Accept quietly and move on',            fx:{Morale:-4},                freeAgent:true}
+  ]},
+  {id:'e23',cat:'Personal',icon:'🖤',title:'Driver Death', grave:true,
+   desc:'A rival driver loses their life in a crash this weekend. The paddock is silent. Racing feels different right now.',
+   choices:[
+    {text:'Dedicate the rest of your season to them', fx:{Morale:+6,Reputation:+5}},
+    {text:'Stay focused. Say nothing.',               fx:{Reputation:-6}}
+  ]},
+  {id:'e24',cat:'Media',icon:'📻',title:'Post-Race Expletive Fine',
+   desc:'You let it fly on team radio after a brutal result. The FIA have reviewed the footage.',
+   choices:[
+    {text:'Apologise publicly and pay the fine', fx:{Reputation:+3}, fineByStage:[50000,50000,100000,250000,500000]},
+    {text:'Double down. The fans loved it.',     fx:{Reputation:+5}, fineByStage:[50000,50000,100000,250000,500000], fiaTone:true}
+  ]},
+  {id:'e25',cat:'Incident',icon:'⏱️',title:'Time Penalty Controversy',
+   desc:'A 5-second penalty drops you one position. Half the paddock thinks it\'s wrong. The other half thinks you\'re lucky.',
+   choices:[
+    {text:'Protest via official channels', fx:{Morale:-3}, rollFx:{chance:0.3,fx:{Consistency:+2}}},
+    {text:'Accept the result and move on', fx:{Consistency:+2,Morale:+1}}
+  ]},
+  {id:'e26',cat:'Incident',icon:'💢',title:'Lance Stroll Incident',
+   desc:'Lance Stroll makes contact with you on track. It costs you time.',
+   choices:[
+    {text:'Blame him publicly. The data backs you up.', fx:{Reputation:-3,Morale:+6}},
+    {text:'"Racing incident." Stay professional.',       fx:{Reputation:+5,Morale:-2}}
+  ]},
+  {id:'e27',cat:'Race',icon:'🟡',title:'Safety Car Deployed',
+   desc:'The safety car is out mid-race and everyone\'s strategy is suddenly in play. Your engineer is on the radio.',
+   choices:[
+    {text:'Pit now — go for the gamble',    fx:{}, safetyCarChoice:'gamble'},
+    {text:'Stay out — protect the position',fx:{}, safetyCarChoice:'safe'}
   ]}
 ];
 
@@ -660,6 +743,23 @@ const EVENTS = [
 
 let S = null;
 let selectedNat = null;
+let activeTab = 'season';
+
+const HELMET_COLORS = [
+  {name:'Scuderia Red',      hex:'#e8000a'},
+  {name:'Arctic White',      hex:'#f0f0f5'},
+  {name:'Championship Gold', hex:'#f5a623'},
+  {name:'Sky Blue',          hex:'#0ea5e9'},
+  {name:'Racing Green',      hex:'#22c55e'},
+  {name:'Midnight Black',    hex:'#1a1a2e'}
+];
+
+const LIVERIES = [
+  {id:'carbon', name:'Carbon Black', grad:'linear-gradient(135deg,#1a1a2e 0%,#2d2d44 100%)'},
+  {id:'white',  name:'Arctic White', grad:'linear-gradient(135deg,#d8d8e8 0%,#a8a8c0 100%)'},
+  {id:'red',    name:'Stealth Red',  grad:'linear-gradient(135deg,#3d0000 0%,#8b0000 100%)'},
+  {id:'chrome', name:'Chrome',       grad:'linear-gradient(135deg,#6a6a8a 0%,#c0c0d4 50%,#6a6a8a 100%)'}
+];
 
 function defaultState() {
   return {
@@ -669,7 +769,9 @@ function defaultState() {
     earnings:0, championships:0, podiums:0, wins:0,
     events:[], resolved:[], log:[],
     lastResult:null, gameOver:false,
-    firedCount:0, contractLocked:false, freeAgent:false, consecutiveBadF1:0
+    firedCount:0, contractLocked:false, freeAgent:false, consecutiveBadF1:0,
+    safetyCarEffect:0,
+    helmetColor:'#e8000a', raceNumber:'', livery:'carbon', customNickname:''
   };
 }
 
@@ -720,6 +822,7 @@ function simRace(totalCars) {
   } else {
     score += S.Reputation / 600;
   }
+  score += (S.safetyCarEffect || 0);
   score += (Math.random()*0.20 - 0.04);
   score = clamp(score, 0, 1);
   return clamp(Math.round((1-score)*(totalCars-1))+1, 1, totalCars);
@@ -793,6 +896,7 @@ function genEvents() {
   S.resolved = [];
   S.contractLocked = false;
   S.freeAgent = false;
+  S.safetyCarEffect = 0;
 }
 
 function resolveEvent(ei, ci) {
@@ -804,8 +908,19 @@ function resolveEvent(ei, ci) {
     if (k in (ch.fx||{})) S[k] = clamp(S[k] + ch.fx[k], 0, 100);
   }
   if (ch.money) S.earnings += ch.money;
+  if (ch.fineByStage) S.earnings = Math.max(0, S.earnings - ch.fineByStage[S.stageIdx]);
   if (ch.contractLocked) S.contractLocked = true;
   if (ch.freeAgent) S.freeAgent = true;
+  if (ch.rollFx && Math.random() < ch.rollFx.chance) {
+    for (const k of STATS) {
+      if (k in (ch.rollFx.fx||{})) S[k] = clamp(S[k] + ch.rollFx.fx[k], 0, 100);
+    }
+  }
+  if (ch.safetyCarChoice === 'gamble') {
+    S.safetyCarEffect = parseFloat(((Math.random() * 0.30) - 0.12).toFixed(3));
+  } else if (ch.safetyCarChoice === 'safe') {
+    S.safetyCarEffect = 0.04;
+  }
   S.resolved.push(ei);
   save();
   renderAll();
@@ -987,26 +1102,51 @@ function closeResults() {
 
 function renderAll() {
   renderHeader();
-  renderStats();
-  renderEvents();
-  renderLog();
-  updateRaceBtn();
+  const onSeason = activeTab === 'season';
+  document.getElementById('stats-sec').classList.toggle('hidden', !onSeason);
+  document.getElementById('events-sec').classList.toggle('hidden', !onSeason);
+  document.getElementById('log-sec').classList.toggle('hidden', !onSeason);
+  document.getElementById('bottom-bar').classList.toggle('hidden', !onSeason);
+  document.getElementById('car-sec').classList.toggle('hidden', onSeason);
+  if (onSeason) {
+    renderStats();
+    renderEvents();
+    renderLog();
+    updateRaceBtn();
+  } else {
+    renderCarTab();
+  }
+}
+
+function switchTab(tab) {
+  activeTab = tab;
+  renderAll();
 }
 
 function renderHeader() {
   const st = stage();
   const t = f1team();
   const teamStr = S.stageIdx===4 && t ? t.name : st.label;
+  const helmet = S.helmetColor || '#e8000a';
+  const numBadge = S.raceNumber
+    ? ` <span style="font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--dim);font-weight:400">#${esc(S.raceNumber)}</span>`
+    : '';
   document.getElementById('game-header').innerHTML = `
     <div class="hdr-top">
       <div>
-        <div class="hdr-name">${esc(S.natFlag)} ${esc(S.name)}</div>
+        <div class="hdr-name">
+          <span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:${helmet};border:2px solid rgba(255,255,255,.25);vertical-align:middle;margin-right:5px;flex-shrink:0"></span>${esc(S.natFlag)} ${esc(S.name)}${numBadge}
+        </div>
         <div class="hdr-team">${esc(teamStr)} · Season ${S.seasonNum}</div>
       </div>
       <div class="hdr-right">
         <span class="hdr-age">Age ${S.age}</span>
         <span class="stage-pill">${st.label}</span>
       </div>
+    </div>
+    <div class="tab-bar">
+      <button class="tab-pill${activeTab==='season'?' active':''}" onclick="switchTab('season')">Season</button>
+      <button class="tab-pill${activeTab==='car'?' active':''}" onclick="switchTab('car')">🚗 My Car</button>
     </div>`;
 }
 
@@ -1052,17 +1192,22 @@ function renderEvents() {
   const cards = S.events.map((ev,i) => {
     const done = S.resolved.includes(i);
     const choices = ev.choices.map((c,ci) => {
-      const tags = Object.entries(c.fx||{}).map(([k,v]) => {
+      const tags = Object.entries(c.fx||{}).filter(([,v])=>v!==0).map(([k,v]) => {
         const cls = v>0?'pos':v<0?'neg':'neu';
         return `<span class="fx-tag ${cls}">${k} ${v>0?'+':''}${v}</span>`;
       });
       if (c.money) tags.push(`<span class="fx-tag pos">+${fmtMoney(c.money)}</span>`);
+      if (c.fineByStage) tags.push(`<span class="fx-tag neg">−${fmtMoney(c.fineByStage[S.stageIdx])}</span>`);
+      if (c.fiaTone) tags.push(`<span class="fx-tag neu">FIA unhappy</span>`);
+      if (c.rollFx) tags.push(`<span class="fx-tag neu">30% penalty reversed</span>`);
+      if (c.safetyCarChoice==='gamble') tags.push(`<span class="fx-tag neu">Big position swing</span>`);
+      if (c.safetyCarChoice==='safe') tags.push(`<span class="fx-tag pos">Consistency +1</span>`);
       return `<button class="choice-btn" onclick="resolveEvent(${i},${ci})">
         <div>${esc(c.text)}</div>
         <div class="fx">${tags.join('')}</div>
       </button>`;
     }).join('');
-    return `<div class="ev-card${done?' resolved':''}">
+    return `<div class="ev-card${done?' resolved':''}${ev.grave?' grave':''}">
       <div class="ev-head">
         <span class="ev-icon">${ev.icon}</span>
         <div>
@@ -1136,7 +1281,7 @@ function renderResultsCard() {
     <div class="champ-banner">
       <div class="trophy">🏆</div>
       <h3>${r.stage} Champion!</h3>
-      <div style="font-size:12px;color:var(--dim);margin-top:3px">"${S.nickname}" claims the title</div>
+      <div style="font-size:12px;color:var(--dim);margin-top:3px">"${effectiveNickname()}" claims the title</div>
     </div>` : '';
 
   let moveBanner = '';
@@ -1162,7 +1307,7 @@ function renderResultsCard() {
     <div class="res-season">${r.stage} · Season ${r.season}</div>
     <div class="res-pos ${pc}">${r.champPos}${sfx}</div>
     <div class="res-sublabel">Championship · Avg P${r.avgPos}${asfx} per race</div>
-    <div class="res-headline">"${S.nickname}" — ${esc(headline)}</div>
+    <div class="res-headline">"${effectiveNickname()}" — ${esc(headline)}</div>
     ${champBanner}
     ${deltaHtml ? `<div class="deltas-grid">${deltaHtml}</div>` : ''}
     <div class="earn-banner">
@@ -1176,6 +1321,10 @@ function renderResultsCard() {
       <tbody>${rows}</tbody>
     </table>
     <button class="btn-continue" onclick="closeResults()">${btnLabel}</button>`;
+}
+
+function effectiveNickname() {
+  return (S.customNickname && S.customNickname.trim()) ? S.customNickname.trim() : S.nickname;
 }
 
 function pickHeadline(r) {
@@ -1258,11 +1407,77 @@ function restartGame() {
   clearSave();
   S = null;
   selectedNat = null;
+  activeTab = 'season';
   document.getElementById('screen-gameover').style.display = 'none';
   showScreen('start');
   document.getElementById('driver-name').value = '';
   document.querySelectorAll('.nat-btn').forEach(b=>b.classList.remove('sel'));
   document.getElementById('start-btn').disabled = true;
+}
+
+// ══════════════════════════════════════════════
+// MY CAR TAB
+// ══════════════════════════════════════════════
+
+function renderCarTab() {
+  const swatches = HELMET_COLORS.map(c =>
+    `<button class="helmet-swatch${S.helmetColor===c.hex?' sel':''}"
+      style="background:${c.hex}"
+      onclick="setHelmetColor('${c.hex}')"
+      title="${c.name}"></button>`
+  ).join('');
+
+  const liveryCards = LIVERIES.map(l =>
+    `<button class="livery-btn${S.livery===l.id?' sel':''}" onclick="setLivery('${l.id}')">
+      <div class="livery-preview" style="background:${l.grad}"></div>
+      <div class="livery-name">${l.name}</div>
+    </button>`
+  ).join('');
+
+  document.getElementById('car-sec').innerHTML = `
+    <div class="section-title">Helmet Colour</div>
+    <div class="helmet-grid">${swatches}</div>
+
+    <div class="section-title" style="margin-top:18px">Race Number</div>
+    <input class="finput car-input" type="number" min="1" max="99"
+      placeholder="1–99" value="${esc(S.raceNumber)}"
+      onchange="setRaceNumber(this.value)">
+
+    <div class="section-title" style="margin-top:18px">Car Livery</div>
+    <div class="livery-grid">${liveryCards}</div>
+
+    <div class="section-title" style="margin-top:18px">Driver Nickname</div>
+    <input class="finput car-input" type="text" maxlength="12"
+      placeholder="${esc(S.nickname)}"
+      value="${esc(S.customNickname)}"
+      onchange="setCustomNickname(this.value)">
+    <div style="font-size:11px;color:var(--dim);margin-top:6px;margin-bottom:20px">Overrides auto-generated nickname in headlines. Max 12 chars.</div>
+  `;
+}
+
+function setHelmetColor(hex) {
+  S.helmetColor = hex;
+  save();
+  renderAll();
+}
+
+function setLivery(id) {
+  S.livery = id;
+  save();
+  renderAll();
+}
+
+function setRaceNumber(val) {
+  const n = parseInt(val, 10);
+  S.raceNumber = (n >= 1 && n <= 99) ? String(n) : '';
+  save();
+  renderHeader();
+}
+
+function setCustomNickname(val) {
+  S.customNickname = val.trim();
+  save();
+  renderHeader();
 }
 
 // ══════════════════════════════════════════════
