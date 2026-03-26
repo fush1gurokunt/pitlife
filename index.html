@@ -1425,89 +1425,240 @@ function buildCarSVG() {
   const num = S.raceNumber ? esc(String(S.raceNumber)) : '';
 
   const gradDefs = {
-    carbon: {x1:'0%',y1:'0%',x2:'100%',y2:'100%', stops:[['0%','#1a1a2e'],['100%','#2d2d44']]},
-    white:  {x1:'0%',y1:'0%',x2:'100%',y2:'100%', stops:[['0%','#d8d8e8'],['100%','#a8a8c0']]},
-    red:    {x1:'0%',y1:'0%',x2:'100%',y2:'100%', stops:[['0%','#3d0000'],['100%','#8b0000']]},
-    chrome: {x1:'0%',y1:'0%',x2:'100%',y2:'100%', stops:[['0%','#6a6a8a'],['50%','#c0c0d4'],['100%','#6a6a8a']]}
+    carbon: {x1:'0%',y1:'0%',x2:'80%',y2:'100%', stops:[['0%','#22223a'],['60%','#1a1a2e'],['100%','#0e0e1c']]},
+    white:  {x1:'0%',y1:'0%',x2:'80%',y2:'100%', stops:[['0%','#e8e8f6'],['60%','#d0d0e8'],['100%','#b8b8d4']]},
+    red:    {x1:'0%',y1:'0%',x2:'80%',y2:'100%', stops:[['0%','#a80000'],['50%','#6e0000'],['100%','#380000']]},
+    chrome: {x1:'0%',y1:'0%',x2:'80%',y2:'100%', stops:[['0%','#c8c8dc'],['40%','#8888a0'],['70%','#b4b4cc'],['100%','#606078']]}
   };
   const gd = gradDefs[lid] || gradDefs.carbon;
   const stopsSVG = gd.stops.map(([o,c])=>`<stop offset="${o}" stop-color="${c}"/>`).join('');
-  const dark = gd.stops[0][1];
 
-  return `<svg viewBox="0 0 320 130" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  // per-livery detail colours
+  const dc = {
+    carbon: {d:'#0a0a16', m:'#1e1e30', hi:'rgba(255,255,255,0.07)'},
+    white:  {d:'#8888a8', m:'#b0b0cc', hi:'rgba(255,255,255,0.35)'},
+    red:    {d:'#1e0000', m:'#4a0000', hi:'rgba(255,100,80,0.1)'},
+    chrome: {d:'#38384c', m:'#7a7a90', hi:'rgba(255,255,255,0.22)'}
+  }[lid] || {d:'#0a0a16', m:'#1e1e30', hi:'rgba(255,255,255,0.07)'};
+
+  return `<svg viewBox="0 0 340 162" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block">
   <defs>
     <linearGradient id="cLiv" x1="${gd.x1}" y1="${gd.y1}" x2="${gd.x2}" y2="${gd.y2}">${stopsSVG}</linearGradient>
-    <linearGradient id="whlG" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#2a2a3a"/>
-      <stop offset="100%" stop-color="#14141e"/>
-    </linearGradient>
+    <radialGradient id="rimG" cx="42%" cy="36%" r="62%">
+      <stop offset="0%" stop-color="#545468"/>
+      <stop offset="55%" stop-color="#282838"/>
+      <stop offset="100%" stop-color="#141420"/>
+    </radialGradient>
+    <radialGradient id="tireG" cx="50%" cy="28%" r="70%">
+      <stop offset="0%" stop-color="#28282e"/>
+      <stop offset="100%" stop-color="#0e0e14"/>
+    </radialGradient>
+    <filter id="cshadow">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#000" flood-opacity="0.75"/>
+    </filter>
+    <filter id="blur3">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
   </defs>
 
-  <!-- bg -->
-  <rect width="320" height="130" fill="#0d0d14" rx="8"/>
-  <!-- ground shadow -->
-  <ellipse cx="158" cy="124" rx="128" ry="5" fill="rgba(0,0,0,0.55)"/>
+  <!-- background -->
+  <rect width="340" height="162" fill="#0d0d14"/>
 
-  <!-- rear wing -->
-  <rect x="258" y="57" width="4"  height="26" rx="1" fill="${dark}"/>
-  <rect x="299" y="57" width="4"  height="26" rx="1" fill="${dark}"/>
-  <rect x="258" y="57" width="45" height="7"  rx="1" fill="url(#cLiv)"/>
-  <rect x="260" y="67" width="41" height="5"  rx="1" fill="url(#cLiv)"/>
-  <path d="M 270,82 L 267,72 L 275,72 L 276,82 Z" fill="${dark}"/>
+  <!-- subtle ground line -->
+  <line x1="12" y1="154" x2="328" y2="154" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
 
-  <!-- rear wheel (behind body) -->
-  <circle cx="248" cy="106" r="14" fill="url(#whlG)" stroke="#252535" stroke-width="1.5"/>
-  <circle cx="248" cy="106" r="8"  fill="#0a0a12"/>
-  <circle cx="248" cy="106" r="3"  fill="#252535"/>
+  <!-- car ground shadow (blurred ellipse) -->
+  <ellipse cx="174" cy="155" rx="152" ry="6" fill="#000" opacity="0.75" filter="url(#blur3)"/>
 
-  <!-- main body -->
-  <path d="M 22,91
-    Q 52,83 76,83
-    L 100,81 L 114,80 L 122,68 L 130,59 L 168,59 L 178,68
-    Q 193,75 207,73 Q 233,69 250,76
-    L 264,83 L 265,91 L 22,91 Z"
-    fill="url(#cLiv)" stroke="rgba(255,255,255,0.1)" stroke-width="0.75"/>
+  <!-- ═══════════ REAR WING ═══════════ -->
+  <!-- endplates — tall trapezoids -->
+  <path d="M 284,72 L 289,72 L 292,112 L 284,112 Z" fill="${dc.d}"/>
+  <path d="M 325,72 L 331,72 L 329,112 L 322,112 Z" fill="${dc.d}"/>
+  <!-- endplate inner accent lines -->
+  <line x1="287" y1="80" x2="289" y2="108" stroke="${dc.m}" stroke-width="0.8" opacity="0.7"/>
+  <line x1="326" y1="80" x2="325" y2="108" stroke="${dc.m}" stroke-width="0.8" opacity="0.7"/>
+  <!-- main plane (curved upper surface) -->
+  <path d="M 284,72 Q 307,69 331,72 L 328,81 Q 307,84 287,81 Z" fill="url(#cLiv)"/>
+  <!-- main plane underside shadow -->
+  <path d="M 287,81 Q 307,84 328,81 L 327,85 Q 307,88 288,85 Z" fill="${dc.d}"/>
+  <!-- DRS second element -->
+  <path d="M 286,88 Q 308,86 328,88 L 326,94 Q 308,96 288,94 Z" fill="url(#cLiv)"/>
+  <!-- DRS underside -->
+  <path d="M 288,94 Q 308,96 326,94 L 325,97 Q 308,99 289,97 Z" fill="${dc.d}" opacity="0.8"/>
+  <!-- wing top highlight -->
+  <path d="M 287,73 Q 307,70 328,73" stroke="${dc.hi}" stroke-width="1.2" fill="none"/>
+  <!-- pylon (connects body to wing underside) -->
+  <path d="M 290,112 L 286,96 L 296,95 L 298,112 Z" fill="${dc.d}"/>
 
-  <!-- sidepod undercut shadow -->
-  <path d="M 96,88 Q 140,84 180,87 L 180,91 Q 140,88 96,91 Z" fill="rgba(0,0,0,0.25)"/>
+  <!-- ═══════════ REAR WHEEL ═══════════ -->
+  <!-- tyre outer -->
+  <circle cx="266" cy="128" r="26" fill="url(#tireG)"/>
+  <!-- tyre sidewall ring -->
+  <circle cx="266" cy="128" r="26" fill="none" stroke="#1c1c26" stroke-width="3.5"/>
+  <circle cx="266" cy="128" r="22.5" fill="none" stroke="#161620" stroke-width="1.2"/>
+  <!-- tyre brand strip (thin coloured ring) -->
+  <circle cx="266" cy="128" r="20" fill="none" stroke="${dc.m}" stroke-width="1.2" opacity="0.5"/>
+  <!-- rim dish -->
+  <circle cx="266" cy="128" r="17.5" fill="url(#rimG)"/>
+  <!-- 5-spoke pattern (rotate transform for even spacing at 72°) -->
+  <g stroke="${dc.m}" stroke-width="2.8" stroke-linecap="round" opacity="0.9">
+    <line x1="266" y1="111" x2="266" y2="145"/>
+    <line x1="266" y1="111" x2="266" y2="145" transform="rotate(72,266,128)"/>
+    <line x1="266" y1="111" x2="266" y2="145" transform="rotate(144,266,128)"/>
+    <line x1="266" y1="111" x2="266" y2="145" transform="rotate(216,266,128)"/>
+    <line x1="266" y1="111" x2="266" y2="145" transform="rotate(288,266,128)"/>
+  </g>
+  <!-- centre cap -->
+  <circle cx="266" cy="128" r="5.5" fill="#0c0c18"/>
+  <circle cx="266" cy="128" r="3" fill="${dc.m}"/>
+  <!-- tyre highlight -->
+  <path d="M 248,108 Q 266,101 284,110" stroke="rgba(255,255,255,0.06)" stroke-width="3" fill="none" stroke-linecap="round"/>
 
-  <!-- cockpit opening -->
-  <path d="M 122,68 L 130,59 L 168,59 L 178,68 Z" fill="#06060d"/>
-  <!-- halo arc -->
-  <path d="M 128,59 Q 150,51 170,59" stroke="rgba(255,255,255,0.22)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- ═══════════ MAIN BODY ═══════════ -->
+  <!-- floor plate (very thin, near ground) -->
+  <path d="M 60,142 L 284,142 L 286,147 L 60,147 Z" fill="${dc.d}"/>
 
-  <!-- helmet -->
-  <ellipse cx="150" cy="63" rx="13" ry="11" fill="${helmet}"/>
-  <!-- visor -->
-  <path d="M 142,59 Q 150,55 158,59 L 157,65 Q 150,68 143,65 Z" fill="rgba(160,215,255,0.38)"/>
-  <!-- visor shine -->
-  <path d="M 145,57 Q 150,55 155,57" stroke="rgba(255,255,255,0.5)" stroke-width="1" fill="none" stroke-linecap="round"/>
+  <!-- diffuser — angled wedge at rear -->
+  <path d="M 252,142 Q 272,138 286,130 L 288,142 Q 272,146 252,147 Z" fill="${dc.m}" opacity="0.9"/>
+  <!-- diffuser strakes -->
+  <line x1="258" y1="142" x2="272" y2="132" stroke="${dc.d}" stroke-width="1.2"/>
+  <line x1="266" y1="143" x2="279" y2="133" stroke="${dc.d}" stroke-width="1.2"/>
+  <line x1="274" y1="143" x2="284" y2="136" stroke="${dc.d}" stroke-width="1.2"/>
 
-  <!-- mirror -->
-  <rect x="115" y="57" width="12" height="4" rx="2" fill="url(#cLiv)"/>
+  <!-- rear suspension upper arm -->
+  <line x1="274" y1="116" x2="268" y2="110" stroke="rgba(255,255,255,0.14)" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- rear suspension lower arm -->
+  <line x1="276" y1="122" x2="268" y2="122" stroke="rgba(255,255,255,0.10)" stroke-width="1.5" stroke-linecap="round"/>
 
-  <!-- front suspension hints -->
-  <line x1="84" y1="91" x2="80" y2="99" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
-  <line x1="84" y1="87" x2="80" y2="99" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+  <!-- BODY — main silhouette, drawn with smooth bezier curves -->
+  <path d="
+    M 18,126
+    C 44,114 68,112 82,111
+    L 100,110 L 118,109 L 128,103
+    C 130,97 132,90 138,83
+    L 164,83
+    C 170,90 172,97 176,103
+    L 192,98
+    C 220,93 248,100 260,105
+    L 275,113 L 282,122 L 284,132 L 284,142
+    L 60,142
+    C 40,140 28,136 18,126
+    Z"
+    fill="url(#cLiv)" filter="url(#cshadow)"/>
 
-  <!-- front wheel (in front of body, behind front wing) -->
-  <circle cx="80" cy="106" r="14" fill="url(#whlG)" stroke="#252535" stroke-width="1.5"/>
-  <circle cx="80" cy="106" r="8"  fill="#0a0a12"/>
-  <circle cx="80" cy="106" r="3"  fill="#252535"/>
+  <!-- nose top edge highlight -->
+  <path d="M 82,111 C 96,110 112,109 118,109 L 128,103 C 130,97 132,90 138,83"
+    stroke="rgba(255,255,255,0.14)" stroke-width="1.4" fill="none"/>
+  <!-- rear body highlight -->
+  <path d="M 164,83 C 170,90 172,97 176,103 L 192,98 C 218,93 246,100 258,105 L 274,113"
+    stroke="rgba(255,255,255,0.09)" stroke-width="1.2" fill="none"/>
+  <!-- nose underside subtle crease -->
+  <path d="M 18,126 C 32,128 48,132 62,136"
+    stroke="rgba(255,255,255,0.05)" stroke-width="1" fill="none"/>
 
-  <!-- front wing -->
-  <rect x="14" y="93"  width="3.5" height="19" rx="1" fill="${dark}"/>
-  <rect x="83" y="89"  width="3.5" height="23" rx="1" fill="${dark}"/>
-  <path d="M 14,110 L 87,106 L 87,111 L 14,113 Z" fill="url(#cLiv)"/>
-  <path d="M 17,106 L 87,102 L 87,106 L 17,110 Z" fill="url(#cLiv)"/>
-  <path d="M 22,102 L 86,98  L 86,102 L 22,106 Z" fill="url(#cLiv)"/>
-  <path d="M 28,98  L 85,94  L 85,98  L 28,102 Z" fill="url(#cLiv)"/>
+  <!-- sidepod panel (slightly lighter inset area) -->
+  <path d="M 118,109 C 144,107 172,107 200,109 L 206,118 C 178,115 146,115 120,117 Z"
+    fill="${dc.hi}"/>
 
-  <!-- race number on sidepod -->
-  ${num ? `<text x="200" y="83"
+  <!-- sidepod undercut shadow (darkens lower sidepod) -->
+  <path d="M 104,128 Q 160,123 220,128 L 220,142 Q 160,137 104,142 Z"
+    fill="rgba(0,0,0,0.38)"/>
+
+  <!-- ═══════════ COCKPIT ═══════════ -->
+  <!-- opening interior -->
+  <path d="M 128,103 C 130,97 132,90 138,83 L 164,83 C 170,90 172,97 176,103 L 168,106 C 158,102 144,101 134,105 Z"
+    fill="#04040b"/>
+
+  <!-- HALO — main structural ring -->
+  <path d="M 134,102 C 132,90 138,79 151,76 C 164,73 172,82 172,93"
+    stroke="url(#cLiv)" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- halo outer edge highlight -->
+  <path d="M 134,100 C 132,88 138,77 151,74 C 164,71 172,80 172,91"
+    stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- halo inner shadow -->
+  <path d="M 135,104 C 133,92 139,81 151,78 C 163,75 171,84 171,95"
+    stroke="${dc.d}" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <!-- halo front pillar (single strut from halo to nose) -->
+  <path d="M 135,102 L 142,114"
+    stroke="url(#cLiv)" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M 134,101 L 141,113"
+    stroke="rgba(255,255,255,0.18)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+
+  <!-- HELMET -->
+  <ellipse cx="154" cy="88" rx="16" ry="14" fill="${helmet}"/>
+  <!-- helmet volume / top highlight -->
+  <ellipse cx="150" cy="83" rx="10" ry="6" fill="rgba(255,255,255,0.14)"/>
+  <!-- visor shape -->
+  <path d="M 143,85 Q 154,80 165,85 L 164,92 Q 154,97 144,92 Z"
+    fill="rgba(120,192,255,0.44)"/>
+  <!-- visor top specular -->
+  <path d="M 147,83 Q 154,80 161,83"
+    stroke="rgba(255,255,255,0.6)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+  <!-- visor bottom rim line -->
+  <path d="M 144,92 Q 154,96 164,92"
+    stroke="rgba(0,0,0,0.3)" stroke-width="0.8" fill="none"/>
+
+  <!-- MIRROR (left side) -->
+  <path d="M 118,84 L 133,80 L 134,86 L 119,90 Z" fill="url(#cLiv)"/>
+  <line x1="124" y1="82" x2="125" y2="88" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/>
+
+  <!-- ═══════════ FRONT WHEEL ═══════════ -->
+  <!-- front suspension upper wishbone -->
+  <line x1="96" y1="115" x2="86" y2="109" stroke="rgba(255,255,255,0.14)" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- front suspension lower wishbone -->
+  <line x1="96" y1="122" x2="84" y2="124" stroke="rgba(255,255,255,0.10)" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- front pushrod -->
+  <line x1="96" y1="119" x2="86" y2="132" stroke="rgba(255,255,255,0.08)" stroke-width="1.2" stroke-linecap="round"/>
+
+  <circle cx="82" cy="128" r="26" fill="url(#tireG)"/>
+  <circle cx="82" cy="128" r="26" fill="none" stroke="#1c1c26" stroke-width="3.5"/>
+  <circle cx="82" cy="128" r="22.5" fill="none" stroke="#161620" stroke-width="1.2"/>
+  <circle cx="82" cy="128" r="20" fill="none" stroke="${dc.m}" stroke-width="1.2" opacity="0.5"/>
+  <circle cx="82" cy="128" r="17.5" fill="url(#rimG)"/>
+  <g stroke="${dc.m}" stroke-width="2.8" stroke-linecap="round" opacity="0.9">
+    <line x1="82" y1="111" x2="82" y2="145"/>
+    <line x1="82" y1="111" x2="82" y2="145" transform="rotate(72,82,128)"/>
+    <line x1="82" y1="111" x2="82" y2="145" transform="rotate(144,82,128)"/>
+    <line x1="82" y1="111" x2="82" y2="145" transform="rotate(216,82,128)"/>
+    <line x1="82" y1="111" x2="82" y2="145" transform="rotate(288,82,128)"/>
+  </g>
+  <circle cx="82" cy="128" r="5.5" fill="#0c0c18"/>
+  <circle cx="82" cy="128" r="3" fill="${dc.m}"/>
+  <!-- tyre highlight -->
+  <path d="M 64,108 Q 82,101 100,110" stroke="rgba(255,255,255,0.06)" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <!-- ═══════════ FRONT WING ═══════════ -->
+  <!-- rear endplate (attaches to nose underside) -->
+  <path d="M 92,109 L 98,109 L 100,154 L 91,154 Z" fill="${dc.d}"/>
+  <!-- front endplate -->
+  <path d="M 11,118 L 18,118 L 18,154 L 11,154 Z" fill="${dc.d}"/>
+  <!-- endplate inner detail -->
+  <line x1="15" y1="124" x2="15" y2="150" stroke="${dc.m}" stroke-width="0.8" opacity="0.6"/>
+  <line x1="95" y1="116" x2="96" y2="148" stroke="${dc.m}" stroke-width="0.8" opacity="0.6"/>
+
+  <!-- main load-bearing element (thickest, lowest) -->
+  <path d="M 12,138 Q 52,131 92,122 L 92,129 Q 52,138 12,145 Z" fill="url(#cLiv)"/>
+  <!-- main element underside (shadow) -->
+  <path d="M 12,145 Q 52,138 92,129 L 92,132 Q 52,142 12,149 Z" fill="${dc.d}" opacity="0.8"/>
+
+  <!-- cascade flap 1 -->
+  <path d="M 16,130 Q 54,123 92,115 L 92,120 Q 54,128 16,135 Z" fill="url(#cLiv)"/>
+  <!-- cascade flap 2 -->
+  <path d="M 20,122 Q 56,116 92,109 L 92,113 Q 56,120 20,126 Z" fill="url(#cLiv)"/>
+  <!-- cascade flap 3 (upper, thin, attaches near nose) -->
+  <path d="M 28,116 Q 60,111 92,107 L 92,110 Q 60,114 28,119 Z" fill="url(#cLiv)"/>
+
+  <!-- cascade top highlight -->
+  <path d="M 30,116 Q 61,111 92,107" stroke="rgba(255,255,255,0.12)" stroke-width="1" fill="none"/>
+  <!-- main element top highlight -->
+  <path d="M 14,138 Q 53,131 92,122" stroke="rgba(255,255,255,0.09)" stroke-width="1" fill="none"/>
+
+  <!-- ═══════════ RACE NUMBER ═══════════ -->
+  ${num ? `<text x="214" y="126"
     font-family="Barlow Condensed,sans-serif"
-    font-size="16" font-weight="900" letter-spacing="1"
-    fill="rgba(255,255,255,0.88)" text-anchor="middle">${num}</text>` : ''}
+    font-size="24" font-weight="900" letter-spacing="2"
+    paint-order="stroke" stroke="rgba(0,0,0,0.55)" stroke-width="4" stroke-linejoin="round"
+    fill="rgba(255,255,255,0.92)" text-anchor="middle">${num}</text>` : ''}
 </svg>`;
 }
 
