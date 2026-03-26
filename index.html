@@ -1419,6 +1419,103 @@ function restartGame() {
 // MY CAR TAB
 // ══════════════════════════════════════════════
 
+function buildCarSVG() {
+  const lid = S.livery || 'carbon';
+  const helmet = S.helmetColor || '#e8000a';
+  const num = S.raceNumber ? esc(String(S.raceNumber)) : '';
+
+  const gradDefs = {
+    carbon: {x1:'0%',y1:'0%',x2:'100%',y2:'100%', stops:[['0%','#1a1a2e'],['100%','#2d2d44']]},
+    white:  {x1:'0%',y1:'0%',x2:'100%',y2:'100%', stops:[['0%','#d8d8e8'],['100%','#a8a8c0']]},
+    red:    {x1:'0%',y1:'0%',x2:'100%',y2:'100%', stops:[['0%','#3d0000'],['100%','#8b0000']]},
+    chrome: {x1:'0%',y1:'0%',x2:'100%',y2:'100%', stops:[['0%','#6a6a8a'],['50%','#c0c0d4'],['100%','#6a6a8a']]}
+  };
+  const gd = gradDefs[lid] || gradDefs.carbon;
+  const stopsSVG = gd.stops.map(([o,c])=>`<stop offset="${o}" stop-color="${c}"/>`).join('');
+  const dark = gd.stops[0][1];
+
+  return `<svg viewBox="0 0 320 130" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <defs>
+    <linearGradient id="cLiv" x1="${gd.x1}" y1="${gd.y1}" x2="${gd.x2}" y2="${gd.y2}">${stopsSVG}</linearGradient>
+    <linearGradient id="whlG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2a2a3a"/>
+      <stop offset="100%" stop-color="#14141e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- bg -->
+  <rect width="320" height="130" fill="#0d0d14" rx="8"/>
+  <!-- ground shadow -->
+  <ellipse cx="158" cy="124" rx="128" ry="5" fill="rgba(0,0,0,0.55)"/>
+
+  <!-- rear wing -->
+  <rect x="258" y="57" width="4"  height="26" rx="1" fill="${dark}"/>
+  <rect x="299" y="57" width="4"  height="26" rx="1" fill="${dark}"/>
+  <rect x="258" y="57" width="45" height="7"  rx="1" fill="url(#cLiv)"/>
+  <rect x="260" y="67" width="41" height="5"  rx="1" fill="url(#cLiv)"/>
+  <path d="M 270,82 L 267,72 L 275,72 L 276,82 Z" fill="${dark}"/>
+
+  <!-- rear wheel (behind body) -->
+  <circle cx="248" cy="106" r="14" fill="url(#whlG)" stroke="#252535" stroke-width="1.5"/>
+  <circle cx="248" cy="106" r="8"  fill="#0a0a12"/>
+  <circle cx="248" cy="106" r="3"  fill="#252535"/>
+
+  <!-- main body -->
+  <path d="M 22,91
+    Q 52,83 76,83
+    L 100,81 L 114,80 L 122,68 L 130,59 L 168,59 L 178,68
+    Q 193,75 207,73 Q 233,69 250,76
+    L 264,83 L 265,91 L 22,91 Z"
+    fill="url(#cLiv)" stroke="rgba(255,255,255,0.1)" stroke-width="0.75"/>
+
+  <!-- sidepod undercut shadow -->
+  <path d="M 96,88 Q 140,84 180,87 L 180,91 Q 140,88 96,91 Z" fill="rgba(0,0,0,0.25)"/>
+
+  <!-- cockpit opening -->
+  <path d="M 122,68 L 130,59 L 168,59 L 178,68 Z" fill="#06060d"/>
+  <!-- halo arc -->
+  <path d="M 128,59 Q 150,51 170,59" stroke="rgba(255,255,255,0.22)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+  <!-- helmet -->
+  <ellipse cx="150" cy="63" rx="13" ry="11" fill="${helmet}"/>
+  <!-- visor -->
+  <path d="M 142,59 Q 150,55 158,59 L 157,65 Q 150,68 143,65 Z" fill="rgba(160,215,255,0.38)"/>
+  <!-- visor shine -->
+  <path d="M 145,57 Q 150,55 155,57" stroke="rgba(255,255,255,0.5)" stroke-width="1" fill="none" stroke-linecap="round"/>
+
+  <!-- mirror -->
+  <rect x="115" y="57" width="12" height="4" rx="2" fill="url(#cLiv)"/>
+
+  <!-- front suspension hints -->
+  <line x1="84" y1="91" x2="80" y2="99" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+  <line x1="84" y1="87" x2="80" y2="99" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+
+  <!-- front wheel (in front of body, behind front wing) -->
+  <circle cx="80" cy="106" r="14" fill="url(#whlG)" stroke="#252535" stroke-width="1.5"/>
+  <circle cx="80" cy="106" r="8"  fill="#0a0a12"/>
+  <circle cx="80" cy="106" r="3"  fill="#252535"/>
+
+  <!-- front wing -->
+  <rect x="14" y="93"  width="3.5" height="19" rx="1" fill="${dark}"/>
+  <rect x="83" y="89"  width="3.5" height="23" rx="1" fill="${dark}"/>
+  <path d="M 14,110 L 87,106 L 87,111 L 14,113 Z" fill="url(#cLiv)"/>
+  <path d="M 17,106 L 87,102 L 87,106 L 17,110 Z" fill="url(#cLiv)"/>
+  <path d="M 22,102 L 86,98  L 86,102 L 22,106 Z" fill="url(#cLiv)"/>
+  <path d="M 28,98  L 85,94  L 85,98  L 28,102 Z" fill="url(#cLiv)"/>
+
+  <!-- race number on sidepod -->
+  ${num ? `<text x="200" y="83"
+    font-family="Barlow Condensed,sans-serif"
+    font-size="16" font-weight="900" letter-spacing="1"
+    fill="rgba(255,255,255,0.88)" text-anchor="middle">${num}</text>` : ''}
+</svg>`;
+}
+
+function updateCarPreview() {
+  const el = document.getElementById('car-preview');
+  if (el) el.innerHTML = buildCarSVG();
+}
+
 function renderCarTab() {
   const swatches = HELMET_COLORS.map(c =>
     `<button class="helmet-swatch${S.helmetColor===c.hex?' sel':''}"
@@ -1435,13 +1532,15 @@ function renderCarTab() {
   ).join('');
 
   document.getElementById('car-sec').innerHTML = `
+    <div id="car-preview" style="border-radius:10px;overflow:hidden;margin-bottom:16px">${buildCarSVG()}</div>
+
     <div class="section-title">Helmet Colour</div>
     <div class="helmet-grid">${swatches}</div>
 
     <div class="section-title" style="margin-top:18px">Race Number</div>
     <input class="finput car-input" type="number" min="1" max="99"
       placeholder="1–99" value="${esc(S.raceNumber)}"
-      onchange="setRaceNumber(this.value)">
+      oninput="setRaceNumber(this.value)">
 
     <div class="section-title" style="margin-top:18px">Car Livery</div>
     <div class="livery-grid">${liveryCards}</div>
@@ -1471,6 +1570,7 @@ function setRaceNumber(val) {
   const n = parseInt(val, 10);
   S.raceNumber = (n >= 1 && n <= 99) ? String(n) : '';
   save();
+  updateCarPreview();
   renderHeader();
 }
 
