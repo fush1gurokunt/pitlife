@@ -528,6 +528,24 @@ body{
 .tier-dot.t1{background:var(--red)}
 .tier-dot.t2{background:var(--gold)}
 .tier-dot.t3{background:var(--dim)}
+
+/* ─── VETERAN BADGE ─── */
+.veteran-badge{background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.3);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--gold);padding:1px 7px;text-transform:uppercase;white-space:nowrap}
+
+/* ─── BURNOUT ─── */
+.burnout-warn{display:flex;align-items:center;gap:8px;background:rgba(220,60,0,.12);border:1px solid rgba(220,60,0,.28);border-radius:var(--rs);padding:8px 10px;margin-top:7px}
+.burnout-track{flex:1;height:3px;background:var(--bg);border-radius:2px;overflow:hidden}
+.burnout-fill{height:100%;border-radius:2px;background:linear-gradient(to right,var(--gold),#ff4400);transition:width .4s ease}
+
+/* ─── LEGACY / ACHIEVEMENTS ─── */
+.legacy-box{background:rgba(245,166,35,.08);border:1.5px solid rgba(245,166,35,.4);border-radius:var(--r);padding:16px;text-align:center;width:100%}
+.legacy-title{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--gold);letter-spacing:1px;text-transform:uppercase}
+.legacy-sub{font-size:12px;color:var(--dim);margin-top:5px;line-height:1.45}
+.achievements-grid{display:flex;flex-direction:column;gap:6px;width:100%}
+.achievement{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:9px 12px;display:flex;align-items:center;gap:10px}
+.ach-icon{font-size:20px;flex-shrink:0}
+.ach-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700}
+.ach-desc{font-size:11px;color:var(--dim);margin-top:1px}
 </style>
 </head>
 <body>
@@ -691,6 +709,208 @@ const SPONSOR_DEALS = [
   {id:'broadcaster', icon:'📡', name:'National Broadcaster', bonus:300000,  penalty:0,      bonusBonus:300000,
    condition:'podium', conditionDesc:'Championship podium (P1–P3)'}
 ];
+
+const PERSONAL_EVENTS = [
+  {id:'pe_dad', minAge:17, maxAge:21, icon:'👨', title:'Dad Wants to Talk',
+   body:'Your dad corners you after a test session. "The money\'s thin, son. Is this really worth it?" He means well.',
+   choices:[
+     {label:'Reassure him — you\'ve got this',   fx:{Morale:3}, burnoutChange:-5},
+     {label:'Get defensive — walk away angry',   fx:{Morale:-4}, burnoutChange:8}
+   ]},
+  {id:'pe_party', minAge:17, maxAge:21, icon:'🎉', title:'First F1 Test Invite',
+   body:'A top team offers you a one-day test. The night before, the team invite you to a party.',
+   choices:[
+     {label:'Skip the party, rest up',          fx:{Pace:2,Morale:2}, burnoutChange:-3},
+     {label:'Go — once-in-a-lifetime vibe',     fx:{Morale:5,Consistency:-2}, burnoutChange:5}
+   ]},
+  {id:'pe_relationship', minAge:22, maxAge:27, icon:'💛', title:'Monaco Night',
+   body:'You\'ve been dating someone long-distance. They flew in for Monaco. Race week or quality time?',
+   choices:[
+     {label:'Full focus on race prep',          fx:{Consistency:2,Morale:-3}, burnoutChange:5},
+     {label:'Spend real time with them',        fx:{Morale:7}, burnoutChange:-8}
+   ]},
+  {id:'pe_prweek', minAge:22, maxAge:27, icon:'📸', title:'PR Obligations',
+   body:'Marketing wants you for two full days of shoots mid-race week. Your trainer says it\'ll wreck your prep.',
+   choices:[
+     {label:'Do the shoots — team needs it',    fx:{Reputation:5,Fitness:-2}, burnoutChange:10},
+     {label:'Negotiate down to half a day',     fx:{Reputation:2}, burnoutChange:3}
+   ]},
+  {id:'pe_retire_talk', minAge:28, maxAge:33, icon:'🏡', title:'Life After Racing',
+   body:'Your partner asks: "Have you thought about life after 35?" The question hits harder than you expected.',
+   choices:[
+     {label:'Not ready to think about it',      fx:{Morale:-3}, burnoutChange:6},
+     {label:'Open conversation — feels good',   fx:{Morale:5}, burnoutChange:-7}
+   ]},
+  {id:'pe_child', minAge:28, maxAge:33, icon:'👶', title:'New Arrival',
+   body:'Baby born race week. You made the delivery, flew through the night, and you\'re in the garage at 6am.',
+   choices:[
+     {label:'Pure joy — nothing touches this',  fx:{Morale:10,Fitness:-2}, burnoutChange:-12},
+     {label:'Exhausted and distracted',         fx:{Morale:3,Consistency:-3}, burnoutChange:8}
+   ]},
+  {id:'pe_burnout_warn', minAge:27, maxAge:35, icon:'😮‍💨', title:'Running on Empty',
+   body:'You\'ve been grinding for years. A journalist asks if you\'re still enjoying it. You pause too long.',
+   choices:[
+     {label:'Take a proper break between tests', fx:{Morale:5}, burnoutChange:-10},
+     {label:'Push through — results fix everything', fx:{Pace:1}, burnoutChange:14}
+   ]},
+  {id:'pe_last_season', minAge:34, maxAge:42, icon:'🎙️', title:'Last Season Questions',
+   body:'"Is this your final season?" Every press conference, same question. It\'s starting to get to you.',
+   choices:[
+     {label:'Embrace it — enjoy the farewell',       fx:{Morale:6,Reputation:3}, burnoutChange:-5},
+     {label:'Shut it down — refuse all questions',   fx:{Reputation:-4,Morale:2}, burnoutChange:4}
+   ]},
+  {id:'pe_young_tm', minAge:34, maxAge:42, icon:'🆕', title:'Young Teammate',
+   body:'Your new teammate is 19 and was 0.3s faster in pre-season testing. The team notices.',
+   choices:[
+     {label:'Mentor them — legacy over ego',    fx:{Reputation:6,Morale:-2}, burnoutChange:-4},
+     {label:'Work harder — prove them wrong',   fx:{Pace:2,Fitness:-3}, burnoutChange:10}
+   ]},
+  {id:'pe_body', minAge:34, maxAge:42, icon:'🩺', title:'Recovery Taking Longer',
+   body:'Your physio says your recovery after hard sessions is slower than last year. The numbers don\'t lie.',
+   choices:[
+     {label:'Adjust training — be smart about it', fx:{Fitness:2,Consistency:1}, burnoutChange:-5},
+     {label:'Ignore it — mind over body',          fx:{Fitness:-3}, burnoutChange:8}
+   ]}
+];
+
+const NAT_EVENTS = {
+  Irish:[
+    {id:'nat_ire1', icon:'☘️', title:'The Home Hero',
+     body:'Back in Belfast, a crowd of 200 people watched your race in a pub. Your cousin rings you mid-debrief.',
+     choices:[
+       {label:'Ring back — embrace it',       fx:{Morale:6,Reputation:4}},
+       {label:'Focus — call tomorrow',        fx:{Morale:-2,Consistency:2}}
+     ]},
+    {id:'nat_ire2', icon:'🎤', title:'Late Late Appearance',
+     body:'Ireland\'s biggest chat show wants you on. It\'s the night before free practice.',
+     choices:[
+       {label:'Do it — huge for the brand',   fx:{Reputation:8,Fitness:-2}},
+       {label:'Politely decline',             fx:{Morale:3}}
+     ]}
+  ],
+  British:[
+    {id:'nat_gbr1', icon:'🗞️', title:'Tabloid Pressure',
+     body:'A tabloid runs a story questioning whether you deserve your seat. It\'s all over the paddock.',
+     choices:[
+       {label:'Say nothing — let results talk', fx:{Morale:-3,Reputation:2}},
+       {label:'Issue a sharp response',         fx:{Reputation:-3,Morale:4}}
+     ]},
+    {id:'nat_gbr2', icon:'🏟️', title:'Silverstone Crowd',
+     body:'The Silverstone grandstands are packed with your fans. The noise on the installation lap is overwhelming.',
+     choices:[
+       {label:'Feed off the energy',  fx:{Morale:8,Racecraft:2}},
+       {label:'Stay in your bubble',  fx:{Consistency:3}}
+     ]}
+  ],
+  Brazilian:[
+    {id:'nat_bra1', icon:'🇧🇷', title:"Senna's Shadow",
+     body:"Every Brazilian journalist compares you to Senna. A senior driver tells you privately it's a curse.",
+     choices:[
+       {label:'Wear it with pride',        fx:{Reputation:5,Morale:3}},
+       {label:'Reject the comparison',     fx:{Morale:-4,Reputation:2}}
+     ]},
+    {id:'nat_bra2', icon:'🎊', title:'Carnival Season',
+     body:'It\'s Carnival back home. Family beg you to come. You have a simulator session scheduled.',
+     choices:[
+       {label:'Go home — family first',   fx:{Morale:9,Fitness:-1}},
+       {label:'Stay and sim',             fx:{Pace:2,Morale:-4}}
+     ]}
+  ],
+  Dutch:[
+    {id:'nat_ned1', icon:'🟠', title:'Orange Army',
+     body:'Thousands of Dutch fans in orange flocked to the circuit. The atmosphere is electric.',
+     choices:[
+       {label:'Acknowledge them on team radio', fx:{Morale:6,Reputation:4}},
+       {label:'Pure focus — no distractions',   fx:{Consistency:3}}
+     ]},
+    {id:'nat_ned2', icon:'📰', title:'Dutch Media Circus',
+     body:'Dutch TV wants a 40-minute documentary crew following you all weekend.',
+     choices:[
+       {label:'Allow it — good for the sport',   fx:{Reputation:6,Fitness:-2}},
+       {label:'Limit to paddock access only',    fx:{Morale:3}}
+     ]}
+  ],
+  German:[
+    {id:'nat_ger1', icon:'🏎️', title:'German Engineering Pride',
+     body:'A German manufacturer is watching. Their head of motorsport shakes your hand in the paddock.',
+     choices:[
+       {label:'Express interest in a future role', fx:{Reputation:7}},
+       {label:'Stay professional — focus on now',  fx:{Consistency:2}}
+     ]},
+    {id:'nat_ger2', icon:'📺', title:'RTL Interview',
+     body:"Germany's biggest sports channel wants a live studio interview before qualifying.",
+     choices:[
+       {label:'Do it — massive audience',  fx:{Reputation:5,Fitness:-1}},
+       {label:'Send a pre-recorded clip',  fx:{Reputation:2,Morale:2}}
+     ]}
+  ],
+  French:[
+    {id:'nat_fra1', icon:'🥖', title:'French Flair',
+     body:"The French press say you're \"trop technique\" and need to show more personality.",
+     choices:[
+       {label:'Lean into the criticism — be bolder', fx:{Racecraft:2,Reputation:3}},
+       {label:'Ignore it — results matter',          fx:{Morale:2}}
+     ]},
+    {id:'nat_fra2', icon:'🏛️', title:'Presidential Congratulations',
+     body:'You receive a letter from the Élysée Palace. Your manager wants a photo op.',
+     choices:[
+       {label:'Do the photo op',          fx:{Reputation:8}},
+       {label:'Respond privately instead', fx:{Morale:4}}
+     ]}
+  ],
+  Spanish:[
+    {id:'nat_esp1', icon:'💃', title:"Nation's Obsession",
+     body:"Spain is gripped by your campaign. Strangers stop you at petrol stations.",
+     choices:[
+       {label:"Enjoy the fame — it's earned", fx:{Morale:6,Reputation:4}},
+       {label:'Keep a low profile',           fx:{Morale:-2,Consistency:3}}
+     ]},
+    {id:'nat_esp2', icon:'🎸', title:'Festival Invite',
+     body:"A major Spanish music festival wants you as a guest between races.",
+     choices:[
+       {label:"Go — one night won't hurt",    fx:{Morale:7,Fitness:-2}},
+       {label:'Send a video message instead', fx:{Reputation:3}}
+     ]}
+  ],
+  Italian:[
+    {id:'nat_ita1', icon:'🍝', title:'Tifosi Expectations',
+     body:'Italian fans expect nothing less than drama and victory. A poor qualifying sparks an online storm.',
+     choices:[
+       {label:'Address the fans directly',     fx:{Reputation:4,Morale:-2}},
+       {label:'Let the race answer',           fx:{Consistency:3}}
+     ]},
+    {id:'nat_ita2', icon:'🏆', title:'Italian Sports Paper',
+     body:"La Gazzetta wants a full feature. They'll rate your season 1-10 live on air.",
+     choices:[
+       {label:'Agree to the interview', fx:{Reputation:6,Morale:-1}},
+       {label:'Skip it',               fx:{Morale:3}}
+     ]}
+  ],
+  Finnish:[
+    {id:'nat_fin1', icon:'🌲', title:'Sisu',
+     body:'"We call it sisu," she says. "Do you have it?"',
+     choices:[
+       {label:'"I just do the work"',   fx:{Reputation:4,Consistency:2}},
+       {label:'"Yes — it defines me"',  fx:{Morale:5,Reputation:3}}
+     ]},
+    {id:'nat_fin2', icon:'🪄', title:'Sauna Debrief',
+     body:"The Finnish engineers invite you for a traditional sauna debrief. Unusual, but they swear by it.",
+     choices:[
+       {label:'Join them — when in Finland', fx:{Morale:7,Fitness:2}},
+       {label:'Stick to the data room',      fx:{Consistency:3}}
+     ]}
+  ]
+};
+
+const BURNOUT_CRISIS_EVENT = {
+  id:'burnout_crisis', icon:'🔥', title:'Breaking Point',
+  body:"You snap at your engineer in a team meeting. Later, alone in the motorhome, you stare at the ceiling. You've been running on fumes for months.",
+  choices:[
+    {label:'Take a week completely off-grid',      fx:{Morale:12,Fitness:3}, burnoutChange:-25},
+    {label:'Speak to the team psychologist',       fx:{Morale:8,Consistency:3}, burnoutChange:-18},
+    {label:"Push through — you're almost there",  fx:{Pace:2}, burnoutChange:20}
+  ]
+};
 
 // ── EVENTS ──────────────────────────────────────
 const EVENTS = [
@@ -924,7 +1144,12 @@ function defaultState() {
     activeSponsors:[], sponsorDealsOffered:[], lastSponsorResults:[],
     firedCount:0, contractLocked:false, freeAgent:false, consecutiveBadF1:0,
     safetyCarEffect:0,
-    helmetColor:'#e8000a', raceNumber:'', livery:'carbon', customNickname:''
+    helmetColor:'#e8000a', raceNumber:'', livery:'carbon', customNickname:'',
+    Burnout:0,
+    monacoSeasonWins:0, homeSeasonWins:0, runnerUpCount:0,
+    sameTeamSeasons:0, lastF1TeamIdx:null, recoveredToF1:false,
+    incidentCount:0, personalEventsShown:[], natEventsShown:[],
+    burnoutEventTriggered:false, burnoutRetired:false
   };
 }
 
@@ -1086,13 +1311,22 @@ function genEvents() {
   S.currentCircuit = circuitList[circuitIdx];
   S.circuitSeason = (S.circuitSeason || 0) + 1;
 
-  // Regular events
+  // Regular events — style-weighted pool
+  const style = S.drivingStyle || 'consistent';
+  const styleCatMap = {aggressive:['Incident','Rivalry','Fitness'], technical:['Technical','Media','Sponsor'], consistent:['Mental','Career','Team']};
+  const preferredCats = styleCatMap[style] || [];
+  const pool = [];
+  EVENTS.forEach(ev => {
+    pool.push(ev);
+    if (preferredCats.includes(ev.cat)) pool.push(ev); // 2x weight for matching category
+  });
   const count = rnd(3,4);
-  const pool = [...EVENTS];
   const picked = [];
+  const usedIds = new Set();
   for (let i=0; i<count && pool.length; i++) {
-    const j = rnd(0, pool.length-1);
-    picked.push(pool.splice(j,1)[0]);
+    let j, ev, attempts = 0;
+    do { j = rnd(0, pool.length-1); ev = pool[j]; attempts++; } while (usedIds.has(ev.id) && attempts < 20);
+    if (!usedIds.has(ev.id)) { usedIds.add(ev.id); picked.push(ev); }
   }
 
   // Circuit-specific event
@@ -1121,6 +1355,30 @@ function genEvents() {
       S.sponsorDealsOffered.push(deal.id);
       picked.push(makeSponsorEvent(deal));
     }
+  }
+
+  // Personal life event (age-gated, one-time per id)
+  if (!S.personalEventsShown) S.personalEventsShown = [];
+  const eligiblePersonal = PERSONAL_EVENTS.filter(e =>
+    S.age >= e.minAge && S.age <= e.maxAge && !S.personalEventsShown.includes(e.id)
+  );
+  if (eligiblePersonal.length && Math.random() < 0.65) {
+    const pe = eligiblePersonal[rnd(0, eligiblePersonal.length-1)];
+    picked.push(makePersonalEvent(pe));
+  }
+
+  // Nationality event (one-time per id)
+  if (!S.natEventsShown) S.natEventsShown = [];
+  const natPool = (NAT_EVENTS[S.nat] || []).filter(e => !S.natEventsShown.includes(e.id));
+  if (natPool.length && Math.random() < 0.5) {
+    const ne = natPool[rnd(0, natPool.length-1)];
+    picked.push(makeNatEvent(ne));
+  }
+
+  // Burnout crisis event (Burnout >= 80, once)
+  if ((S.Burnout || 0) >= 80 && !S.burnoutEventTriggered) {
+    S.burnoutEventTriggered = true;
+    picked.push(makeBurnoutCrisisEvent());
   }
 
   // Shuffle
@@ -1280,6 +1538,22 @@ function makeSponsorEvent(deal) {
     ]};
 }
 
+function makePersonalEvent(pe) {
+  return {id:pe.id, cat:'Personal', icon:pe.icon, title:pe.title, desc:pe.body,
+    choices: pe.choices.map(c => ({text:c.label, fx:c.fx||{}, burnoutChange:c.burnoutChange||0, _peId:pe.id}))};
+}
+
+function makeNatEvent(ne) {
+  return {id:ne.id, cat:'Nationality', icon:ne.icon, title:ne.title, desc:ne.body,
+    choices: ne.choices.map(c => ({text:c.label, fx:c.fx||{}, _neId:ne.id}))};
+}
+
+function makeBurnoutCrisisEvent() {
+  const bc = BURNOUT_CRISIS_EVENT;
+  return {id:bc.id, cat:'Burnout', icon:bc.icon, title:bc.title, desc:bc.body,
+    choices: bc.choices.map(c => ({text:c.label, fx:c.fx||{}, burnoutChange:c.burnoutChange||0}))};
+}
+
 function resolveEvent(ei, ci) {
   if (S.resolved.includes(ei)) return;
   const ev = S.events[ei];
@@ -1309,6 +1583,21 @@ function resolveEvent(ei, ci) {
       if (!S.activeSponsors) S.activeSponsors = [];
       S.activeSponsors.push({...deal});
     }
+  }
+  if (ch.burnoutChange) {
+    if (!S.Burnout) S.Burnout = 0;
+    S.Burnout = clamp(S.Burnout + ch.burnoutChange, 0, 100);
+  }
+  if (ev.cat === 'Incident') {
+    S.incidentCount = (S.incidentCount || 0) + 1;
+  }
+  if (ch._peId) {
+    if (!S.personalEventsShown) S.personalEventsShown = [];
+    if (!S.personalEventsShown.includes(ch._peId)) S.personalEventsShown.push(ch._peId);
+  }
+  if (ch._neId) {
+    if (!S.natEventsShown) S.natEventsShown = [];
+    if (!S.natEventsShown.includes(ch._neId)) S.natEventsShown.push(ch._neId);
   }
   S.resolved.push(ei);
   save();
@@ -1475,10 +1764,51 @@ function raceTheSeason() {
   S.age++;
   S.seasonNum++;
 
+  // Physical decline
+  if (S.age > 33) S.Fitness = clamp(S.Fitness - 2, 0, 100);
+  if (S.age > 35) S.Pace = clamp(S.Pace - 1, 0, 100);
+
+  // Burnout from race results
+  if (!S.Burnout) S.Burnout = 0;
+  if (champPos === 1) {
+    S.Burnout = clamp(S.Burnout - 5, 0, 100); // winning is energising
+  } else if (avgPos > Math.ceil(st.cars * 0.75)) {
+    S.Burnout = clamp(S.Burnout + 8, 0, 100); // bad results grind you down
+  } else {
+    S.Burnout = clamp(S.Burnout + 3, 0, 100); // racing is taxing regardless
+  }
+
+  // Burnout forced retirement
+  if (S.Burnout >= 100) {
+    S.burnoutRetired = true;
+    S.gameOver = true;
+  }
+
+  // Track monaco/home wins
+  const circ = S.currentCircuit;
+  if (circ) {
+    if (circ.special === 'monaco' && champPos === 1) S.monacoSeasonWins = (S.monacoSeasonWins||0)+1;
+    if (circ.special === 'home' && champPos === 1) S.homeSeasonWins = (S.homeSeasonWins||0)+1;
+  }
+  if (champPos === 2) S.runnerUpCount = (S.runnerUpCount||0)+1;
+
+  // Track consecutive seasons with same F1 team
+  if (S.stageIdx === 4) {
+    if (S.f1TeamIdx === S.lastF1TeamIdx) {
+      S.sameTeamSeasons = (S.sameTeamSeasons||0)+1;
+    } else {
+      S.sameTeamSeasons = 1;
+    }
+    S.lastF1TeamIdx = S.f1TeamIdx;
+  }
+
   // Apply promotion/demotion to stage
   if (promoted && S.stageIdx < 4) {
     S.stageIdx++;
-    if (S.stageIdx === 4) assignF1Team();
+    if (S.stageIdx === 4) {
+      assignF1Team();
+      if (S.firedCount > 0) S.recoveredToF1 = true;
+    }
   } else if (fired) {
     S.firedCount++;
     if (S.stageIdx === 4) {
@@ -1591,6 +1921,7 @@ function renderHeader() {
       </div>
       <div class="hdr-right">
         <span class="hdr-age">Age ${S.age}</span>
+        ${S.age > 33 ? '<span class="veteran-badge">Veteran</span>' : ''}
         <span class="stage-pill">${st.label}</span>
       </div>
     </div>
@@ -1637,10 +1968,25 @@ function renderStats() {
       <div class="car-rating-track"><div class="car-rating-fill" style="width:${S.teamCarRating}%"></div></div>
     </div>` : '';
 
+  const burnout = S.Burnout || 0;
+  const burnoutHtml = burnout >= 50 ? `
+    <div class="burnout-warn">
+      <span style="font-size:16px">🔥</span>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;color:#ff6600;text-transform:uppercase">Burnout</span>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#ff6600">${burnout}/100</span>
+        </div>
+        <div class="burnout-track"><div class="burnout-fill" style="width:${burnout}%"></div></div>
+        ${burnout >= 80 ? '<div style="font-size:11px;color:#ff4400;margin-top:4px">⚠️ Critical — on the edge of burnout</div>' : ''}
+      </div>
+    </div>` : '';
+
   document.getElementById('stats-sec').innerHTML = `
     <div class="section-title">Driver Stats</div>
     <div class="stats-grid">${bars}</div>
     ${carRatingHtml}
+    ${burnoutHtml}
     <div class="earn-row">
       <span class="earn-lbl">Career Earnings</span>
       <span class="earn-val">${fmtMoney(S.earnings)}</span>
@@ -1697,6 +2043,8 @@ function renderEvents() {
     if (c.rollFx) tags.push(`<span class="fx-tag neu">30% penalty reversed</span>`);
     if (c.safetyCarChoice==='gamble') tags.push(`<span class="fx-tag neu">Big position swing</span>`);
     if (c.safetyCarChoice==='safe') tags.push(`<span class="fx-tag pos">Consistency +1</span>`);
+    if (c.burnoutChange > 0) tags.push(`<span class="fx-tag neg">🔥 +${c.burnoutChange} Burnout</span>`);
+    if (c.burnoutChange < 0) tags.push(`<span class="fx-tag pos">🔥 ${c.burnoutChange} Burnout</span>`);
     return `<button class="tinder-choice" onclick="resolveEvent(${ei},${ci})">
       <div>${esc(c.text)}</div>
       ${tags.length ? `<div class="fx" style="margin-top:5px">${tags.join('')}</div>` : ''}
@@ -1891,8 +2239,12 @@ function pickHeadline(r) {
 
 function renderGameOver() {
   const el = document.getElementById('screen-gameover');
-  const reason = S.age>=40 ? 'Retired at 40' : 'Career ended — no more seats available';
+  let reason = 'Career ended — no more seats available';
+  if (S.age >= 40) reason = 'Retired at 40';
+  else if (S.burnoutRetired) reason = 'Retired — burnout forced the end';
   const rating = calcRating();
+  const legacy = calcLegacyTitle();
+  const achievements = calcAchievements();
 
   const stats = [
     {v:S.championships, l:'Championships', g:S.championships>0},
@@ -1924,11 +2276,22 @@ function renderGameOver() {
     </div>`;
   }).join('');
 
+  const achHtml = achievements.length ? achievements.map(a => `
+    <div class="achievement">
+      <div class="ach-icon">${a.icon}</div>
+      <div class="ach-name">${a.name}</div>
+      <div class="ach-desc">${a.desc}</div>
+    </div>`).join('') : '<div style="color:var(--dim);font-size:13px;padding:8px 0">No special achievements this career.</div>';
+
   el.innerHTML = `
     <div class="go-title">
       <div style="font-size:48px">🏁</div>
       <h1>Career Over</h1>
       <p>${esc(reason)}</p>
+    </div>
+    <div class="legacy-box">
+      <div class="legacy-title">${legacy.title}</div>
+      <div class="legacy-sub">${legacy.desc}</div>
     </div>
     <div class="rating-box">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:6px">Career Rating</div>
@@ -1936,6 +2299,10 @@ function renderGameOver() {
       <div class="grade-lbl">${rating.label}</div>
     </div>
     <div class="sum-grid">${statBoxes}</div>
+    <div style="width:100%">
+      <div class="section-title">Achievements</div>
+      <div class="achievements-grid">${achHtml}</div>
+    </div>
     <div style="width:100%">
       <div class="section-title">Full Career Log</div>
       <div class="log-list">${logItems}</div>
@@ -1951,6 +2318,40 @@ function calcRating() {
   if (sc>=25)  return {grade:'C', label:'Journeyman Pro'};
   if (sc>=8)   return {grade:'D', label:'Nearly Made It'};
   return          {grade:'F', label:'Back to Karting'};
+}
+
+function calcLegacyTitle() {
+  if (S.championships >= 3 && S.wins >= 20) return {title:'Motorsport Icon', desc:'Three titles. Decades of brilliance. Your name belongs in the pantheon.'};
+  if (S.championships >= 2) return {title:'Double Champion', desc:'More than once, you conquered the grid. Your legacy is undeniable.'};
+  if (S.championships === 1 && S.wins >= 10) return {title:'World Champion', desc:'You reached the summit. Only a handful ever do.'};
+  if (S.championships === 1) return {title:'Champion', desc:'Once, the championship was yours. Not everyone gets that moment.'};
+  if (S.seasonsInF1 >= 5 && S.podiums >= 10) return {title:'F1 Veteran', desc:'Years in the top flight, countless battles. A respected name in the paddock.'};
+  if (S.seasonsInF1 >= 3) return {title:'F1 Racer', desc:'You made it to the pinnacle and competed at the highest level.'};
+  if (S.wins >= 5) return {title:'Race Winner', desc:'You stood on the top step. Speed was never your problem.'};
+  if (S.podiums >= 3) return {title:'Podium Finisher', desc:'You mixed it with the best and came away with silverware.'};
+  if (S.burnoutRetired) return {title:'Burnt Out', desc:"The sport took everything you had. There's no shame in that."};
+  return {title:'Journeyman', desc:'You gave everything the sport demanded. Most never make it this far.'};
+}
+
+function calcAchievements() {
+  const ach = [];
+  if (S.championships >= 1) ach.push({icon:'🏆', name:'World Champion', desc:'Won a championship title'});
+  if (S.championships >= 3) ach.push({icon:'👑', name:'Dynasty', desc:'Three or more titles'});
+  if (S.wins >= 1)  ach.push({icon:'🥇', name:'Race Winner', desc:'Stood on the top step'});
+  if (S.wins >= 10) ach.push({icon:'🔟', name:'Ten Wins', desc:'10 race victories'});
+  if (S.wins >= 25) ach.push({icon:'🌟', name:'25 Wins', desc:'An all-time great record'});
+  if (S.podiums >= 10) ach.push({icon:'🥈', name:'Podium Regular', desc:'10 or more podiums'});
+  if (S.seasonsInF1 >= 10) ach.push({icon:'🎖️', name:'F1 Lifer', desc:'10 seasons in Formula 1'});
+  if ((S.monacoSeasonWins||0) >= 2) ach.push({icon:'🎰', name:'Monaco Master', desc:'Won at Monaco Royale twice'});
+  if ((S.homeSeasonWins||0) >= 1) ach.push({icon:'🏠', name:'Home Hero', desc:'Won the Home Grand Prix'});
+  if ((S.runnerUpCount||0) >= 3) ach.push({icon:'😤', name:'The Nearly Man', desc:'Runner-up in championship three times'});
+  if ((S.sameTeamSeasons||0) >= 4) ach.push({icon:'🤝', name:'Loyal', desc:'4+ seasons with the same F1 team'});
+  if (S.recoveredToF1) ach.push({icon:'💪', name:'Comeback', desc:'Returned to F1 after being dropped'});
+  if ((S.incidentCount||0) >= 5) ach.push({icon:'💥', name:'Incident Prone', desc:'5 or more on-track incidents'});
+  if (S.burnoutRetired) ach.push({icon:'🔥', name:'Burned Out', desc:'Career ended by total burnout'});
+  if (S.earnings >= 50000000) ach.push({icon:'💰', name:'Fifty Million', desc:'£50M+ career earnings'});
+  if (ach.length === 0 && S.seasonsInF1 >= 1) ach.push({icon:'🏎️', name:'F1 Driver', desc:'Made it to Formula 1'});
+  return ach;
 }
 
 function restartGame() {
