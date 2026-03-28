@@ -495,6 +495,39 @@ body{
 .form-dot{width:7px;height:7px;border-radius:50%;background:var(--border)}
 .form-dot.pod{background:var(--gold)}
 .form-dot.pts{background:var(--green)}
+
+/* ─── DRIVING STYLE ─── */
+.style-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px}
+.style-btn{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--rs);cursor:pointer;padding:12px 6px 10px;text-align:center;transition:border-color .15s,background .15s;width:100%}
+.style-btn:hover{border-color:#555}
+.style-btn.sel{border-color:var(--red);background:rgba(232,0,10,.12)}
+.style-icon{font-size:24px;margin-bottom:4px;line-height:1}
+.style-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.5px}
+.style-desc{font-size:10px;color:var(--dim);margin-top:3px;line-height:1.3}
+
+/* ─── CIRCUIT BADGE ─── */
+.circuit-badge{font-size:11px;color:var(--dim);margin-top:2px}
+.circuit-badge .rain-tag{color:#60a0ff;margin-left:4px}
+
+/* ─── SPONSOR TRACKER ─── */
+.sponsor-row{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);margin-bottom:6px}
+.sponsor-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700}
+.sponsor-cond{font-size:11px;color:var(--dim);margin-top:2px;line-height:1.3}
+.sponsor-badge{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;white-space:nowrap;margin-left:10px;flex-shrink:0}
+.sponsor-badge.pass{color:var(--green)}
+.sponsor-badge.fail{color:#ff6060}
+
+/* ─── CAR RATING ─── */
+.car-rating-wrap{display:flex;align-items:center;gap:8px;margin-top:3px}
+.car-rating-track{flex:1;height:3px;background:var(--bg);border-radius:2px;overflow:hidden}
+.car-rating-fill{height:100%;border-radius:2px;background:var(--gold);transition:width .4s ease}
+.car-rating-val{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--gold);font-weight:700;min-width:24px;text-align:right}
+
+/* ─── TIER DOT ─── */
+.tier-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-left:4px;vertical-align:middle;flex-shrink:0}
+.tier-dot.t1{background:var(--red)}
+.tier-dot.t2{background:var(--gold)}
+.tier-dot.t3{background:var(--dim)}
 </style>
 </head>
 <body>
@@ -513,6 +546,26 @@ body{
     <div>
       <label class="flabel">Nationality</label>
       <div class="nat-grid" id="nat-grid"></div>
+    </div>
+    <div>
+      <label class="flabel">Driving Style</label>
+      <div class="style-grid" id="style-grid">
+        <button class="style-btn sel" onclick="pickStyle('consistent')">
+          <div class="style-icon">🎯</div>
+          <div class="style-name">Consistent</div>
+          <div class="style-desc">Lower variance, steady progress</div>
+        </button>
+        <button class="style-btn" onclick="pickStyle('aggressive')">
+          <div class="style-icon">🔥</div>
+          <div class="style-name">Aggressive</div>
+          <div class="style-desc">High ceiling, more incidents</div>
+        </button>
+        <button class="style-btn" onclick="pickStyle('technical')">
+          <div class="style-icon">🧠</div>
+          <div class="style-name">Technical</div>
+          <div class="style-desc">Wet bonus, precision driving</div>
+        </button>
+      </div>
     </div>
     <button class="btn-primary" id="start-btn" onclick="onStart()" disabled>Start Career</button>
   </div>
@@ -602,6 +655,42 @@ const PTS_TABLE = [25,18,15,12,10,8,6,4,2,1];
 
 const RIVAL_FLAGS = ['🇩🇪','🇫🇷','🇮🇹','🇪🇸','🇳🇱','🇫🇮','🇧🇷','🇲🇽','🇦🇺','🇨🇦','🇺🇸','🇯🇵','🇦🇹','🇧🇪','🇩🇰','🇸🇪','🇳🇿','🇨🇴','🇬🇧'];
 const FEEDER_TEAMS = ['Apex Racing','Elite Motorsport','Speed Factory','Nordic Speed','Iron Cross','Titan Motorsport','Prestige Racing','Storm Racing','Alpha Academy','Lightning MS'];
+
+const CIRCUITS = {
+  karting:[
+    {id:'kc1',name:'Buckmore Park',rain:0.25,special:null},
+    {id:'kc2',name:'Shenington Kart',rain:0.25,special:null},
+    {id:'kc3',name:'PF International',rain:0.30,special:null},
+    {id:'kc4',name:'Rowrah Circuit',rain:0.25,special:null},
+    {id:'kc5',name:'Larkhall Park',rain:0.25,special:null},
+    {id:'kc6',name:'Clay Pigeon Kart',rain:0.35,special:null}
+  ],
+  feeder:[
+    {id:'fc1',name:'Vallelunga',rain:0.20,special:null},
+    {id:'fc2',name:'Misano Adriatico',rain:0.20,special:null},
+    {id:'fc3',name:'Imola Circuit',rain:0.25,special:null},
+    {id:'fc4',name:'Pau City Street',rain:0.25,special:'street'},
+    {id:'fc5',name:'Hockenheimring',rain:0.25,special:'slipstream'},
+    {id:'fc6',name:'Macau Bridge',rain:0.25,special:'dangerous'}
+  ],
+  f1:[
+    {id:'f1_monaco', name:'Monaco Royale',     rain:0.30,special:'monaco'},
+    {id:'f1_monza',  name:'Monza Veloce',      rain:0.20,special:'monza'},
+    {id:'f1_spa',    name:'Spa Ardennes',       rain:0.40,special:'spa'},
+    {id:'f1_suzuka', name:'Suzuka Spiral',      rain:0.25,special:'suzuka'},
+    {id:'f1_desert', name:'Desert Grand Prix',  rain:0.05,special:'desert'},
+    {id:'f1_home',   name:'Home Grand Prix',    rain:0.25,special:'home'}
+  ]
+};
+
+const SPONSOR_DEALS = [
+  {id:'redfuel',     icon:'🔴', name:'RedFuel Energy',      bonus:500000,  penalty:200000, bonusBonus:0,
+   condition:'top8',   conditionDesc:'Top 8 in championship'},
+  {id:'luxwatch',    icon:'⌚', name:'Prestige Chronos',     bonus:1000000, penalty:0,      bonusBonus:0,
+   condition:'rep50',  conditionDesc:'Reputation 50+ at season end'},
+  {id:'broadcaster', icon:'📡', name:'National Broadcaster', bonus:300000,  penalty:0,      bonusBonus:300000,
+   condition:'podium', conditionDesc:'Championship podium (P1–P3)'}
+];
 
 // ── EVENTS ──────────────────────────────────────
 const EVENTS = [
@@ -803,6 +892,7 @@ const EVENTS = [
 
 let S = null;
 let selectedNat = null;
+let selectedStyle = 'consistent';
 let activeTab = 'season';
 
 const HELMET_COLORS = [
@@ -829,6 +919,9 @@ function defaultState() {
     earnings:0, championships:0, podiums:0, wins:0,
     events:[], resolved:[], log:[],
     lastResult:null, gameOver:false, leagueStandings:null, seasonRivals:[],
+    drivingStyle:'consistent', circuitSeason:0, currentCircuit:null,
+    teamCarRating:null, weatherEffect:0, weatherRainForecast:false,
+    activeSponsors:[], sponsorDealsOffered:[], lastSponsorResults:[],
     firedCount:0, contractLocked:false, freeAgent:false, consecutiveBadF1:0,
     safetyCarEffect:0,
     helmetColor:'#e8000a', raceNumber:'', livery:'carbon', customNickname:''
@@ -876,14 +969,38 @@ function ptsFor(pos) {
 function simRace(totalCars) {
   let score = (S.Pace*0.35 + S.Racecraft*0.30 + S.Consistency*0.25 + S.Fitness*0.10) / 100;
   score += (S.Morale - 50) / 500;
+
   if (S.stageIdx === 4) {
-    const t = f1team();
-    if (t) score += t.tier===1 ? 0.28 : t.tier===2 ? 0.14 : 0;
+    // Team car rating replaces tier bonus
+    const cr = S.teamCarRating !== null ? S.teamCarRating :
+               (f1team() ? (f1team().tier===1?80:f1team().tier===2?55:35) : 35);
+    score += (cr - 50) / 300;
   } else {
     score += S.Reputation / 600;
   }
+
+  // Driving style variance
+  const style = S.drivingStyle || 'consistent';
+  const variance = style==='aggressive' ? 0.28 : style==='consistent' ? 0.14 : 0.20;
+  const offset   = style==='aggressive' ? -0.06 : style==='consistent' ? -0.02 : -0.04;
+  score += Math.random() * variance + offset;
+
+  // Circuit trait effect
+  const circuit = S.currentCircuit;
+  if (circuit && circuit.special) {
+    const spec = circuit.special;
+    if (spec==='monaco')  score += (S.Racecraft - 50) / 300;
+    if (spec==='monza')   score += (S.Pace - 50) / 300 + (style==='aggressive' ? 0.03 : 0);
+    if (spec==='spa')     score += (S.Racecraft - 50) / 350 + (style==='technical' ? 0.04 : 0);
+    if (spec==='suzuka')  score += (S.Consistency - 50) / 300;
+    if (spec==='desert')  score += (S.Fitness - 50) / 300;
+    if (spec==='home')    score += 0.04 + (S.Morale - 50) / 600;
+  }
+
+  // Weather effect from event choice
+  score += (S.weatherEffect || 0);
+
   score += (S.safetyCarEffect || 0);
-  score += (Math.random()*0.20 - 0.04);
   score = clamp(score, 0, 1);
   return clamp(Math.round((1-score)*(totalCars-1))+1, 1, totalCars);
 }
@@ -926,6 +1043,13 @@ function checkReady() {
   document.getElementById('start-btn').disabled = !name || selectedNat===null;
 }
 
+function pickStyle(style) {
+  selectedStyle = style;
+  document.querySelectorAll('.style-btn').forEach(b => {
+    b.classList.toggle('sel', b.getAttribute('onclick') === `pickStyle('${style}')`);
+  });
+}
+
 function goHome() {
   if (confirm('Return to main menu? Your progress is saved.')) showScreen('start');
 }
@@ -938,6 +1062,7 @@ function onStart() {
   S.natFlag = NATS[selectedNat].f;
   S.nat = NATS[selectedNat].n;
   S.nickname = NICKNAMES[rnd(0,NICKNAMES.length-1)];
+  S.drivingStyle = selectedStyle || 'consistent';
   genEvents();
   save();
   showScreen('game');
@@ -949,25 +1074,210 @@ function onStart() {
 // ══════════════════════════════════════════════
 
 function genEvents() {
-  const count = rnd(3,5);
+  // Reset per-season flags
+  S.weatherEffect = 0;
+  S.weatherRainForecast = false;
+  S.safetyCarEffect = 0;
+
+  // Pick circuit for this season
+  const stageKey = S.stageIdx === 4 ? 'f1' : S.stageIdx >= 1 ? 'feeder' : 'karting';
+  const circuitList = CIRCUITS[stageKey];
+  const circuitIdx = (S.circuitSeason || 0) % circuitList.length;
+  S.currentCircuit = circuitList[circuitIdx];
+  S.circuitSeason = (S.circuitSeason || 0) + 1;
+
+  // Regular events
+  const count = rnd(3,4);
   const pool = [...EVENTS];
   const picked = [];
   for (let i=0; i<count && pool.length; i++) {
     const j = rnd(0, pool.length-1);
     picked.push(pool.splice(j,1)[0]);
   }
+
+  // Circuit-specific event
+  picked.push(makeCircuitEvent(S.currentCircuit));
+
+  // Weather event (roll rain)
+  const rainChance = S.currentCircuit.rain || 0.25;
+  if (Math.random() < rainChance) {
+    S.weatherRainForecast = true;
+    const weatherEv = makeWeatherEvent(S.currentCircuit);
+    if (weatherEv) picked.push(weatherEv);
+  }
+
+  // Team development event (F1 only)
+  if (S.stageIdx === 4 && S.teamCarRating !== null) {
+    picked.push(makeTeamDevEvent());
+  }
+
+  // Sponsor deal event (F2+, once per deal)
+  if (S.stageIdx >= 3) {
+    const offered = S.sponsorDealsOffered || [];
+    const available = SPONSOR_DEALS.filter(d => !offered.includes(d.id));
+    if (available.length && Math.random() < 0.55) {
+      const deal = available[rnd(0, available.length-1)];
+      if (!S.sponsorDealsOffered) S.sponsorDealsOffered = [];
+      S.sponsorDealsOffered.push(deal.id);
+      picked.push(makeSponsorEvent(deal));
+    }
+  }
+
+  // Shuffle
+  for (let i=picked.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [picked[i],picked[j]] = [picked[j],picked[i]];
+  }
+
   S.events = picked;
   S.resolved = [];
   S.contractLocked = false;
   S.freeAgent = false;
-  S.safetyCarEffect = 0;
+
+  // Build season rivals
   const aiPool = S.stageIdx === 4 ? F1_AI : FEEDER_AI;
   const rivalCount = STAGES[S.stageIdx].cars - 1;
   S.seasonRivals = aiPool.slice(0, rivalCount).map((name, i) => ({
     name,
     flag: RIVAL_FLAGS[i % RIVAL_FLAGS.length],
-    team: S.stageIdx === 4 ? F1_TEAMS[i % F1_TEAMS.length].name : FEEDER_TEAMS[i % FEEDER_TEAMS.length]
+    team: S.stageIdx === 4 ? F1_TEAMS[i % F1_TEAMS.length].name : FEEDER_TEAMS[i % FEEDER_TEAMS.length],
+    tier: S.stageIdx === 4 ? F1_TEAMS[i % F1_TEAMS.length].tier : null
   }));
+}
+
+// ── EVENT FACTORIES ─────────────────────────────
+function makeCircuitEvent(circuit) {
+  const spec = circuit.special;
+  const generic = {id:'c_gen',cat:'Circuit',icon:'🏁',title:`Racing at ${circuit.name}`,
+    desc:`The circuit demands total focus. Every tenth counts here.`,
+    choices:[
+      {text:'Push for every tenth — no holds barred', fx:{Pace:+3,Fitness:-2}},
+      {text:'Balanced approach — craft over raw pace', fx:{Racecraft:+2,Consistency:+1}},
+      {text:'Nail the braking points, be consistent', fx:{Consistency:+3,Morale:-1}}
+    ]};
+  const map = {
+    monaco:{id:'c_monaco',cat:'Circuit',icon:'🎰',title:'Monaco Royale — Perfection Required',
+      desc:'The most glamorous race on the calendar. One wall touch ends your race. The entire world is watching every corner.',
+      choices:[
+        {text:'Commit fully — attack every apex', fx:{Racecraft:+4,Morale:+3,Fitness:-2}},
+        {text:'Manage the race and bank the points', fx:{Consistency:+3,Reputation:+2}},
+        {text:'Survive and score — no heroics today', fx:{Morale:-3,Reputation:+3}}
+      ]},
+    monza:{id:'c_monza',cat:'Circuit',icon:'💨',title:'Monza Slipstream War',
+      desc:'The train forms on the back straight. Everyone is within tenths. The slipstream decides everything.',
+      choices:[
+        {text:'Lead out of the chicane — defend on the line', fx:{Racecraft:+3,Pace:+2}},
+        {text:'Sit in the tow and pounce last lap', fx:{Racecraft:+2,Morale:+2}},
+        {text:'Stay out of the chaos — build a gap', fx:{Consistency:+3,Reputation:+1}}
+      ]},
+    spa:{id:'c_spa',cat:'Weather',icon:'⛈️',title:'Spa Ardennes Storm',
+      desc:'The Ardennes weather system has rolled in. The Eau Rouge puddles are already forming. Your team is arguing about tyres.',
+      choices:[
+        {text:'Full wet tyres — commit to the rain', fx:{Racecraft:+3,Consistency:+2}, weatherEffect:0.05},
+        {text:'Intermediates — gamble it dries', fx:{Pace:+3,Morale:+2,Consistency:-4}, weatherEffect:0.09},
+        {text:'Box and wait — safety car strategy', fx:{Consistency:+4,Morale:-2}, weatherEffect:0.02}
+      ]},
+    suzuka:{id:'c_suzuka',cat:'Circuit',icon:'⚙️',title:'Suzuka — The Setup Window',
+      desc:'Suzuka Spiral rewards technical perfection above all. Your engineers want to lock in the setup two days early.',
+      choices:[
+        {text:'Full technical setup — trust the data', fx:{Consistency:+5,Pace:+1}},
+        {text:'Balanced setup — flexibility for the race', fx:{Consistency:+3,Racecraft:+1}},
+        {text:'Override with your instinct', fx:{Pace:+4,Consistency:-3}}
+      ]},
+    desert:{id:'c_desert',cat:'Circuit',icon:'🌡️',title:'Desert Heat Management',
+      desc:'It\'s 48°C outside. The cockpit will be an oven. The night lights are spectacular — but the heat baked everyone all afternoon.',
+      choices:[
+        {text:'Full cooling protocols — ice vests, cold liquids', fx:{Fitness:+5,Morale:+2}},
+        {text:'Push through — you\'ve trained for this', fx:{Pace:+2,Fitness:-4}},
+        {text:'Manage energy from the start', fx:{Consistency:+3,Morale:-3}}
+      ]},
+    home:{id:'c_home',cat:'Circuit',icon:'🏠',title:'Home Grand Prix — The Nation Watches',
+      desc:`Your home grand prix. The crowd is chanting your name before you\'ve left the pit lane. Every camera follows you.`,
+      choices:[
+        {text:'Feed off it — this is what you\'ve dreamed of', fx:{Morale:+10,Racecraft:+3,Pace:+2}},
+        {text:'Stay focused — treat it like any other race', fx:{Consistency:+4,Morale:+3}},
+        {text:'Head down, just drive — block out the noise', fx:{Morale:-5,Consistency:+5}}
+      ]},
+    street:{id:'c_street',cat:'Circuit',icon:'🏙️',title:'Street Circuit Chaos',
+      desc:'Armco lines every wall. One mistake and your race is over. The barriers look close in qualifying — they\'re even closer in traffic.',
+      choices:[
+        {text:'Full attack — these streets are yours', fx:{Racecraft:+3,Morale:+4,Fitness:-2}},
+        {text:'Find your rhythm before attacking', fx:{Consistency:+3,Racecraft:+1}},
+        {text:'Score points — keep the car clean', fx:{Morale:-2,Reputation:+3}}
+      ]},
+    slipstream:{id:'c_slip',cat:'Circuit',icon:'💨',title:'Slipstream Festival',
+      desc:'Long straights create pack chaos. Raw top speed matters as much as racecraft. The braking zones will be crowded.',
+      choices:[
+        {text:'Bold moves at every braking zone', fx:{Racecraft:+4,Pace:+2}},
+        {text:'Save tyres and attack in the closing laps', fx:{Consistency:+2,Pace:+3}},
+        {text:'Control the pace from the front', fx:{Consistency:+3,Morale:-1}}
+      ]},
+    dangerous:{id:'c_danger',cat:'Circuit',icon:'⚠️',title:'The Dangerous One',
+      desc:'This track has ended careers and crowned legends in equal measure. Commitment through the fastest sections is total.',
+      choices:[
+        {text:'Commit fully — legends are made here', fx:{Racecraft:+5,Reputation:+5,Morale:+4,Fitness:-3}},
+        {text:'Find the limit, then push 5% further', fx:{Racecraft:+3,Pace:+2}},
+        {text:'Respect the danger — consistent clean laps', fx:{Consistency:+4,Morale:-2}}
+      ]}
+  };
+  return (spec && map[spec]) ? map[spec] : generic;
+}
+
+function makeWeatherEvent(circuit) {
+  if (circuit && circuit.special === 'spa') return null; // spa circuit event already covers weather
+  return {id:'w_rain',cat:'Weather',icon:'🌧️',title:'Race Day Rain Forecast',
+    desc:'Persistent rain is expected from the first formation lap. The pit wall strategy call will define your race.',
+    choices:[
+      {text:'Pit immediately for full wets — lead the reaction', fx:{Racecraft:+2,Consistency:+2}, weatherEffect:0.03},
+      {text:'Stay out on slicks — gamble it stays dry enough', fx:{Pace:+2,Morale:+3,Consistency:-3}, weatherEffect:0.07}
+    ]};
+}
+
+function makeTeamDevEvent() {
+  const cr = S.teamCarRating || 60;
+  const roll = Math.random();
+  let delta, title, desc, icon;
+  if (roll < 0.30) {
+    delta = rnd(8,15);
+    title = 'Winter Development Breakthrough';
+    desc = `The factory has made major gains over the winter. A significant upgrade package arrives for the first race. Car Rating +${delta}.`;
+    icon = '🔧';
+  } else if (roll < 0.55) {
+    delta = -rnd(5,12);
+    title = 'Key Engineers Depart';
+    desc = `Several senior engineers have left for a rival team. Development progress has stalled. Car Rating ${delta}.`;
+    icon = '📉';
+  } else if (roll < 0.78) {
+    delta = rnd(3,7);
+    title = 'Incremental Gains';
+    desc = `Steady development work has produced tangible results in the wind tunnel. The car is noticeably better in corners.`;
+    icon = '📊';
+  } else {
+    delta = rnd(-3,3);
+    title = 'Token Allocation Decision';
+    desc = `The team spent development tokens on reliability. Minimal performance change — but reliability should improve.`;
+    icon = '⚙️';
+  }
+  // Apply delta immediately to state
+  S.teamCarRating = clamp(cr + delta, 10, 100);
+  return {id:'td_dev',cat:'Team Dev',icon,title,desc,
+    choices: delta >= 0 ? [
+      {text:'Push for qualifying pace gains', fx:{Pace:+2}},
+      {text:'Optimise for race-day consistency', fx:{Consistency:+2}}
+    ] : [
+      {text:'Work overtime with remaining staff', fx:{Fitness:-2,Morale:-2}},
+      {text:'Accept it and focus on your own driving', fx:{Morale:-1,Consistency:+1}}
+    ]};
+}
+
+function makeSponsorEvent(deal) {
+  return {id:`sp_${deal.id}`,cat:'Sponsorship',icon:deal.icon,
+    title:`${deal.name} Approach`,
+    desc:`${deal.name} wants you as their ambassador. ${fmtMoney(deal.bonus)} upfront — but there are conditions: ${deal.conditionDesc}.`,
+    choices:[
+      {text:`Accept the deal`, fx:{Reputation:+4,Morale:+3}, money:deal.bonus, sponsorId:deal.id},
+      {text:'Decline — not the right fit right now', fx:{}}
+    ]};
 }
 
 function resolveEvent(ei, ci) {
@@ -991,6 +1301,14 @@ function resolveEvent(ei, ci) {
     S.safetyCarEffect = parseFloat(((Math.random() * 0.30) - 0.12).toFixed(3));
   } else if (ch.safetyCarChoice === 'safe') {
     S.safetyCarEffect = 0.04;
+  }
+  if (ch.weatherEffect !== undefined) S.weatherEffect = ch.weatherEffect;
+  if (ch.sponsorId) {
+    const deal = SPONSOR_DEALS.find(d => d.id === ch.sponsorId);
+    if (deal) {
+      if (!S.activeSponsors) S.activeSponsors = [];
+      S.activeSponsors.push({...deal});
+    }
   }
   S.resolved.push(ei);
   save();
@@ -1041,8 +1359,27 @@ function raceTheSeason() {
     const teamName = d.me
       ? (S.stageIdx===4 && f1team() ? f1team().name : st.label)
       : (rival ? rival.team : '');
-    return {...d, flag: d.me ? S.natFlag : (rival ? rival.flag : ''), team: teamName, form};
+    const tier = d.me
+      ? (S.stageIdx===4 && f1team() ? f1team().tier : null)
+      : (rival ? rival.tier : null);
+    return {...d, flag: d.me ? S.natFlag : (rival ? rival.flag : ''), team: teamName, form, tier};
   });
+
+  // Resolve sponsor obligations
+  const sponsorResults = [];
+  if (S.activeSponsors && S.activeSponsors.length) {
+    for (const sp of S.activeSponsors) {
+      let met = false;
+      if (sp.condition === 'top8')   met = champPos <= 8;
+      if (sp.condition === 'rep50')  met = S.Reputation >= 50;
+      if (sp.condition === 'podium') met = champPos <= 3;
+      if (!met && sp.penalty)    S.earnings = Math.max(0, S.earnings - sp.penalty);
+      if (met && sp.bonusBonus)  S.earnings += sp.bonusBonus;
+      sponsorResults.push({name:sp.name, icon:sp.icon||'📋', met, penalty:sp.penalty||0, bonusBonus:sp.bonusBonus||0, conditionDesc:sp.conditionDesc||''});
+    }
+    S.activeSponsors = [];
+  }
+  S.lastSponsorResults = sponsorResults;
 
   // Earnings
   let seasonEarn;
@@ -1118,16 +1455,21 @@ function raceTheSeason() {
     }
   }
 
+  const wasRain = S.weatherRainForecast || false;
+  const circuitName = S.currentCircuit ? S.currentCircuit.name : null;
+
   const logEntry = {
     season:S.seasonNum, stage:st.label, avgPos, champPos,
     wins:playerWins, podiums:playerPodiums, earnings:seasonEarn,
     champWon:champPos===1, promoted, fired, promotedTo, newTeamName,
-    team: S.stageIdx===4 ? f1team()?.name : null
+    team: S.stageIdx===4 ? f1team()?.name : null,
+    wasRain, circuitName
   };
   S.log.unshift(logEntry);
 
   S.lastResult = {
-    ...logEntry, deltas, standings:standings.slice(0,5), totalCars:st.cars
+    ...logEntry, deltas, standings:standings.slice(0,5), totalCars:st.cars,
+    sponsorResults
   };
 
   S.age++;
@@ -1164,6 +1506,7 @@ function assignF1Team() {
   const tier = S.Reputation>=70 ? 1 : S.Reputation>=45 ? 2 : 3;
   const pool = F1_TEAMS.filter(t=>t.tier===tier);
   S.f1TeamIdx = F1_TEAMS.indexOf(pool[rnd(0,pool.length-1)]);
+  S.teamCarRating = tier===1 ? rnd(72,88) : tier===2 ? rnd(50,68) : rnd(28,46);
 }
 
 // ══════════════════════════════════════════════
@@ -1243,6 +1586,7 @@ function renderHeader() {
             <span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:${helmet};border:2px solid rgba(255,255,255,.25);vertical-align:middle;margin-right:5px;flex-shrink:0"></span>${esc(S.natFlag)} ${esc(S.name)}${numBadge}
           </div>
           <div class="hdr-team">${esc(teamStr)} · Season ${S.seasonNum}</div>
+          ${S.currentCircuit ? `<div class="circuit-badge">🏁 ${esc(S.currentCircuit.name)}${S.weatherRainForecast?'<span class="rain-tag">· 🌧️ Rain</span>':''}</div>` : ''}
         </div>
       </div>
       <div class="hdr-right">
@@ -1282,16 +1626,28 @@ function renderStats() {
   const contractStr = S.stageIdx===4 && t
     ? fmtMoney(t.pay)+'/yr'
     : fmtMoney(st.earnings)+'/season';
+  const styleIcons = {aggressive:'🔥',technical:'🧠',consistent:'🎯'};
+  const styleLabel = S.drivingStyle || 'consistent';
+  const carRatingHtml = (S.stageIdx===4 && S.teamCarRating!==null) ? `
+    <div style="margin-top:7px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:8px 10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--dim);text-transform:uppercase">Car Rating</span>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--gold)">${S.teamCarRating}</span>
+      </div>
+      <div class="car-rating-track"><div class="car-rating-fill" style="width:${S.teamCarRating}%"></div></div>
+    </div>` : '';
 
   document.getElementById('stats-sec').innerHTML = `
     <div class="section-title">Driver Stats</div>
     <div class="stats-grid">${bars}</div>
+    ${carRatingHtml}
     <div class="earn-row">
       <span class="earn-lbl">Career Earnings</span>
       <span class="earn-val">${fmtMoney(S.earnings)}</span>
     </div>
-    <div style="font-size:11px;color:var(--dim);text-align:right;margin-top:4px;margin-bottom:2px">
-      Contract value: ${contractStr}
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-top:4px;margin-bottom:2px">
+      <span>${styleIcons[styleLabel]} ${styleLabel.charAt(0).toUpperCase()+styleLabel.slice(1)}</span>
+      <span>Contract: ${contractStr}</span>
     </div>
     <div class="career-row">
       <div class="cs"><div class="cs-val">${S.championships}</div><div class="cs-lbl">Titles</div></div>
@@ -1397,12 +1753,13 @@ function renderLeague() {
     const pCls = i===0 ? 'p1' : '';
     const meCls = d.me ? 'me-row' : '';
     const formDots = (d.form||[]).map(f=>`<div class="form-dot ${f}"></div>`).join('');
+    const tierDot = (d.tier && S.stageIdx===4) ? `<span class="tier-dot t${d.tier}"></span>` : '';
     return `<div class="league-row ${meCls}" style="transition-delay:${i*40}ms">
       <div class="lg-pos ${pCls}">${i+1}</div>
       <div class="lg-flag">${d.flag||''}</div>
       <div class="lg-info">
         <div class="lg-name">${d.me?esc(S.name):esc(d.name)}</div>
-        <div class="lg-team">${esc(d.team||'')}</div>
+        <div class="lg-team">${esc(d.team||'')}${tierDot}</div>
       </div>
       <div>
         <div class="lg-pts">${d.pts}</div>
@@ -1486,6 +1843,16 @@ function renderResultsCard() {
       <span class="earn-b-val">${fmtMoney(r.earnings)}</span>
     </div>
     ${moveBanner}
+    ${(r.sponsorResults && r.sponsorResults.length) ? `
+      <div class="section-title" style="margin:10px 0 6px">Sponsor Obligations</div>
+      ${r.sponsorResults.map(sp=>`
+        <div class="sponsor-row">
+          <div>
+            <div class="sponsor-name">${sp.icon} ${esc(sp.name)}</div>
+            <div class="sponsor-cond">${sp.conditionDesc} — ${sp.met?'✅ Met':'❌ Failed'}</div>
+          </div>
+          <div class="sponsor-badge ${sp.met?'pass':'fail'}">${sp.met?(sp.bonusBonus?`+${fmtMoney(sp.bonusBonus)}`:'✓'):`−${fmtMoney(sp.penalty)}`}</div>
+        </div>`).join('')}` : ''}
     <div class="section-title" style="margin:0 0 6px">Championship Standings</div>
     <table class="standings">
       <thead><tr><th>#</th><th>Driver</th><th style="text-align:right">PTS</th></tr></thead>
@@ -1499,6 +1866,18 @@ function effectiveNickname() {
 }
 
 function pickHeadline(r) {
+  if (r.wasRain) {
+    if (r.champPos === 1) return ['A masterclass in the wet!','Rain master claims the title','Brilliant through the spray'][rnd(0,2)];
+    if (r.champPos <= 3)  return ['Stellar wet-weather drive','Cool head in chaotic conditions','Composed through the spray'][rnd(0,2)];
+  }
+  if (r.circuitName === 'Monaco Royale') {
+    if (r.champPos === 1) return ['Monaco Royale champion — the streets belonged to them!','The king of the streets!'][rnd(0,1)];
+    if (r.champPos <= 3)  return ['A Monaco podium for the ages','Street fighter shows their class'][rnd(0,1)];
+  }
+  if (r.circuitName === 'Home Grand Prix') {
+    if (r.champPos === 1) return ['Home hero! The crowd goes wild!','The home faithful roar their champion home'][rnd(0,1)];
+    if (r.champPos <= 3)  return ['Home podium delights the crowd','Local hero delivers on the big stage'][rnd(0,1)];
+  }
   if (r.champWon)       return ['Championship glory at last!','Dominant title campaign','The title is theirs!'][rnd(0,2)];
   if (r.champPos <= 3)  return ['Championship podium — the future is bright','Strong season raises expectations','Closing in on the top'][rnd(0,2)];
   if (r.fired)          return ['A difficult year raises hard questions','Under pressure from all sides','The comeback starts now'][rnd(0,2)];
@@ -1578,11 +1957,13 @@ function restartGame() {
   clearSave();
   S = null;
   selectedNat = null;
+  selectedStyle = 'consistent';
   activeTab = 'season';
   document.getElementById('screen-gameover').style.display = 'none';
   showScreen('start');
   document.getElementById('driver-name').value = '';
   document.querySelectorAll('.nat-btn').forEach(b=>b.classList.remove('sel'));
+  document.querySelectorAll('.style-btn').forEach(b=>b.classList.toggle('sel', b.getAttribute('onclick')==="pickStyle('consistent')"));
   document.getElementById('start-btn').disabled = true;
 }
 
