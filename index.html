@@ -439,6 +439,62 @@ body{
 .ev-card.grave{border-color:#444}
 .ev-card.grave .ev-cat{color:var(--dim)}
 .ev-card.grave .ev-icon{filter:grayscale(1)}
+
+/* ─── HOME BUTTON ─── */
+.btn-home{background:none;border:none;cursor:pointer;color:var(--dim);font-size:18px;padding:4px 6px;border-radius:var(--rs);transition:color .15s,background .15s;flex-shrink:0;line-height:1}
+.btn-home:hover{background:rgba(255,255,255,.07);color:var(--text)}
+
+/* ─── TIER GLOW ─── */
+#game-header{transition:border-bottom-color .4s,box-shadow .4s}
+#game-header.tier-top{border-bottom-color:rgba(232,0,10,.4);box-shadow:0 2px 18px -4px rgba(232,0,10,.45)}
+#game-header.tier-mid{border-bottom-color:rgba(245,166,35,.35);box-shadow:0 2px 18px -4px rgba(245,166,35,.38)}
+#game-header.tier-back{border-bottom-color:rgba(120,120,160,.3);box-shadow:0 2px 10px -4px rgba(120,120,160,.2)}
+
+/* ─── TAB FADE ─── */
+.tab-content{animation:tabFadeIn .2s ease both}
+@keyframes tabFadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ─── TINDER CARDS ─── */
+.tinder-wrap{display:flex;flex-direction:column;align-items:center;padding:8px 0 16px}
+.tinder-dots{display:flex;gap:7px;margin-bottom:16px}
+.tinder-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .2s}
+.tinder-dot.done{background:var(--green)}
+.tinder-dot.active{background:var(--red)}
+#tinder-card{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);width:100%;padding:24px 20px 18px;transition:opacity .25s,transform .25s;opacity:1;transform:none}
+#tinder-card.exit{opacity:0;transform:translateY(-14px);pointer-events:none}
+#tinder-card.enter{animation:cardEnter .25s ease both}
+#tinder-card.grave{border-color:#444}
+#tinder-card.grave .tinder-cat{color:var(--dim)}
+@keyframes cardEnter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.tinder-icon{font-size:44px;text-align:center;margin-bottom:10px;line-height:1}
+.tinder-cat{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--red);text-transform:uppercase;text-align:center;margin-bottom:4px}
+.tinder-title{font-family:'Barlow Condensed',sans-serif;font-size:23px;font-weight:700;line-height:1.2;text-align:center;margin-bottom:10px}
+.tinder-desc{font-size:13.5px;color:var(--dim);line-height:1.55;text-align:center;margin-bottom:18px}
+.tinder-choices{display:flex;flex-direction:column;gap:8px}
+.tinder-choice{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text);cursor:pointer;font-family:'Barlow',sans-serif;font-size:13px;padding:10px 12px;text-align:left;width:100%;transition:border-color .15s,background .15s,transform .1s}
+.tinder-choice:hover{border-color:var(--red);background:rgba(232,0,10,.08)}
+.tinder-choice:active{transform:scale(.98)}
+.tinder-all-done{text-align:center;padding:20px 0 8px;width:100%}
+.tinder-all-done-icon{font-size:36px;margin-bottom:8px}
+.tinder-all-done-text{font-family:'Barlow Condensed',sans-serif;font-size:15px;color:var(--dim);letter-spacing:.5px}
+
+/* ─── LEAGUE TABLE ─── */
+.league-row{display:grid;grid-template-columns:24px 22px 1fr 52px 38px;align-items:center;gap:6px;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.04);opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s}
+.league-row.visible{opacity:1;transform:none}
+.league-row:last-child{border-bottom:none}
+.league-row.me-row .lg-name{color:var(--red);font-weight:700}
+.lg-pos{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--dim);text-align:center}
+.lg-pos.p1{color:var(--gold)}
+.lg-flag{font-size:15px;text-align:center}
+.lg-info{min-width:0}
+.lg-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lg-team{font-size:10px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.lg-pts{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;text-align:right;white-space:nowrap}
+.lg-gap{font-size:10px;color:var(--dim);text-align:right;margin-top:1px}
+.lg-form{display:flex;gap:3px;justify-content:flex-end;align-items:center}
+.form-dot{width:7px;height:7px;border-radius:50%;background:var(--border)}
+.form-dot.pod{background:var(--gold)}
+.form-dot.pts{background:var(--green)}
 </style>
 </head>
 <body>
@@ -470,6 +526,7 @@ body{
     <div id="events-sec"></div>
     <div id="log-sec"></div>
     <div id="car-sec" class="hidden"></div>
+    <div id="league-sec" class="hidden"></div>
   </div>
   <div id="bottom-bar">
     <button id="race-btn" onclick="raceTheSeason()" disabled>
@@ -542,6 +599,9 @@ const F1_AI = ['Hamilton Jr','Schumacher III','Alonso II','Verstappen II',
   'Ricciardo III','Tsunoda Jr','Stroll Jr','Magnussen Jr','Sargeant II'];
 
 const PTS_TABLE = [25,18,15,12,10,8,6,4,2,1];
+
+const RIVAL_FLAGS = ['🇩🇪','🇫🇷','🇮🇹','🇪🇸','🇳🇱','🇫🇮','🇧🇷','🇲🇽','🇦🇺','🇨🇦','🇺🇸','🇯🇵','🇦🇹','🇧🇪','🇩🇰','🇸🇪','🇳🇿','🇨🇴','🇬🇧'];
+const FEEDER_TEAMS = ['Apex Racing','Elite Motorsport','Speed Factory','Nordic Speed','Iron Cross','Titan Motorsport','Prestige Racing','Storm Racing','Alpha Academy','Lightning MS'];
 
 // ── EVENTS ──────────────────────────────────────
 const EVENTS = [
@@ -768,7 +828,7 @@ function defaultState() {
     Pace:42, Racecraft:40, Consistency:40, Fitness:42, Reputation:30, Morale:62,
     earnings:0, championships:0, podiums:0, wins:0,
     events:[], resolved:[], log:[],
-    lastResult:null, gameOver:false,
+    lastResult:null, gameOver:false, leagueStandings:null, seasonRivals:[],
     firedCount:0, contractLocked:false, freeAgent:false, consecutiveBadF1:0,
     safetyCarEffect:0,
     helmetColor:'#e8000a', raceNumber:'', livery:'carbon', customNickname:''
@@ -866,6 +926,10 @@ function checkReady() {
   document.getElementById('start-btn').disabled = !name || selectedNat===null;
 }
 
+function goHome() {
+  if (confirm('Return to main menu? Your progress is saved.')) showScreen('start');
+}
+
 function onStart() {
   const name = document.getElementById('driver-name').value.trim();
   if (!name || selectedNat===null) return;
@@ -897,6 +961,13 @@ function genEvents() {
   S.contractLocked = false;
   S.freeAgent = false;
   S.safetyCarEffect = 0;
+  const aiPool = S.stageIdx === 4 ? F1_AI : FEEDER_AI;
+  const rivalCount = STAGES[S.stageIdx].cars - 1;
+  S.seasonRivals = aiPool.slice(0, rivalCount).map((name, i) => ({
+    name,
+    flag: RIVAL_FLAGS[i % RIVAL_FLAGS.length],
+    team: S.stageIdx === 4 ? F1_TEAMS[i % F1_TEAMS.length].name : FEEDER_TEAMS[i % FEEDER_TEAMS.length]
+  }));
 }
 
 function resolveEvent(ei, ci) {
@@ -923,7 +994,14 @@ function resolveEvent(ei, ci) {
   }
   S.resolved.push(ei);
   save();
-  renderAll();
+  const card = document.getElementById('tinder-card');
+  if (card) {
+    card.classList.remove('enter');
+    card.classList.add('exit');
+    setTimeout(() => renderAll(), 280);
+  } else {
+    renderAll();
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -948,6 +1026,23 @@ function raceTheSeason() {
   const aiPool = S.stageIdx===4 ? F1_AI : FEEDER_AI;
   const standings = buildStandings(aiPool, st.cars, st.rounds, playerPts);
   const champPos = standings.findIndex(r=>r.me)+1;
+
+  // Build full league standings with flag/team/form
+  const rivals = S.seasonRivals || [];
+  S.leagueStandings = standings.map(d => {
+    const rival = rivals.find(r => r.name === d.name);
+    const avgPts = d.pts / st.rounds;
+    const form = Array.from({length:5}, () => {
+      const rv = Math.random();
+      if (avgPts >= 12) return rv < 0.55 ? 'pod' : rv < 0.9 ? 'pts' : 'none';
+      if (avgPts >= 4)  return rv < 0.15 ? 'pod' : rv < 0.65 ? 'pts' : 'none';
+      return rv < 0.05 ? 'pod' : rv < 0.3 ? 'pts' : 'none';
+    });
+    const teamName = d.me
+      ? (S.stageIdx===4 && f1team() ? f1team().name : st.label)
+      : (rival ? rival.team : '');
+    return {...d, flag: d.me ? S.natFlag : (rival ? rival.flag : ''), team: teamName, form};
+  });
 
   // Earnings
   let seasonEarn;
@@ -1103,19 +1198,27 @@ function closeResults() {
 function renderAll() {
   renderHeader();
   const onSeason = activeTab === 'season';
+  const onCar = activeTab === 'car';
+  const onLeague = activeTab === 'league';
   document.getElementById('stats-sec').classList.toggle('hidden', !onSeason);
   document.getElementById('events-sec').classList.toggle('hidden', !onSeason);
   document.getElementById('log-sec').classList.toggle('hidden', !onSeason);
   document.getElementById('bottom-bar').classList.toggle('hidden', !onSeason);
-  document.getElementById('car-sec').classList.toggle('hidden', onSeason);
+  document.getElementById('car-sec').classList.toggle('hidden', !onCar);
+  document.getElementById('league-sec').classList.toggle('hidden', !onLeague);
   if (onSeason) {
     renderStats();
     renderEvents();
     renderLog();
     updateRaceBtn();
+  } else if (onLeague) {
+    renderLeague();
   } else {
     renderCarTab();
   }
+  // Tab fade
+  const wrap = document.querySelector('.wrap');
+  if (wrap) { wrap.classList.remove('tab-content'); void wrap.offsetWidth; wrap.classList.add('tab-content'); }
 }
 
 function switchTab(tab) {
@@ -1133,11 +1236,14 @@ function renderHeader() {
     : '';
   document.getElementById('game-header').innerHTML = `
     <div class="hdr-top">
-      <div>
-        <div class="hdr-name">
-          <span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:${helmet};border:2px solid rgba(255,255,255,.25);vertical-align:middle;margin-right:5px;flex-shrink:0"></span>${esc(S.natFlag)} ${esc(S.name)}${numBadge}
+      <div style="display:flex;align-items:center;gap:8px;min-width:0">
+        <button class="btn-home" onclick="goHome()">🏠</button>
+        <div style="min-width:0">
+          <div class="hdr-name">
+            <span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:${helmet};border:2px solid rgba(255,255,255,.25);vertical-align:middle;margin-right:5px;flex-shrink:0"></span>${esc(S.natFlag)} ${esc(S.name)}${numBadge}
+          </div>
+          <div class="hdr-team">${esc(teamStr)} · Season ${S.seasonNum}</div>
         </div>
-        <div class="hdr-team">${esc(teamStr)} · Season ${S.seasonNum}</div>
       </div>
       <div class="hdr-right">
         <span class="hdr-age">Age ${S.age}</span>
@@ -1147,7 +1253,14 @@ function renderHeader() {
     <div class="tab-bar">
       <button class="tab-pill${activeTab==='season'?' active':''}" onclick="switchTab('season')">Season</button>
       <button class="tab-pill${activeTab==='car'?' active':''}" onclick="switchTab('car')">🚗 My Car</button>
+      <button class="tab-pill${activeTab==='league'?' active':''}" onclick="switchTab('league')">🏆 League</button>
     </div>`;
+  // Apply tier glow
+  const hdr = document.getElementById('game-header');
+  hdr.classList.remove('tier-top','tier-mid','tier-back');
+  if (S.stageIdx===4 && t) {
+    hdr.classList.add(t.tier===1?'tier-top':t.tier===2?'tier-mid':'tier-back');
+  }
 }
 
 function renderStats() {
@@ -1160,7 +1273,7 @@ function renderStats() {
         <span class="stat-name">${k}</span>
         <span class="stat-val">${v}</span>
       </div>
-      <div class="stat-track"><div class="stat-fill ${fc}" style="width:${v}%"></div></div>
+      <div class="stat-track"><div class="stat-fill ${fc}" style="width:0" data-w="${v}%"></div></div>
     </div>`;
   }).join('');
 
@@ -1186,43 +1299,65 @@ function renderStats() {
       <div class="cs"><div class="cs-val">${S.podiums}</div><div class="cs-lbl">Podiums</div></div>
       <div class="cs"><div class="cs-val">${S.seasonsInF1}</div><div class="cs-lbl">F1 Seasons</div></div>
     </div>`;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll('.stat-fill[data-w]').forEach(el => { el.style.width = el.dataset.w; });
+  }));
 }
 
 function renderEvents() {
-  const cards = S.events.map((ev,i) => {
-    const done = S.resolved.includes(i);
-    const choices = ev.choices.map((c,ci) => {
-      const tags = Object.entries(c.fx||{}).filter(([,v])=>v!==0).map(([k,v]) => {
-        const cls = v>0?'pos':v<0?'neg':'neu';
-        return `<span class="fx-tag ${cls}">${k} ${v>0?'+':''}${v}</span>`;
-      });
-      if (c.money) tags.push(`<span class="fx-tag pos">+${fmtMoney(c.money)}</span>`);
-      if (c.fineByStage) tags.push(`<span class="fx-tag neg">−${fmtMoney(c.fineByStage[S.stageIdx])}</span>`);
-      if (c.fiaTone) tags.push(`<span class="fx-tag neu">FIA unhappy</span>`);
-      if (c.rollFx) tags.push(`<span class="fx-tag neu">30% penalty reversed</span>`);
-      if (c.safetyCarChoice==='gamble') tags.push(`<span class="fx-tag neu">Big position swing</span>`);
-      if (c.safetyCarChoice==='safe') tags.push(`<span class="fx-tag pos">Consistency +1</span>`);
-      return `<button class="choice-btn" onclick="resolveEvent(${i},${ci})">
-        <div>${esc(c.text)}</div>
-        <div class="fx">${tags.join('')}</div>
-      </button>`;
-    }).join('');
-    return `<div class="ev-card${done?' resolved':''}${ev.grave?' grave':''}">
-      <div class="ev-head">
-        <span class="ev-icon">${ev.icon}</span>
-        <div>
-          <div class="ev-cat">${ev.cat}</div>
-          <div class="ev-title">${esc(ev.title)}</div>
+  const total = S.events.length;
+  const resolvedCount = S.resolved.length;
+
+  const dots = S.events.map((ev, i) => {
+    const isDone = S.resolved.includes(i);
+    const firstUnresolved = S.events.findIndex((_, j) => !S.resolved.includes(j));
+    const isActive = !isDone && i === firstUnresolved;
+    return `<div class="tinder-dot${isDone?' done':isActive?' active':''}"></div>`;
+  }).join('');
+
+  if (resolvedCount >= total) {
+    document.getElementById('events-sec').innerHTML = `
+      <div class="tinder-wrap">
+        <div class="tinder-dots">${dots}</div>
+        <div class="tinder-all-done">
+          <div class="tinder-all-done-icon">✅</div>
+          <div class="tinder-all-done-text">All events resolved — ready to race!</div>
         </div>
-      </div>
-      <div class="ev-desc">${esc(ev.desc)}</div>
-      <div class="ev-choices">${choices}</div>
-    </div>`;
+      </div>`;
+    return;
+  }
+
+  const ei = S.events.findIndex((_, i) => !S.resolved.includes(i));
+  const ev = S.events[ei];
+
+  const choices = ev.choices.map((c, ci) => {
+    const tags = Object.entries(c.fx||{}).filter(([,v])=>v!==0).map(([k,v]) => {
+      const cls = v>0?'pos':v<0?'neg':'neu';
+      return `<span class="fx-tag ${cls}">${k} ${v>0?'+':''}${v}</span>`;
+    });
+    if (c.money) tags.push(`<span class="fx-tag pos">+${fmtMoney(c.money)}</span>`);
+    if (c.fineByStage) tags.push(`<span class="fx-tag neg">−${fmtMoney(c.fineByStage[S.stageIdx])}</span>`);
+    if (c.fiaTone) tags.push(`<span class="fx-tag neu">FIA unhappy</span>`);
+    if (c.rollFx) tags.push(`<span class="fx-tag neu">30% penalty reversed</span>`);
+    if (c.safetyCarChoice==='gamble') tags.push(`<span class="fx-tag neu">Big position swing</span>`);
+    if (c.safetyCarChoice==='safe') tags.push(`<span class="fx-tag pos">Consistency +1</span>`);
+    return `<button class="tinder-choice" onclick="resolveEvent(${ei},${ci})">
+      <div>${esc(c.text)}</div>
+      ${tags.length ? `<div class="fx" style="margin-top:5px">${tags.join('')}</div>` : ''}
+    </button>`;
   }).join('');
 
   document.getElementById('events-sec').innerHTML = `
-    <div class="section-title">Season Events · ${S.resolved.length}/${S.events.length} resolved</div>
-    <div class="events-list">${cards}</div>`;
+    <div class="tinder-wrap">
+      <div class="tinder-dots">${dots}</div>
+      <div id="tinder-card" class="enter${ev.grave?' grave':''}">
+        <div class="tinder-icon">${ev.icon}</div>
+        <div class="tinder-cat">${ev.cat}</div>
+        <div class="tinder-title">${esc(ev.title)}</div>
+        <div class="tinder-desc">${esc(ev.desc)}</div>
+        <div class="tinder-choices">${choices}</div>
+      </div>
+    </div>`;
 }
 
 function renderLog() {
@@ -1246,6 +1381,42 @@ function renderLog() {
   document.getElementById('log-sec').innerHTML = `
     <div class="section-title">Career Log</div>
     <div class="log-list">${entries}</div>`;
+}
+
+function renderLeague() {
+  const el = document.getElementById('league-sec');
+  if (!S.leagueStandings) {
+    el.innerHTML = `
+      <div class="section-title">Championship Standings</div>
+      <div style="padding:28px 0;text-align:center;color:var(--dim);font-size:13px">Race your first season to see standings</div>`;
+    return;
+  }
+  const leader = S.leagueStandings[0];
+  const rows = S.leagueStandings.map((d, i) => {
+    const gap = i===0 ? 'Leader' : `–${leader.pts - d.pts} pts`;
+    const pCls = i===0 ? 'p1' : '';
+    const meCls = d.me ? 'me-row' : '';
+    const formDots = (d.form||[]).map(f=>`<div class="form-dot ${f}"></div>`).join('');
+    return `<div class="league-row ${meCls}" style="transition-delay:${i*40}ms">
+      <div class="lg-pos ${pCls}">${i+1}</div>
+      <div class="lg-flag">${d.flag||''}</div>
+      <div class="lg-info">
+        <div class="lg-name">${d.me?esc(S.name):esc(d.name)}</div>
+        <div class="lg-team">${esc(d.team||'')}</div>
+      </div>
+      <div>
+        <div class="lg-pts">${d.pts}</div>
+        <div class="lg-gap">${gap}</div>
+      </div>
+      <div class="lg-form">${formDots}</div>
+    </div>`;
+  }).join('');
+  el.innerHTML = `
+    <div class="section-title">Championship Standings</div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden">${rows}</div>`;
+  requestAnimationFrame(() => {
+    el.querySelectorAll('.league-row').forEach(row => row.classList.add('visible'));
+  });
 }
 
 function updateRaceBtn() {
@@ -1492,27 +1663,27 @@ function buildCarSVG() {
 
   <!-- ═══════════ REAR WHEEL ═══════════ -->
   <!-- tyre outer -->
-  <circle cx="266" cy="128" r="26" fill="url(#tireG)"/>
+  <circle cx="266" cy="128" r="28" fill="url(#tireG)"/>
   <!-- tyre sidewall ring -->
-  <circle cx="266" cy="128" r="26" fill="none" stroke="#1c1c26" stroke-width="3.5"/>
-  <circle cx="266" cy="128" r="22.5" fill="none" stroke="#161620" stroke-width="1.2"/>
+  <circle cx="266" cy="128" r="28" fill="none" stroke="#1c1c26" stroke-width="3.5"/>
+  <circle cx="266" cy="128" r="24" fill="none" stroke="#161620" stroke-width="1.2"/>
   <!-- tyre brand strip (thin coloured ring) -->
-  <circle cx="266" cy="128" r="20" fill="none" stroke="${dc.m}" stroke-width="1.2" opacity="0.5"/>
+  <circle cx="266" cy="128" r="21.5" fill="none" stroke="${dc.m}" stroke-width="1.2" opacity="0.5"/>
   <!-- rim dish -->
-  <circle cx="266" cy="128" r="17.5" fill="url(#rimG)"/>
+  <circle cx="266" cy="128" r="19" fill="url(#rimG)"/>
   <!-- 5-spoke pattern (rotate transform for even spacing at 72°) -->
   <g stroke="${dc.m}" stroke-width="2.8" stroke-linecap="round" opacity="0.9">
-    <line x1="266" y1="111" x2="266" y2="145"/>
-    <line x1="266" y1="111" x2="266" y2="145" transform="rotate(72,266,128)"/>
-    <line x1="266" y1="111" x2="266" y2="145" transform="rotate(144,266,128)"/>
-    <line x1="266" y1="111" x2="266" y2="145" transform="rotate(216,266,128)"/>
-    <line x1="266" y1="111" x2="266" y2="145" transform="rotate(288,266,128)"/>
+    <line x1="266" y1="109" x2="266" y2="147"/>
+    <line x1="266" y1="109" x2="266" y2="147" transform="rotate(72,266,128)"/>
+    <line x1="266" y1="109" x2="266" y2="147" transform="rotate(144,266,128)"/>
+    <line x1="266" y1="109" x2="266" y2="147" transform="rotate(216,266,128)"/>
+    <line x1="266" y1="109" x2="266" y2="147" transform="rotate(288,266,128)"/>
   </g>
   <!-- centre cap -->
   <circle cx="266" cy="128" r="5.5" fill="#0c0c18"/>
   <circle cx="266" cy="128" r="3" fill="${dc.m}"/>
   <!-- tyre highlight -->
-  <path d="M 248,108 Q 266,101 284,110" stroke="rgba(255,255,255,0.06)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M 246,106 Q 266,99 286,108" stroke="rgba(255,255,255,0.06)" stroke-width="3" fill="none" stroke-linecap="round"/>
 
   <!-- ═══════════ MAIN BODY ═══════════ -->
   <!-- floor plate (very thin, near ground) -->
@@ -1610,22 +1781,22 @@ function buildCarSVG() {
   <!-- front pushrod -->
   <line x1="96" y1="119" x2="86" y2="132" stroke="rgba(255,255,255,0.08)" stroke-width="1.2" stroke-linecap="round"/>
 
-  <circle cx="82" cy="128" r="26" fill="url(#tireG)"/>
-  <circle cx="82" cy="128" r="26" fill="none" stroke="#1c1c26" stroke-width="3.5"/>
-  <circle cx="82" cy="128" r="22.5" fill="none" stroke="#161620" stroke-width="1.2"/>
-  <circle cx="82" cy="128" r="20" fill="none" stroke="${dc.m}" stroke-width="1.2" opacity="0.5"/>
-  <circle cx="82" cy="128" r="17.5" fill="url(#rimG)"/>
-  <g stroke="${dc.m}" stroke-width="2.8" stroke-linecap="round" opacity="0.9">
-    <line x1="82" y1="111" x2="82" y2="145"/>
-    <line x1="82" y1="111" x2="82" y2="145" transform="rotate(72,82,128)"/>
-    <line x1="82" y1="111" x2="82" y2="145" transform="rotate(144,82,128)"/>
-    <line x1="82" y1="111" x2="82" y2="145" transform="rotate(216,82,128)"/>
-    <line x1="82" y1="111" x2="82" y2="145" transform="rotate(288,82,128)"/>
+  <circle cx="82" cy="128" r="21" fill="url(#tireG)"/>
+  <circle cx="82" cy="128" r="21" fill="none" stroke="#1c1c26" stroke-width="3.5"/>
+  <circle cx="82" cy="128" r="18" fill="none" stroke="#161620" stroke-width="1.2"/>
+  <circle cx="82" cy="128" r="15.5" fill="none" stroke="${dc.m}" stroke-width="1.2" opacity="0.5"/>
+  <circle cx="82" cy="128" r="13" fill="url(#rimG)"/>
+  <g stroke="${dc.m}" stroke-width="2.2" stroke-linecap="round" opacity="0.9">
+    <line x1="82" y1="115" x2="82" y2="141"/>
+    <line x1="82" y1="115" x2="82" y2="141" transform="rotate(72,82,128)"/>
+    <line x1="82" y1="115" x2="82" y2="141" transform="rotate(144,82,128)"/>
+    <line x1="82" y1="115" x2="82" y2="141" transform="rotate(216,82,128)"/>
+    <line x1="82" y1="115" x2="82" y2="141" transform="rotate(288,82,128)"/>
   </g>
-  <circle cx="82" cy="128" r="5.5" fill="#0c0c18"/>
-  <circle cx="82" cy="128" r="3" fill="${dc.m}"/>
+  <circle cx="82" cy="128" r="4.5" fill="#0c0c18"/>
+  <circle cx="82" cy="128" r="2.5" fill="${dc.m}"/>
   <!-- tyre highlight -->
-  <path d="M 64,108 Q 82,101 100,110" stroke="rgba(255,255,255,0.06)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M 68,112 Q 82,107 96,113" stroke="rgba(255,255,255,0.06)" stroke-width="3" fill="none" stroke-linecap="round"/>
 
   <!-- ═══════════ FRONT WING ═══════════ -->
   <!-- rear endplate (attaches to nose underside) -->
