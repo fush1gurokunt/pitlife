@@ -5,30 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>PitLife — F1 Career Simulator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:       #050508;
-  --bg2:      #0d0d14;
-  --bg3:      #15151e;
-  --border:   #26263a;
-  --red:      #e8000a;
-  --red-dark: #b50008;
-  --gold:     #f5a623;
-  --green:    #22c55e;
-  --text:     #f0f0f5;
-  --dim:      #7878a0;
-  --head:     'Barlow Condensed', sans-serif;
-  --body:     'Barlow', sans-serif;
-  --r:        10px;
-  --rs:       6px;
+  --bg:       #F5F4F0;
+  --surface:  #FFFFFF;
+  --bg2:      #FFFFFF;
+  --bg3:      #F8F7F4;
+  --border:   #E0DED8;
+  --red:      #E8000A;
+  --red-dark: #B50008;
+  --gold:     #C9A84C;
+  --green:    #1A7A3C;
+  --text:     #0A0A0A;
+  --dim:      #6B6B6B;
+  --head:     'Bebas Neue', sans-serif;
+  --body:     'DM Sans', sans-serif;
+  --r:        0px;
+  --rs:       0px;
 }
 *{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-user-select:none}
 html{background:var(--bg)}
 body{
   background:var(--bg);
   color:var(--text);
-  font-family:'Barlow',sans-serif;
+  font-family:'DM Sans',sans-serif;
   min-height:100dvh;
   display:flex;
   flex-direction:column;
@@ -41,511 +42,566 @@ body{
 
 /* ─── START ─── */
 #screen-start{
-  padding:40px 16px 60px;
+  padding:48px 16px 60px;
   display:flex;
   flex-direction:column;
   align-items:center;
   gap:24px;
+  background:var(--bg);
 }
-.logo-icon{font-size:52px;text-align:center;line-height:1}
+.logo-icon{font-size:48px;text-align:center;line-height:1}
 .logo-title{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:52px;font-weight:900;
-  letter-spacing:3px;color:var(--red);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:72px;
+  letter-spacing:6px;color:var(--text);
   text-transform:uppercase;text-align:center;
+  line-height:1;
 }
 .logo-sub{
-  color:var(--dim);font-size:13px;
-  letter-spacing:2px;text-transform:uppercase;
-  text-align:center;margin-top:2px;
+  color:var(--red);font-size:10px;font-weight:700;
+  letter-spacing:4px;text-transform:uppercase;
+  text-align:center;margin-top:-10px;
+  font-family:'DM Sans',sans-serif;
 }
-.form{width:100%;display:flex;flex-direction:column;gap:18px}
+.form{width:100%;display:flex;flex-direction:column;gap:20px}
 .flabel{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:12px;font-weight:700;
-  letter-spacing:2px;color:var(--dim);
-  text-transform:uppercase;margin-bottom:7px;display:block;
+  font-family:'DM Sans',sans-serif;
+  font-size:9px;font-weight:700;
+  letter-spacing:2.5px;color:var(--dim);
+  text-transform:uppercase;margin-bottom:8px;display:block;
 }
 .finput{
-  width:100%;background:var(--bg3);
-  border:1.5px solid var(--border);border-radius:var(--rs);
-  color:var(--text);font-family:'Barlow Condensed',sans-serif;
-  font-size:22px;font-weight:700;
-  padding:12px 14px;outline:none;
+  width:100%;background:transparent;
+  border:none;border-bottom:2px solid var(--border);
+  color:var(--text);font-family:'Bebas Neue',sans-serif;
+  font-size:30px;
+  padding:8px 0;outline:none;
   transition:border-color .15s;
+  border-radius:0;
 }
-.finput:focus{border-color:var(--red)}
-.nat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.finput:focus{border-bottom-color:var(--red)}
+.finput::placeholder{color:var(--border)}
+.nat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
 .nat-btn{
-  background:var(--bg3);border:1.5px solid var(--border);
-  border-radius:var(--rs);cursor:pointer;
-  font-size:20px;padding:7px 2px;
+  background:var(--surface);border:1.5px solid var(--border);
+  cursor:pointer;
+  font-size:20px;padding:8px 2px;
   text-align:center;transition:border-color .15s,background .15s;
   position:relative;
 }
-.nat-btn:hover{border-color:#555}
-.nat-btn.sel{border-color:var(--red);background:rgba(232,0,10,.12)}
+.nat-btn:hover{border-color:var(--text)}
+.nat-btn.sel{border-color:var(--red);background:rgba(232,0,10,.05)}
 .nat-tip{
   display:none;position:absolute;
   bottom:calc(100% + 4px);left:50%;
   transform:translateX(-50%);
-  background:#222;color:#fff;
-  font-size:10px;padding:2px 7px;
-  border-radius:4px;white-space:nowrap;
+  background:var(--text);color:#fff;
+  font-size:10px;padding:3px 8px;
+  white-space:nowrap;
   pointer-events:none;z-index:10;
-  font-family:'Barlow',sans-serif;
+  font-family:'DM Sans',sans-serif;font-weight:600;
 }
 .nat-btn:hover .nat-tip{display:block}
 .btn-primary{
-  background:var(--red);border:none;border-radius:var(--rs);
+  background:var(--red);border:none;
   color:#fff;cursor:pointer;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:19px;font-weight:700;
-  letter-spacing:1.5px;padding:14px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;letter-spacing:3px;
+  padding:15px;
   text-transform:uppercase;width:100%;
   transition:background .15s,transform .1s;
 }
 .btn-primary:hover:not(:disabled){background:var(--red-dark)}
 .btn-primary:active:not(:disabled){transform:scale(.98)}
-.btn-primary:disabled{background:#1c1c28;color:#444;cursor:not-allowed}
+.btn-primary:disabled{background:var(--border);color:var(--dim);cursor:not-allowed}
 
 /* ─── GAME SCREEN ─── */
 #screen-game{display:flex;flex-direction:column;align-items:center}
 #game-header{
   position:sticky;top:0;
-  background:var(--bg);
-  border-bottom:1px solid var(--border);
-  padding:10px 16px;z-index:100;
+  background:#0A0A0A;
+  padding:10px 16px 0;z-index:100;
   width:100%;max-width:480px;
 }
-.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+#game-header::after{content:'';display:block;height:3px;background:var(--red)}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding-bottom:8px}
 .hdr-name{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:21px;font-weight:700;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:26px;letter-spacing:1px;
+  color:#fff;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
-.hdr-team{font-size:12px;color:var(--dim);margin-top:2px}
+.hdr-team{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;font-family:'DM Sans',sans-serif}
 .hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.hdr-age{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--dim)}
+.hdr-age{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.45)}
 .stage-pill{
-  background:var(--red);border-radius:20px;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:1px;
-  padding:3px 10px;text-transform:uppercase;white-space:nowrap;
+  background:var(--red);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:12px;letter-spacing:1.5px;
+  padding:2px 9px;text-transform:uppercase;white-space:nowrap;color:#fff;
 }
 .wrap{width:100%;max-width:480px;padding:0 16px 110px}
 .section-title{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:12px;font-weight:700;
-  letter-spacing:2.5px;color:var(--dim);
-  text-transform:uppercase;margin:20px 0 10px;
+  font-family:'DM Sans',sans-serif;
+  font-size:9px;font-weight:700;
+  letter-spacing:3px;color:var(--red);
+  text-transform:uppercase;margin:24px 0 10px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:5px;
 }
 
-/* ─── STATS ─── */
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.stat-bar{
-  background:var(--bg3);border:1px solid var(--border);
-  border-radius:var(--rs);padding:8px 10px;
+/* ─── STATS — DOSSIER CARD GRID ─── */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);
+  padding:14px 10px 10px;text-align:center;
 }
-.stat-lbl{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-.stat-name{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;
-  letter-spacing:1px;color:var(--dim);text-transform:uppercase;
+.stat-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:44px;line-height:1;color:var(--text);
 }
-.stat-val{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:15px;font-weight:700;
+.stat-num.hi{color:var(--green)}
+.stat-num.lo{color:var(--red)}
+.stat-key{
+  font-family:'DM Sans',sans-serif;
+  font-size:9px;font-weight:700;
+  letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-top:5px;
 }
-.stat-track{background:var(--bg);border-radius:3px;height:4px;overflow:hidden}
-.stat-fill{background:var(--red);border-radius:3px;height:100%;transition:width .4s ease}
-.stat-fill.hi{background:var(--green)}
-.stat-fill.md{background:var(--gold)}
+.stat-classified{
+  background:var(--surface);border:1px solid var(--border);
+  padding:14px 10px 10px;text-align:center;
+  opacity:.7;
+}
+.stat-redact{background:var(--text);height:22px;width:80%;margin:0 auto 2px}
 .earn-row{
-  background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);
-  padding:10px 12px;display:flex;justify-content:space-between;align-items:center;margin-top:7px;
+  background:var(--surface);border:1px solid var(--border);
+  padding:14px 14px;display:flex;justify-content:space-between;align-items:center;margin-top:6px;
 }
 .earn-lbl{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:12px;font-weight:700;
-  letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;
+  font-family:'DM Sans',sans-serif;
+  font-size:9px;font-weight:700;
+  letter-spacing:2px;color:var(--dim);text-transform:uppercase;
 }
 .earn-val{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:21px;font-weight:700;color:var(--gold);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:30px;color:var(--text);
 }
-.career-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:7px}
+.career-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:6px;background:var(--border)}
 .cs{
-  background:var(--bg3);border:1px solid var(--border);
-  border-radius:var(--rs);padding:8px 4px;text-align:center;
+  background:var(--surface);
+  padding:10px 4px;text-align:center;
 }
 .cs-val{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:22px;font-weight:900;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px;color:var(--text);
 }
-.cs-lbl{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.cs-lbl{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;font-family:'DM Sans',sans-serif;font-weight:600}
 
 /* ─── EVENT CARDS ─── */
-.events-list{display:flex;flex-direction:column;gap:10px}
+.events-list{display:flex;flex-direction:column;gap:8px}
 .ev-card{
-  background:var(--bg3);border:1.5px solid var(--border);
-  border-radius:var(--r);overflow:hidden;transition:opacity .3s;
+  background:var(--surface);
+  border-left:4px solid var(--red);
+  border-top:1px solid var(--border);
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  overflow:hidden;transition:opacity .3s;
 }
-.ev-card.resolved{opacity:.4;pointer-events:none}
+.ev-card.resolved{opacity:.35;pointer-events:none}
 .ev-head{display:flex;align-items:flex-start;gap:10px;padding:12px 14px 6px}
 .ev-icon{font-size:22px;flex-shrink:0;margin-top:1px}
 .ev-cat{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:10px;font-weight:700;
-  letter-spacing:1.5px;color:var(--red);text-transform:uppercase;
+  font-family:'DM Sans',sans-serif;
+  font-size:9px;font-weight:700;
+  letter-spacing:2px;color:var(--red);text-transform:uppercase;
 }
 .ev-title{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:17px;font-weight:700;line-height:1.2;margin-top:1px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.3rem;line-height:1.15;margin-top:2px;color:var(--text);
 }
-.ev-desc{font-size:13px;color:var(--dim);line-height:1.5;padding:0 14px 10px}
+.ev-desc{font-size:13px;color:var(--dim);line-height:1.55;padding:0 14px 10px;font-family:'DM Sans',sans-serif}
 .ev-choices{display:flex;flex-direction:column;gap:6px;padding:0 10px 10px}
 .choice-btn{
-  background:var(--bg2);border:1.5px solid var(--border);
-  border-radius:var(--rs);color:var(--text);
-  cursor:pointer;font-family:'Barlow',sans-serif;
-  font-size:13px;padding:8px 10px;
+  background:#fff;border:1.5px solid var(--text);
+  color:var(--text);
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:500;padding:9px 12px;
   text-align:left;width:100%;
-  transition:border-color .15s,background .15s;
+  transition:background .12s,color .12s;
 }
-.choice-btn:hover{border-color:var(--red);background:rgba(232,0,10,.08)}
-.fx{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.choice-btn:hover{background:var(--text);color:#fff}
+.fx{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
 .fx-tag{
-  border-radius:4px;font-family:'Barlow Condensed',sans-serif;
-  font-size:10px;font-weight:700;letter-spacing:.5px;padding:1px 5px;
+  font-family:'DM Sans',sans-serif;
+  font-size:9px;font-weight:700;letter-spacing:1px;padding:2px 5px;
+  text-transform:uppercase;
 }
-.fx-tag.pos{background:rgba(34,197,94,.15);color:var(--green)}
-.fx-tag.neg{background:rgba(232,0,10,.15);color:#ff6060}
-.fx-tag.neu{background:rgba(255,255,255,.08);color:var(--dim)}
+.fx-tag.pos{background:rgba(26,122,60,.1);color:var(--green)}
+.fx-tag.neg{background:rgba(232,0,10,.1);color:var(--red)}
+.fx-tag.neu{background:var(--border);color:var(--dim)}
 
-/* ─── SEASON LOG ─── */
-.log-list{display:flex;flex-direction:column;gap:6px}
+/* ─── SEASON LOG — NEWSPAPER ARCHIVE ─── */
+.log-list{display:flex;flex-direction:column}
 .log-entry{
-  background:var(--bg3);border:1px solid var(--border);
-  border-radius:var(--rs);padding:9px 12px;
+  border-bottom:1px solid var(--border);
+  padding:10px 0;
 }
-.log-h{display:flex;justify-content:space-between;align-items:center}
+.log-entry:last-child{border-bottom:none}
+.log-h{display:flex;justify-content:space-between;align-items:baseline}
 .log-stage{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;font-weight:700;color:var(--red);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:17px;color:var(--text);letter-spacing:.5px;
 }
-.log-pos{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700}
+.log-pos{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--dim)}
 .log-pos.gold{color:var(--gold)}
-.log-pos.silver{color:#b0b0c0}
-.log-detail{font-size:12px;color:var(--dim);margin-top:2px}
+.log-pos.silver{color:#999}
+.log-detail{font-size:11px;color:var(--dim);margin-top:2px;font-family:'DM Sans',sans-serif}
 
 /* ─── BOTTOM BAR ─── */
 #bottom-bar{
   position:fixed;bottom:0;left:50%;
   transform:translateX(-50%);
   width:100%;max-width:480px;
-  background:linear-gradient(to top,var(--bg) 75%,transparent);
+  background:linear-gradient(to top,var(--bg) 70%,transparent);
   padding:16px 16px 22px;z-index:99;
 }
 #race-btn{
-  background:var(--red);border:none;border-radius:var(--rs);
+  background:var(--red);border:none;
   color:#fff;cursor:pointer;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:21px;font-weight:700;letter-spacing:2px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;letter-spacing:3px;
   padding:15px;text-transform:uppercase;width:100%;
   transition:background .15s,transform .1s;
 }
 #race-btn:hover:not(:disabled){background:var(--red-dark)}
 #race-btn:active:not(:disabled){transform:scale(.98)}
-#race-btn:disabled{background:#14141e;color:#3a3a50;cursor:not-allowed}
-#race-btn .sub{display:block;font-size:11px;font-weight:400;letter-spacing:1px;opacity:.65;margin-top:2px}
+#race-btn:disabled{background:var(--border);color:var(--dim);cursor:not-allowed}
+#race-btn .sub{display:block;font-size:11px;font-weight:400;letter-spacing:1px;opacity:.65;margin-top:2px;font-family:'DM Sans',sans-serif}
 
 /* ─── RESULTS OVERLAY ─── */
 #results-overlay{
   position:fixed;inset:0;
-  background:rgba(5,5,8,.88);
-  backdrop-filter:blur(4px);
+  background:rgba(10,10,10,.55);
+  backdrop-filter:blur(8px);
   z-index:200;display:flex;
   flex-direction:column;align-items:center;
   justify-content:flex-end;padding:16px;
 }
 #results-overlay.hidden{display:none!important}
 .res-card{
-  background:var(--bg2);border:1.5px solid var(--border);
-  border-radius:var(--r);width:100%;max-width:448px;
-  padding:20px;
+  background:var(--surface);
+  border-top:4px solid var(--red);
+  width:100%;max-width:448px;
+  padding:24px 20px 20px;
   animation:slideUp .35s cubic-bezier(.34,1.56,.64,1);
-  max-height:88vh;overflow-y:auto;
+  max-height:90vh;overflow-y:auto;
 }
 @keyframes slideUp{
   from{transform:translateY(100%);opacity:0}
   to{transform:translateY(0);opacity:1}
 }
 .res-season{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:2px;
-  color:var(--red);text-transform:uppercase;margin-bottom:4px;
+  font-family:'DM Sans',sans-serif;
+  font-size:9px;font-weight:700;letter-spacing:2px;
+  color:var(--red);text-transform:uppercase;margin-bottom:2px;
 }
 .res-pos{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:72px;font-weight:900;line-height:1;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:8rem;line-height:1;color:var(--text);
 }
 .res-pos.gold{color:var(--gold)}
-.res-pos.silver{color:#b0b0c0}
+.res-pos.silver{color:#999}
 .res-sublabel{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:15px;color:var(--dim);margin-bottom:14px;
+  font-family:'DM Sans',sans-serif;
+  font-size:11px;font-weight:700;color:var(--red);
+  margin-bottom:16px;text-transform:uppercase;letter-spacing:2px;
 }
 .res-headline{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:17px;font-weight:700;line-height:1.3;
-  border-left:3px solid var(--red);padding-left:10px;margin-bottom:14px;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:500;line-height:1.55;
+  border-left:3px solid var(--red);padding-left:12px;margin-bottom:18px;color:var(--text);
 }
-.deltas-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px}
+.deltas-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:16px;border:1px solid var(--border)}
 .delta{
-  background:var(--bg3);border-radius:var(--rs);
-  padding:6px 10px;display:flex;justify-content:space-between;align-items:center;
+  padding:9px 10px;display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid var(--border);border-right:1px solid var(--border);
 }
-.delta-n{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
-.delta-v{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700}
+.delta-n{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:1px}
+.delta-v{font-family:'Bebas Neue',sans-serif;font-size:20px;}
 .delta-v.pos{color:var(--green)}
-.delta-v.neg{color:#ff6060}
+.delta-v.neg{color:var(--red)}
 .delta-v.neu{color:var(--dim)}
 .earn-banner{
-  background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);
-  border-radius:var(--rs);padding:9px 13px;
-  display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;
+  border-top:2px solid var(--text);
+  border-bottom:2px solid var(--text);
+  padding:12px 0;
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:16px;
 }
-.earn-b-lbl{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
-.earn-b-val{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--gold)}
+.earn-b-lbl{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:2px}
+.earn-b-val{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--text)}
 .champ-banner{
-  background:linear-gradient(135deg,rgba(245,166,35,.18),rgba(232,0,10,.15));
-  border:1.5px solid var(--gold);border-radius:var(--rs);
-  padding:12px 14px;text-align:center;margin-bottom:14px;
+  background:var(--gold);
+  padding:14px 16px;text-align:center;margin-bottom:16px;
 }
-.champ-banner .trophy{font-size:30px}
+.champ-banner .trophy{font-size:28px}
 .champ-banner h3{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:20px;font-weight:900;color:var(--gold);
-  text-transform:uppercase;letter-spacing:1px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:26px;color:#fff;
+  text-transform:uppercase;letter-spacing:3px;
 }
 .move-banner{
-  border-radius:var(--rs);padding:9px 13px;
+  padding:10px 14px;
   text-align:center;margin-bottom:14px;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  border:1.5px solid;
 }
-.move-banner.up{background:rgba(34,197,94,.1);border:1.5px solid var(--green);color:var(--green)}
-.move-banner.down{background:rgba(232,0,10,.1);border:1.5px solid var(--red);color:#ff6060}
-.standings{width:100%;border-collapse:collapse;margin-bottom:14px}
+.move-banner.up{border-color:var(--green);color:var(--green)}
+.move-banner.down{border-color:var(--red);color:var(--red)}
+.standings{width:100%;border-collapse:collapse;margin-bottom:16px}
 .standings th{
-  font-family:'Barlow Condensed',sans-serif;font-size:10px;
+  font-family:'DM Sans',sans-serif;font-size:9px;
   font-weight:700;letter-spacing:1.5px;color:var(--dim);
   text-transform:uppercase;text-align:left;
-  padding:4px 8px;border-bottom:1px solid var(--border);
+  padding:6px 8px;border-bottom:2px solid var(--text);
 }
 .standings td{
-  font-family:'Barlow Condensed',sans-serif;font-size:14px;
-  padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.04);
+  font-family:'DM Sans',sans-serif;font-size:13px;
+  padding:8px 8px;border-bottom:1px solid var(--border);color:var(--text);
 }
 .standings tr.me td{color:var(--red);font-weight:700}
 .standings td.pts{text-align:right;font-weight:700}
 .btn-continue{
-  background:var(--red);border:none;border-radius:var(--rs);
+  background:var(--red);border:none;
   color:#fff;cursor:pointer;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:17px;font-weight:700;letter-spacing:1.5px;
-  padding:13px;text-transform:uppercase;width:100%;
-  transition:background .15s;margin-top:4px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;letter-spacing:3px;
+  padding:14px;text-transform:uppercase;width:100%;
+  transition:background .15s;margin-top:8px;
 }
 .btn-continue:hover{background:var(--red-dark)}
 
 /* ─── GAME OVER ─── */
 #screen-gameover{
   width:100%;max-width:480px;
-  padding:40px 16px 60px;
-  display:none;flex-direction:column;align-items:center;gap:18px;
+  padding:48px 16px 60px;
+  display:none;flex-direction:column;align-items:center;gap:20px;
+  background:var(--bg);
 }
-.go-title{text-align:center}
+.go-title{text-align:center;width:100%;padding-bottom:16px;border-bottom:3px solid var(--text)}
 .go-title h1{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:42px;font-weight:900;color:var(--red);
-  text-transform:uppercase;letter-spacing:2px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:60px;color:var(--text);
+  text-transform:uppercase;letter-spacing:4px;
 }
-.go-title p{font-size:13px;color:var(--dim);margin-top:4px}
+.go-title p{font-size:11px;color:var(--dim);margin-top:6px;font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:1.5px}
 .rating-box{
-  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
-  padding:16px;width:100%;text-align:center;
+  background:var(--surface);border:1px solid var(--border);
+  padding:20px;width:100%;text-align:center;
 }
 .rating-box .grade{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:52px;font-weight:900;color:var(--gold);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:80px;line-height:1;color:var(--text);
 }
-.rating-box .grade-lbl{font-size:13px;color:var(--dim);margin-top:2px}
-.sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+.rating-box .grade-lbl{font-size:11px;color:var(--dim);margin-top:4px;font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:2px}
+.sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;width:100%;background:var(--border)}
 .sum-stat{
-  background:var(--bg3);border:1px solid var(--border);
-  border-radius:var(--rs);padding:14px 10px;text-align:center;
+  background:var(--surface);
+  padding:16px 10px;text-align:center;
 }
-.sum-v{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900}
+.sum-v{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--text)}
 .sum-v.gold{color:var(--gold)}
-.sum-l{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+.sum-l{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;font-family:'DM Sans',sans-serif;font-weight:600}
 
 /* ─── MISC ─── */
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:#2a2a40;border-radius:2px}
+::-webkit-scrollbar-thumb{background:var(--border)}
 .hidden{display:none!important}
 
 /* ─── TAB BAR ─── */
-.tab-bar{display:flex;gap:6px;padding:8px 0 2px}
+.tab-bar{display:flex;gap:0;border-top:1px solid rgba(255,255,255,.1)}
 .tab-pill{
-  background:var(--bg3);border:1.5px solid var(--border);border-radius:20px;
-  color:var(--dim);cursor:pointer;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:12px;font-weight:700;letter-spacing:1px;
-  padding:5px 14px;text-transform:uppercase;
-  transition:border-color .15s,color .15s,background .15s;
+  background:transparent;border:none;
+  border-bottom:2px solid transparent;
+  color:rgba(255,255,255,.45);cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:1.5px;
+  padding:8px 14px;text-transform:uppercase;
+  transition:color .15s,border-bottom-color .15s;
 }
-.tab-pill.active{background:var(--red);border-color:var(--red);color:#fff}
+.tab-pill.active{color:#fff;border-bottom-color:var(--red)}
+.tab-pill:hover:not(.active){color:rgba(255,255,255,.7)}
 
 /* ─── MY CAR ─── */
-.helmet-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:4px}
+.helmet-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:8px}
 .helmet-swatch{
   aspect-ratio:1;border-radius:50%;
-  border:2.5px solid var(--border);cursor:pointer;
+  border:2px solid var(--border);cursor:pointer;
   transition:border-color .15s,transform .1s;
 }
-.helmet-swatch:hover{transform:scale(1.1)}
+.helmet-swatch:hover{transform:scale(1.08)}
 .helmet-swatch.sel{border-color:var(--text);border-width:3px}
-.car-input{font-size:18px;padding:10px 14px}
-.livery-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.car-input{
+  font-size:26px;padding:8px 0;
+  border:none;border-bottom:2px solid var(--border);
+  background:transparent;color:var(--text);
+  font-family:'Bebas Neue',sans-serif;
+  width:100%;outline:none;
+}
+.car-input:focus{border-bottom-color:var(--red)}
+.livery-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .livery-btn{
-  background:var(--bg3);border:1.5px solid var(--border);
-  border-radius:var(--rs);cursor:pointer;
-  padding:0 0 8px;overflow:hidden;
+  background:var(--surface);border:1.5px solid var(--border);
+  cursor:pointer;
+  padding:0 0 10px;overflow:hidden;
   transition:border-color .15s;text-align:center;
 }
-.livery-btn:hover{border-color:#555}
+.livery-btn:hover{border-color:var(--text)}
 .livery-btn.sel{border-color:var(--red)}
-.livery-preview{height:48px;width:100%;margin-bottom:6px}
+.livery-preview{height:56px;width:100%;margin-bottom:8px}
 .livery-name{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;
-  letter-spacing:1px;color:var(--text);text-transform:uppercase;
+  font-family:'DM Sans',sans-serif;
+  font-size:9px;font-weight:700;
+  letter-spacing:2px;color:var(--dim);text-transform:uppercase;
 }
 
 /* ─── GRAVE EVENT ─── */
-.ev-card.grave{border-color:#444}
+.ev-card.grave{border-left-color:var(--dim)}
 .ev-card.grave .ev-cat{color:var(--dim)}
 .ev-card.grave .ev-icon{filter:grayscale(1)}
 
 /* ─── HOME BUTTON ─── */
-.btn-home{background:none;border:none;cursor:pointer;color:var(--dim);font-size:18px;padding:4px 6px;border-radius:var(--rs);transition:color .15s,background .15s;flex-shrink:0;line-height:1}
-.btn-home:hover{background:rgba(255,255,255,.07);color:var(--text)}
+.btn-home{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:18px;padding:4px 6px;transition:color .15s;flex-shrink:0;line-height:1}
+.btn-home:hover{color:#fff}
 
-/* ─── TIER GLOW ─── */
-#game-header{transition:border-bottom-color .4s,box-shadow .4s}
-#game-header.tier-top{border-bottom-color:rgba(232,0,10,.4);box-shadow:0 2px 18px -4px rgba(232,0,10,.45)}
-#game-header.tier-mid{border-bottom-color:rgba(245,166,35,.35);box-shadow:0 2px 18px -4px rgba(245,166,35,.38)}
-#game-header.tier-back{border-bottom-color:rgba(120,120,160,.3);box-shadow:0 2px 10px -4px rgba(120,120,160,.2)}
+/* ─── TIER STRIPE ─── */
+#game-header{transition:box-shadow .4s}
+#game-header.tier-top::after{background:var(--red)}
+#game-header.tier-mid::after{background:var(--gold)}
+#game-header.tier-back::after{background:rgba(120,120,120,.5)}
 
 /* ─── TAB FADE ─── */
 .tab-content{animation:tabFadeIn .2s ease both}
-@keyframes tabFadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@keyframes tabFadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ─── CALENDAR STRIP ─── */
+.calendar-strip{display:flex;gap:5px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none;margin-bottom:4px}
+.calendar-strip::-webkit-scrollbar{display:none}
+.cal-card{flex-shrink:0;background:var(--surface);border:1px solid var(--border);padding:7px 9px;text-align:center;min-width:82px;transition:opacity .2s}
+.cal-card.past{opacity:.3;background:var(--bg)}
+.cal-card.current{border-color:var(--red);border-width:2px;background:var(--red)}
+.cal-card.current .cal-name,.cal-card.current .cal-weather{color:#fff}
+.cal-name{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70px}
+.cal-weather{font-size:11px;margin-top:3px;color:var(--dim)}
 
 /* ─── TINDER CARDS ─── */
-.tinder-wrap{display:flex;flex-direction:column;align-items:center;padding:8px 0 16px}
+.tinder-wrap{display:flex;flex-direction:column;align-items:center;padding:4px 0 16px}
 .tinder-dots{display:flex;gap:7px;margin-bottom:16px}
-.tinder-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .2s}
+.tinder-dot{width:7px;height:7px;background:var(--border);transition:background .2s}
 .tinder-dot.done{background:var(--green)}
 .tinder-dot.active{background:var(--red)}
-#tinder-card{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);width:100%;padding:24px 20px 18px;transition:opacity .25s,transform .25s;opacity:1;transform:none}
+#tinder-card{
+  background:var(--surface);
+  border-left:4px solid var(--red);
+  border-top:1px solid var(--border);
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  width:100%;padding:22px 18px 18px;
+  transition:opacity .25s,transform .25s;opacity:1;transform:none;
+}
 #tinder-card.exit{opacity:0;transform:translateY(-14px);pointer-events:none}
 #tinder-card.enter{animation:cardEnter .25s ease both}
-#tinder-card.grave{border-color:#444}
+#tinder-card.grave{border-left-color:var(--dim)}
 #tinder-card.grave .tinder-cat{color:var(--dim)}
 @keyframes cardEnter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-.tinder-icon{font-size:44px;text-align:center;margin-bottom:10px;line-height:1}
-.tinder-cat{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--red);text-transform:uppercase;text-align:center;margin-bottom:4px}
-.tinder-title{font-family:'Barlow Condensed',sans-serif;font-size:23px;font-weight:700;line-height:1.2;text-align:center;margin-bottom:10px}
-.tinder-desc{font-size:13.5px;color:var(--dim);line-height:1.55;text-align:center;margin-bottom:18px}
+.tinder-icon{font-size:40px;text-align:center;margin-bottom:8px;line-height:1}
+.tinder-cat{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--red);text-transform:uppercase;margin-bottom:6px}
+.tinder-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;line-height:1.1;margin-bottom:10px;color:var(--text)}
+.tinder-desc{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dim);line-height:1.6;margin-bottom:18px}
 .tinder-choices{display:flex;flex-direction:column;gap:8px}
-.tinder-choice{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text);cursor:pointer;font-family:'Barlow',sans-serif;font-size:13px;padding:10px 12px;text-align:left;width:100%;transition:border-color .15s,background .15s,transform .1s}
-.tinder-choice:hover{border-color:var(--red);background:rgba(232,0,10,.08)}
+.tinder-choice{background:#fff;border:1.5px solid var(--text);color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:11px 14px;text-align:left;width:100%;transition:background .12s,color .12s,transform .1s}
+.tinder-choice:hover{background:var(--text);color:#fff}
 .tinder-choice:active{transform:scale(.98)}
 .tinder-all-done{text-align:center;padding:20px 0 8px;width:100%}
 .tinder-all-done-icon{font-size:36px;margin-bottom:8px}
-.tinder-all-done-text{font-family:'Barlow Condensed',sans-serif;font-size:15px;color:var(--dim);letter-spacing:.5px}
+.tinder-all-done-text{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dim)}
 
-/* ─── LEAGUE TABLE ─── */
-.league-row{display:grid;grid-template-columns:24px 22px 1fr 52px 38px;align-items:center;gap:6px;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.04);opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s}
+/* ─── UNLOCK BANNER ─── */
+.unlock-banner{background:var(--red);padding:14px 16px;margin-bottom:10px;width:100%}
+.unlock-banner-head{font-family:'DM Sans',sans-serif;font-size:8px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:3px}
+.unlock-banner-stat{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:#fff}
+.unlock-banner-msg{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.8);margin-top:4px;line-height:1.4}
+
+/* ─── LEAGUE TABLE — NEWSPAPER STYLE ─── */
+.league-row{display:grid;grid-template-columns:24px 22px 1fr 52px 38px;align-items:center;gap:6px;padding:10px 10px;border-bottom:1px solid var(--border);opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s}
 .league-row.visible{opacity:1;transform:none}
 .league-row:last-child{border-bottom:none}
-.league-row.me-row .lg-name{color:var(--red);font-weight:700}
-.lg-pos{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--dim);text-align:center}
+.league-row.me-row{border-left:3px solid var(--red);padding-left:7px}
+.lg-pos{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--dim);text-align:center}
 .lg-pos.p1{color:var(--gold)}
 .lg-flag{font-size:15px;text-align:center}
 .lg-info{min-width:0}
-.lg-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lg-name{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
 .lg-team{font-size:10px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
-.lg-pts{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;text-align:right;white-space:nowrap}
-.lg-gap{font-size:10px;color:var(--dim);text-align:right;margin-top:1px}
+.lg-pts{font-family:'Bebas Neue',sans-serif;font-size:16px;text-align:right;white-space:nowrap;color:var(--text)}
+.lg-gap{font-size:10px;color:var(--dim);text-align:right;margin-top:1px;font-family:'DM Sans',sans-serif}
 .lg-form{display:flex;gap:3px;justify-content:flex-end;align-items:center}
-.form-dot{width:7px;height:7px;border-radius:50%;background:var(--border)}
+.form-dot{width:6px;height:6px;border-radius:50%;background:var(--border)}
 .form-dot.pod{background:var(--gold)}
 .form-dot.pts{background:var(--green)}
 
 /* ─── DRIVING STYLE ─── */
 .style-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px}
-.style-btn{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--rs);cursor:pointer;padding:12px 6px 10px;text-align:center;transition:border-color .15s,background .15s;width:100%}
-.style-btn:hover{border-color:#555}
-.style-btn.sel{border-color:var(--red);background:rgba(232,0,10,.12)}
-.style-icon{font-size:24px;margin-bottom:4px;line-height:1}
-.style-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.5px}
-.style-desc{font-size:10px;color:var(--dim);margin-top:3px;line-height:1.3}
+.style-btn{background:var(--surface);border:1.5px solid var(--border);cursor:pointer;padding:14px 6px 12px;text-align:center;transition:border-color .15s,background .15s;width:100%}
+.style-btn:hover{border-color:var(--text)}
+.style-btn.sel{border-color:var(--red);background:rgba(232,0,10,.04)}
+.style-icon{font-size:24px;margin-bottom:5px;line-height:1}
+.style-name{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--text);text-transform:uppercase;letter-spacing:1px}
+.style-desc{font-size:9px;color:var(--dim);margin-top:3px;line-height:1.4;font-family:'DM Sans',sans-serif;font-weight:500}
 
 /* ─── CIRCUIT BADGE ─── */
-.circuit-badge{font-size:11px;color:var(--dim);margin-top:2px}
-.circuit-badge .rain-tag{color:#60a0ff;margin-left:4px}
+.circuit-badge{font-size:10px;color:rgba(255,255,255,.35);margin-top:2px;font-family:'DM Sans',sans-serif}
+.circuit-badge .rain-tag{color:#80b8ff;margin-left:4px}
 
 /* ─── SPONSOR TRACKER ─── */
-.sponsor-row{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);margin-bottom:6px}
-.sponsor-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700}
+.sponsor-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
+.sponsor-row:last-child{border-bottom:none}
+.sponsor-name{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--text)}
 .sponsor-cond{font-size:11px;color:var(--dim);margin-top:2px;line-height:1.3}
-.sponsor-badge{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;white-space:nowrap;margin-left:10px;flex-shrink:0}
+.sponsor-badge{font-family:'Bebas Neue',sans-serif;font-size:17px;white-space:nowrap;margin-left:10px;flex-shrink:0}
 .sponsor-badge.pass{color:var(--green)}
-.sponsor-badge.fail{color:#ff6060}
+.sponsor-badge.fail{color:var(--red)}
 
 /* ─── CAR RATING ─── */
-.car-rating-wrap{display:flex;align-items:center;gap:8px;margin-top:3px}
-.car-rating-track{flex:1;height:3px;background:var(--bg);border-radius:2px;overflow:hidden}
-.car-rating-fill{height:100%;border-radius:2px;background:var(--gold);transition:width .4s ease}
-.car-rating-val{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--gold);font-weight:700;min-width:24px;text-align:right}
+.car-rating-track{flex:1;height:2px;background:var(--border);overflow:hidden}
+.car-rating-fill{height:100%;background:var(--gold);transition:width .4s ease}
 
 /* ─── TIER DOT ─── */
-.tier-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-left:4px;vertical-align:middle;flex-shrink:0}
+.tier-dot{width:5px;height:5px;border-radius:50%;display:inline-block;margin-left:4px;vertical-align:middle;flex-shrink:0}
 .tier-dot.t1{background:var(--red)}
 .tier-dot.t2{background:var(--gold)}
 .tier-dot.t3{background:var(--dim)}
 
 /* ─── VETERAN BADGE ─── */
-.veteran-badge{background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.3);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--gold);padding:1px 7px;text-transform:uppercase;white-space:nowrap}
+.veteran-badge{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--gold);padding:2px 7px;text-transform:uppercase;white-space:nowrap}
 
 /* ─── BURNOUT ─── */
-.burnout-warn{display:flex;align-items:center;gap:8px;background:rgba(220,60,0,.12);border:1px solid rgba(220,60,0,.28);border-radius:var(--rs);padding:8px 10px;margin-top:7px}
-.burnout-track{flex:1;height:3px;background:var(--bg);border-radius:2px;overflow:hidden}
-.burnout-fill{height:100%;border-radius:2px;background:linear-gradient(to right,var(--gold),#ff4400);transition:width .4s ease}
+.burnout-warn{display:flex;align-items:center;gap:8px;background:rgba(232,0,10,.05);border:1px solid rgba(232,0,10,.2);padding:10px 12px;margin-top:8px}
+.burnout-track{flex:1;height:2px;background:var(--border);overflow:hidden}
+.burnout-fill{height:100%;background:linear-gradient(to right,var(--gold),var(--red));transition:width .4s ease}
 
 /* ─── LEGACY / ACHIEVEMENTS ─── */
-.legacy-box{background:rgba(245,166,35,.08);border:1.5px solid rgba(245,166,35,.4);border-radius:var(--r);padding:16px;text-align:center;width:100%}
-.legacy-title{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--gold);letter-spacing:1px;text-transform:uppercase}
-.legacy-sub{font-size:12px;color:var(--dim);margin-top:5px;line-height:1.45}
-.achievements-grid{display:flex;flex-direction:column;gap:6px;width:100%}
-.achievement{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:9px 12px;display:flex;align-items:center;gap:10px}
-.ach-icon{font-size:20px;flex-shrink:0}
-.ach-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700}
-.ach-desc{font-size:11px;color:var(--dim);margin-top:1px}
+.legacy-box{border-top:4px solid var(--gold);background:var(--surface);padding:20px;text-align:center;width:100%}
+.legacy-title{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--text);letter-spacing:2px;text-transform:uppercase}
+.legacy-sub{font-size:12px;color:var(--dim);margin-top:6px;line-height:1.55;font-family:'DM Sans',sans-serif}
+.achievements-grid{display:flex;flex-direction:column;gap:0;width:100%}
+.achievement{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 12px;display:flex;align-items:center;gap:12px}
+.achievement:last-child{border-bottom:none}
+.ach-icon{font-size:18px;flex-shrink:0}
+.ach-name{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--text);letter-spacing:.5px}
+.ach-desc{font-size:11px;color:var(--dim);margin-top:1px;font-family:'DM Sans',sans-serif}
 </style>
 </head>
 <body>
@@ -1149,7 +1205,9 @@ function defaultState() {
     monacoSeasonWins:0, homeSeasonWins:0, runnerUpCount:0,
     sameTeamSeasons:0, lastF1TeamIdx:null, recoveredToF1:false,
     incidentCount:0, personalEventsShown:[], natEventsShown:[],
-    burnoutEventTriggered:false, burnoutRetired:false
+    burnoutEventTriggered:false, burnoutRetired:false,
+    unlockedStats: ['Reputation'],
+    pendingUnlocks: []
   };
 }
 
@@ -1171,6 +1229,14 @@ function clearSave() { localStorage.removeItem('pitlife_v3'); }
 
 function rnd(lo, hi) { return Math.floor(Math.random() * (hi - lo + 1)) + lo; }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function tryUnlock(stat, msg) {
+  if (!S.unlockedStats) S.unlockedStats = ['Reputation'];
+  if (!S.unlockedStats.includes(stat)) {
+    S.unlockedStats.push(stat);
+    if (!S.pendingUnlocks) S.pendingUnlocks = [];
+    S.pendingUnlocks.push({stat, msg});
+  }
+}
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -1599,6 +1665,11 @@ function resolveEvent(ei, ci) {
     if (!S.natEventsShown) S.natEventsShown = [];
     if (!S.natEventsShown.includes(ch._neId)) S.natEventsShown.push(ch._neId);
   }
+  // Stat unlock triggers
+  const cat = ev.cat || '';
+  if (cat === 'Incident' || cat === 'Rivalry') tryUnlock('Racecraft', 'Your first wheel-to-wheel battle has revealed how you race under pressure.');
+  if ('Fitness' in (ch.fx||{})) tryUnlock('Fitness', 'Training has become part of your weekly routine.');
+  if (cat === 'Team' || cat === 'Contract' || cat === 'Career') tryUnlock('Morale', 'Your relationship with the team shapes how you perform on track.');
   S.resolved.push(ei);
   save();
   const card = document.getElementById('tinder-card');
@@ -1764,6 +1835,10 @@ function raceTheSeason() {
   S.age++;
   S.seasonNum++;
 
+  // Stat unlocks from race results
+  tryUnlock('Pace', 'Race data reveals your raw speed for the first time.');
+  tryUnlock('Consistency', 'A full season of results shows your reliability under pressure.');
+
   // Physical decline
   if (S.age > 33) S.Fitness = clamp(S.Fitness - 2, 0, 100);
   if (S.age > 35) S.Pace = clamp(S.Pace - 1, 0, 100);
@@ -1905,7 +1980,7 @@ function renderHeader() {
   const teamStr = S.stageIdx===4 && t ? t.name : st.label;
   const helmet = S.helmetColor || '#e8000a';
   const numBadge = S.raceNumber
-    ? ` <span style="font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--dim);font-weight:400">#${esc(S.raceNumber)}</span>`
+    ? ` <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.4);font-weight:600">#${esc(S.raceNumber)}</span>`
     : '';
   document.getElementById('game-header').innerHTML = `
     <div class="hdr-top">
@@ -1940,15 +2015,19 @@ function renderHeader() {
 
 function renderStats() {
   const KEYS = ['Pace','Racecraft','Consistency','Fitness','Reputation','Morale'];
-  const bars = KEYS.map(k => {
+  const unlocked = S.unlockedStats || ['Reputation'];
+  const cards = KEYS.map(k => {
+    if (!unlocked.includes(k)) {
+      return `<div class="stat-classified">
+        <div class="stat-redact"></div>
+        <div class="stat-key">${k}</div>
+      </div>`;
+    }
     const v = S[k];
-    const fc = v>=70?'hi':v>=40?'md':'';
-    return `<div class="stat-bar">
-      <div class="stat-lbl">
-        <span class="stat-name">${k}</span>
-        <span class="stat-val">${v}</span>
-      </div>
-      <div class="stat-track"><div class="stat-fill ${fc}" style="width:0" data-w="${v}%"></div></div>
+    const cls = v >= 70 ? 'hi' : v <= 28 ? 'lo' : '';
+    return `<div class="stat-card">
+      <div class="stat-num ${cls}">${v}</div>
+      <div class="stat-key">${k}</div>
     </div>`;
   }).join('');
 
@@ -1959,11 +2038,12 @@ function renderStats() {
     : fmtMoney(st.earnings)+'/season';
   const styleIcons = {aggressive:'🔥',technical:'🧠',consistent:'🎯'};
   const styleLabel = S.drivingStyle || 'consistent';
+
   const carRatingHtml = (S.stageIdx===4 && S.teamCarRating!==null) ? `
-    <div style="margin-top:7px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:8px 10px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:5px">
-        <span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--dim);text-transform:uppercase">Car Rating</span>
-        <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--gold)">${S.teamCarRating}</span>
+    <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px;margin-top:6px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);text-transform:uppercase">Car Rating</span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--gold)">${S.teamCarRating}</span>
       </div>
       <div class="car-rating-track"><div class="car-rating-fill" style="width:${S.teamCarRating}%"></div></div>
     </div>` : '';
@@ -1973,27 +2053,27 @@ function renderStats() {
     <div class="burnout-warn">
       <span style="font-size:16px">🔥</span>
       <div style="flex:1">
-        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-          <span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;color:#ff6600;text-transform:uppercase">Burnout</span>
-          <span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#ff6600">${burnout}/100</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+          <span style="font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--red);text-transform:uppercase">Burnout</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--red)">${burnout}/100</span>
         </div>
         <div class="burnout-track"><div class="burnout-fill" style="width:${burnout}%"></div></div>
-        ${burnout >= 80 ? '<div style="font-size:11px;color:#ff4400;margin-top:4px">⚠️ Critical — on the edge of burnout</div>' : ''}
+        ${burnout >= 80 ? '<div style="font-family:\'DM Sans\',sans-serif;font-size:10px;font-weight:600;color:var(--red);margin-top:5px;text-transform:uppercase;letter-spacing:1px">⚠ Critical — on the edge</div>' : ''}
       </div>
     </div>` : '';
 
   document.getElementById('stats-sec').innerHTML = `
-    <div class="section-title">Driver Stats</div>
-    <div class="stats-grid">${bars}</div>
+    <div class="section-title">Driver Dossier</div>
+    <div class="stats-grid">${cards}</div>
     ${carRatingHtml}
     ${burnoutHtml}
     <div class="earn-row">
       <span class="earn-lbl">Career Earnings</span>
       <span class="earn-val">${fmtMoney(S.earnings)}</span>
     </div>
-    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-top:4px;margin-bottom:2px">
-      <span>${styleIcons[styleLabel]} ${styleLabel.charAt(0).toUpperCase()+styleLabel.slice(1)}</span>
-      <span>Contract: ${contractStr}</span>
+    <div style="display:flex;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:10px;color:var(--dim);margin-top:8px;margin-bottom:2px">
+      <span>${styleIcons[styleLabel]} ${styleLabel.charAt(0).toUpperCase()+styleLabel.slice(1)} style</span>
+      <span>${contractStr}</span>
     </div>
     <div class="career-row">
       <div class="cs"><div class="cs-val">${S.championships}</div><div class="cs-lbl">Titles</div></div>
@@ -2001,14 +2081,32 @@ function renderStats() {
       <div class="cs"><div class="cs-val">${S.podiums}</div><div class="cs-lbl">Podiums</div></div>
       <div class="cs"><div class="cs-val">${S.seasonsInF1}</div><div class="cs-lbl">F1 Seasons</div></div>
     </div>`;
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    document.querySelectorAll('.stat-fill[data-w]').forEach(el => { el.style.width = el.dataset.w; });
-  }));
 }
 
 function renderEvents() {
   const total = S.events.length;
   const resolvedCount = S.resolved.length;
+
+  // Calendar strip
+  const stageKey = S.stageIdx === 4 ? 'f1' : S.stageIdx >= 1 ? 'feeder' : 'karting';
+  const circuits = CIRCUITS[stageKey];
+  const currentIdxInCycle = ((S.circuitSeason || 1) - 1) % circuits.length;
+  const calStrip = `<div class="calendar-strip">${circuits.map((c,i) => {
+    const st = i < currentIdxInCycle ? 'past' : i === currentIdxInCycle ? 'current' : '';
+    const weather = c.rain >= 0.35 ? '🌧' : c.rain >= 0.25 ? '🌦' : '☀';
+    const label = c.name.length > 9 ? c.name.slice(0,9) + '…' : c.name;
+    return `<div class="cal-card ${st}"><div class="cal-name">${label}</div><div class="cal-weather">${weather}</div></div>`;
+  }).join('')}</div>`;
+
+  // Unlock notifications
+  const pending = S.pendingUnlocks || [];
+  const unlockHtml = pending.map(u => `
+    <div class="unlock-banner">
+      <div class="unlock-banner-head">New stat unlocked</div>
+      <div class="unlock-banner-stat">${u.stat}</div>
+      <div class="unlock-banner-msg">${u.msg}</div>
+    </div>`).join('');
+  if (pending.length) { S.pendingUnlocks = []; save(); }
 
   const dots = S.events.map((ev, i) => {
     const isDone = S.resolved.includes(i);
@@ -2019,11 +2117,13 @@ function renderEvents() {
 
   if (resolvedCount >= total) {
     document.getElementById('events-sec').innerHTML = `
+      ${calStrip}
+      ${unlockHtml}
       <div class="tinder-wrap">
         <div class="tinder-dots">${dots}</div>
         <div class="tinder-all-done">
           <div class="tinder-all-done-icon">✅</div>
-          <div class="tinder-all-done-text">All events resolved — ready to race!</div>
+          <div class="tinder-all-done-text">All events resolved — ready to race</div>
         </div>
       </div>`;
     return;
@@ -2040,18 +2140,20 @@ function renderEvents() {
     if (c.money) tags.push(`<span class="fx-tag pos">+${fmtMoney(c.money)}</span>`);
     if (c.fineByStage) tags.push(`<span class="fx-tag neg">−${fmtMoney(c.fineByStage[S.stageIdx])}</span>`);
     if (c.fiaTone) tags.push(`<span class="fx-tag neu">FIA unhappy</span>`);
-    if (c.rollFx) tags.push(`<span class="fx-tag neu">30% penalty reversed</span>`);
-    if (c.safetyCarChoice==='gamble') tags.push(`<span class="fx-tag neu">Big position swing</span>`);
-    if (c.safetyCarChoice==='safe') tags.push(`<span class="fx-tag pos">Consistency +1</span>`);
-    if (c.burnoutChange > 0) tags.push(`<span class="fx-tag neg">🔥 +${c.burnoutChange} Burnout</span>`);
-    if (c.burnoutChange < 0) tags.push(`<span class="fx-tag pos">🔥 ${c.burnoutChange} Burnout</span>`);
+    if (c.rollFx) tags.push(`<span class="fx-tag neu">30% chance reversed</span>`);
+    if (c.safetyCarChoice==='gamble') tags.push(`<span class="fx-tag neu">Big swing</span>`);
+    if (c.safetyCarChoice==='safe') tags.push(`<span class="fx-tag pos">Safe gain</span>`);
+    if (c.burnoutChange > 0) tags.push(`<span class="fx-tag neg">🔥 +${c.burnoutChange}</span>`);
+    if (c.burnoutChange < 0) tags.push(`<span class="fx-tag pos">🔥 ${c.burnoutChange}</span>`);
     return `<button class="tinder-choice" onclick="resolveEvent(${ei},${ci})">
       <div>${esc(c.text)}</div>
-      ${tags.length ? `<div class="fx" style="margin-top:5px">${tags.join('')}</div>` : ''}
+      ${tags.length ? `<div class="fx">${tags.join('')}</div>` : ''}
     </button>`;
   }).join('');
 
   document.getElementById('events-sec').innerHTML = `
+    ${calStrip}
+    ${unlockHtml}
     <div class="tinder-wrap">
       <div class="tinder-dots">${dots}</div>
       <div id="tinder-card" class="enter${ev.grave?' grave':''}">
@@ -2092,7 +2194,7 @@ function renderLeague() {
   if (!S.leagueStandings) {
     el.innerHTML = `
       <div class="section-title">Championship Standings</div>
-      <div style="padding:28px 0;text-align:center;color:var(--dim);font-size:13px">Race your first season to see standings</div>`;
+      <div style="padding:28px 0;text-align:center;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:13px">Race your first season to see standings</div>`;
     return;
   }
   const leader = S.leagueStandings[0];
@@ -2118,7 +2220,7 @@ function renderLeague() {
   }).join('');
   el.innerHTML = `
     <div class="section-title">Championship Standings</div>
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden">${rows}</div>`;
+    <div style="background:var(--surface);border:1px solid var(--border);overflow:hidden">${rows}</div>`;
   requestAnimationFrame(() => {
     el.querySelectorAll('.league-row').forEach(row => row.classList.add('visible'));
   });
@@ -2157,7 +2259,7 @@ function renderResultsCard() {
     <div class="champ-banner">
       <div class="trophy">🏆</div>
       <h3>${r.stage} Champion!</h3>
-      <div style="font-size:12px;color:var(--dim);margin-top:3px">"${effectiveNickname()}" claims the title</div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.8);margin-top:4px">"${effectiveNickname()}" claims the title</div>
     </div>` : '';
 
   let moveBanner = '';
@@ -2294,7 +2396,7 @@ function renderGameOver() {
       <div class="legacy-sub">${legacy.desc}</div>
     </div>
     <div class="rating-box">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:6px">Career Rating</div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:8px">Career Rating</div>
       <div class="grade">${rating.grade}</div>
       <div class="grade-lbl">${rating.label}</div>
     </div>
@@ -2608,7 +2710,7 @@ function buildCarSVG() {
 
   <!-- ═══════════ RACE NUMBER ═══════════ -->
   ${num ? `<text x="214" y="126"
-    font-family="Barlow Condensed,sans-serif"
+    font-family="Bebas Neue,sans-serif"
     font-size="24" font-weight="900" letter-spacing="2"
     paint-order="stroke" stroke="rgba(0,0,0,0.55)" stroke-width="4" stroke-linejoin="round"
     fill="rgba(255,255,255,0.92)" text-anchor="middle">${num}</text>` : ''}
@@ -2636,7 +2738,7 @@ function renderCarTab() {
   ).join('');
 
   document.getElementById('car-sec').innerHTML = `
-    <div id="car-preview" style="border-radius:10px;overflow:hidden;margin-bottom:16px">${buildCarSVG()}</div>
+    <div id="car-preview" style="overflow:hidden;margin-bottom:16px">${buildCarSVG()}</div>
 
     <div class="section-title">Helmet Colour</div>
     <div class="helmet-grid">${swatches}</div>
@@ -2654,7 +2756,7 @@ function renderCarTab() {
       placeholder="${esc(S.nickname)}"
       value="${esc(S.customNickname)}"
       onchange="setCustomNickname(this.value)">
-    <div style="font-size:11px;color:var(--dim);margin-top:6px;margin-bottom:20px">Overrides auto-generated nickname in headlines. Max 12 chars.</div>
+    <div style="font-family:'DM Sans',sans-serif;font-size:10px;color:var(--dim);margin-top:6px;margin-bottom:20px">Overrides auto-generated nickname in headlines. Max 12 chars.</div>
   `;
 }
 
