@@ -43,85 +43,114 @@ body{
 
 /* ─── START ─── */
 #screen-start{
-  padding:48px 16px 60px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:24px;
-  background:var(--bg);
+  padding:20px 12px 32px;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-start;min-height:100dvh;
 }
-.logo-icon{font-size:48px;text-align:center;line-height:1}
+.start-card{
+  background:var(--surface);
+  border-radius:12px;
+  box-shadow:0 4px 24px rgba(0,0,0,.10);
+  padding:1.5rem;
+  width:100%;max-width:400px;
+  display:flex;flex-direction:column;
+}
+.logo-icon{font-size:36px;text-align:center;line-height:1;margin-bottom:4px}
 .logo-title{
   font-family:'Bebas Neue',sans-serif;
-  font-size:72px;
-  letter-spacing:6px;color:var(--text);
-  text-transform:uppercase;text-align:center;
-  line-height:1;
+  font-size:60px;letter-spacing:6px;color:var(--text);
+  text-transform:uppercase;text-align:center;line-height:1;
 }
 .logo-sub{
-  color:var(--red);font-size:10px;font-weight:700;
+  color:var(--red);font-size:9px;font-weight:700;
   letter-spacing:4px;text-transform:uppercase;
-  text-align:center;margin-top:-10px;
+  text-align:center;margin-top:-6px;
   font-family:'DM Sans',sans-serif;
 }
-.form{width:100%;display:flex;flex-direction:column;gap:20px}
+.start-rule-red{height:2px;background:var(--red);margin:12px 0 14px}
+.start-rule-grey{height:1px;background:var(--border);margin:12px 0}
+.form{width:100%;display:flex;flex-direction:column;gap:12px}
 .flabel{
   font-family:'DM Sans',sans-serif;
   font-size:9px;font-weight:700;
   letter-spacing:2.5px;color:var(--dim);
-  text-transform:uppercase;margin-bottom:8px;display:block;
+  text-transform:uppercase;margin-bottom:6px;display:block;
 }
 .finput{
   width:100%;background:transparent;
   border:none;border-bottom:2px solid var(--border);
   color:var(--text);font-family:'Bebas Neue',sans-serif;
-  font-size:30px;
-  padding:8px 0;outline:none;
-  transition:border-color .15s;
-  border-radius:0;
+  font-size:28px;padding:6px 0;outline:none;
+  transition:border-color .15s;border-radius:0;
 }
 .finput:focus{border-bottom-color:var(--red)}
 .finput::placeholder{color:var(--border)}
 /* ─── CHIBI CREATOR ─── */
 #chibi-creator{width:100%}
+.chibi-top{display:flex;align-items:flex-end;gap:12px;margin-bottom:10px}
 .chibi-preview-card{
-  background:var(--surface);border:1px solid var(--border);
-  display:flex;justify-content:center;align-items:center;
-  height:200px;margin-bottom:14px;
+  flex-shrink:0;
+  display:flex;justify-content:center;align-items:flex-end;
+  height:130px;
 }
-.chibi-gender-row{display:flex;gap:6px;margin-bottom:0}
-.chibi-gender{background:var(--surface);border:1.5px solid var(--border);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;padding:8px 18px;text-transform:uppercase;transition:border-color .15s,background .15s,color .15s;color:var(--dim)}
+.chibi-gender-col{display:flex;flex-direction:column;gap:4px;justify-content:flex-end}
+.chibi-gender{background:transparent;border:1.5px solid var(--border);cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;
+  padding:5px 12px;text-transform:uppercase;transition:border-color .12s,background .12s,color .12s;
+  color:var(--dim);border-radius:40px}
 .chibi-gender.sel{border-color:var(--red);background:var(--red);color:#fff}
-.chibi-ctrl-row{margin-top:12px}
-.chibi-ctrl-label{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:7px}
-.chibi-swatches{display:flex;gap:6px;flex-wrap:wrap}
-.chibi-swatch{width:28px;height:28px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:border-color .12s,transform .12s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
-.chibi-swatch.sel{border-color:var(--red);transform:scale(1.12)}
-.chibi-hair-btns{display:flex;gap:4px;flex-wrap:wrap}
-.chibi-hair-btn{background:var(--surface);border:1.5px solid var(--border);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.5px;padding:5px 10px;color:var(--dim);text-transform:uppercase;transition:border-color .12s,color .12s,background .12s}
-.chibi-hair-btn.sel{border-color:var(--red);color:var(--red);background:rgba(232,0,10,.04)}
+.chibi-ctrl-micro{font-family:'DM Sans',sans-serif;font-size:8px;font-weight:700;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:4px;margin-top:8px}
+.chibi-ctrl-row{margin-top:0}
+.chibi-swatches{display:flex;gap:5px;flex-wrap:wrap}
+.chibi-swatch{width:22px;height:22px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:border-color .12s,transform .12s;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.chibi-swatch.sel{border-color:var(--red);transform:scale(1.15)}
+.chibi-hair-icons{display:flex;gap:5px}
+.chibi-hair-icon{
+  width:38px;height:26px;border:2px solid var(--border);background:var(--surface);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:border-color .12s;overflow:hidden;padding:2px;
+}
+.chibi-hair-icon.sel{border-color:var(--red)}
+.chibi-suit-helmet-row{display:flex;align-items:center;gap:8px}
+.chibi-sh-divider{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--border);flex-shrink:0}
 
-.nat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
-.nat-btn{
+.nat-dropdown{position:relative;width:100%}
+.nat-input{
+  width:100%;background:var(--surface);
+  border:1.5px solid var(--border);
+  color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:500;
+  padding:9px 12px;outline:none;cursor:pointer;
+  transition:border-color .15s;
+  display:flex;align-items:center;gap:8px;
+  user-select:none;-webkit-user-select:none;
+}
+.nat-input:focus-within{border-color:var(--red)}
+.nat-input input{
+  border:none;outline:none;background:transparent;
+  font-family:'DM Sans',sans-serif;font-size:14px;
+  color:var(--text);width:100%;cursor:pointer;
+  user-select:text;-webkit-user-select:text;
+}
+.nat-input input::placeholder{color:var(--dim)}
+.nat-input .nat-flag{font-size:18px;flex-shrink:0;line-height:1}
+.nat-list{
+  position:absolute;top:calc(100% + 2px);left:0;right:0;
   background:var(--surface);border:1.5px solid var(--border);
-  cursor:pointer;
-  font-size:20px;padding:8px 2px;
-  text-align:center;transition:border-color .15s,background .15s;
-  position:relative;
+  max-height:168px;overflow-y:auto;z-index:200;
+  display:none;
+  scrollbar-width:thin;
 }
-.nat-btn:hover{border-color:var(--text)}
-.nat-btn.sel{border-color:var(--red);background:rgba(232,0,10,.05)}
-.nat-tip{
-  display:none;position:absolute;
-  bottom:calc(100% + 4px);left:50%;
-  transform:translateX(-50%);
-  background:var(--text);color:#fff;
-  font-size:10px;padding:3px 8px;
-  white-space:nowrap;
-  pointer-events:none;z-index:10;
-  font-family:'DM Sans',sans-serif;font-weight:600;
+.nat-list.open{display:block}
+.nat-option{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 12px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:13px;
+  transition:background .1s;
 }
-.nat-btn:hover .nat-tip{display:block}
+.nat-option:hover,.nat-option.focused{background:rgba(232,0,10,.06)}
+.nat-option .nat-opt-flag{font-size:18px;line-height:1}
+.nat-option .nat-opt-name{color:var(--text);font-weight:500}
 .btn-primary{
   background:var(--red);border:none;
   color:#fff;cursor:pointer;
@@ -159,25 +188,28 @@ body{
   font-size:12px;letter-spacing:1.5px;
   padding:2px 9px;text-transform:uppercase;white-space:nowrap;color:#fff;
 }
-.wrap{width:100%;max-width:480px;padding:0 16px 110px}
+.wrap{width:100%;max-width:480px;padding:0 12px 100px}
 .section-title{
   font-family:'DM Sans',sans-serif;
   font-size:9px;font-weight:700;
   letter-spacing:3px;color:var(--red);
-  text-transform:uppercase;margin:24px 0 10px;
+  text-transform:uppercase;margin:18px 0 8px;
   border-bottom:1px solid var(--border);
   padding-bottom:5px;
 }
+.game-divider-red{height:2px;background:var(--red);width:100%;max-width:480px}
+.game-divider-grey{height:1px;background:var(--border);margin:0 12px;width:calc(100% - 24px);max-width:456px}
+#events-sec{background:#F0EEE8;padding:0 12px 8px;margin:0 -12px;}
 
 /* ─── STATS — DOSSIER CARD GRID ─── */
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
 .stat-card{
   background:linear-gradient(160deg,#fff,#F8F6F0);border:1px solid var(--border);
-  padding:14px 10px 10px;text-align:center;
+  padding:10px 8px 8px;text-align:center;
 }
 .stat-num{
   font-family:'Bebas Neue',sans-serif;
-  font-size:3rem;line-height:1;color:var(--text);
+  font-size:2rem;line-height:1;color:var(--text);
 }
 .stat-num.hi{color:var(--green)}
 .stat-num.lo{color:var(--red)}
@@ -188,7 +220,7 @@ body{
 }
 .stat-locked{
   background:var(--surface);border:1px dashed var(--border);
-  padding:14px 10px 10px;text-align:center;opacity:.4;
+  padding:10px 8px 8px;text-align:center;opacity:.4;
 }
 .stat-locked-icon{font-size:20px;line-height:1;margin-bottom:4px}
 .stat-locked-label{font-family:'DM Sans',sans-serif;font-size:8px;font-weight:700;letter-spacing:2px;color:var(--red);text-transform:uppercase}
@@ -644,63 +676,79 @@ body{
 
 <!-- ═══════ START SCREEN ═══════ -->
 <div id="screen-start" class="screen">
-  <div class="logo-icon">🏎</div>
-  <div class="logo-title">PitLife</div>
-  <div class="logo-sub">F1 Career Simulator</div>
+  <div class="start-card">
+    <!-- Logo -->
+    <div class="logo-icon">🏎</div>
+    <div class="logo-title">PitLife</div>
+    <div class="logo-sub">F1 Career Simulator</div>
+    <div class="start-rule-red"></div>
 
-  <div class="form">
-    <div>
-      <label class="flabel">Driver Name</label>
-      <input class="finput" id="driver-name" type="text" placeholder="Your name" maxlength="24" autocomplete="off">
+    <!-- Form -->
+    <div class="form">
+      <div>
+        <label class="flabel">Driver Name</label>
+        <input class="finput" id="driver-name" type="text" placeholder="Your name" maxlength="24" autocomplete="off">
+      </div>
+
+      <div>
+        <label class="flabel">Nationality</label>
+        <div class="nat-dropdown" id="nat-dropdown">
+          <div class="nat-input" id="nat-trigger" onclick="openNatDropdown()">
+            <span class="nat-flag" id="nat-flag-display">🌍</span>
+            <input type="text" id="nat-search" placeholder="Search your country…" autocomplete="off" readonly
+              onfocus="openNatDropdown()" oninput="filterNat(this.value)" onclick="event.stopPropagation()">
+          </div>
+          <div class="nat-list" id="nat-list"></div>
+        </div>
+      </div>
+
+      <div>
+        <label class="flabel">Driving Style</label>
+        <div class="style-grid" id="style-grid">
+          <button class="style-btn sel" onclick="pickStyle('consistent')">
+            <div class="style-icon">🎯</div>
+            <div class="style-name">Consistent</div>
+            <div class="style-desc">Lower variance, steady progress</div>
+          </button>
+          <button class="style-btn" onclick="pickStyle('aggressive')">
+            <div class="style-icon">🔥</div>
+            <div class="style-name">Aggressive</div>
+            <div class="style-desc">High ceiling, more incidents</div>
+          </button>
+          <button class="style-btn" onclick="pickStyle('technical')">
+            <div class="style-icon">🧠</div>
+            <div class="style-name">Technical</div>
+            <div class="style-desc">Wet bonus, precision driving</div>
+          </button>
+        </div>
+      </div>
     </div>
+
+    <div class="start-rule-grey"></div>
+
+    <!-- Character creator -->
     <div id="chibi-creator">
-      <label class="flabel">Your Driver</label>
-      <div class="chibi-preview-card"><div id="chibi-preview"></div></div>
-      <div class="chibi-gender-row">
-        <button class="chibi-gender sel" onclick="setChibiGender('m')">♂ Male</button>
-        <button class="chibi-gender" onclick="setChibiGender('f')">♀ Female</button>
+      <div class="chibi-top">
+        <div class="chibi-preview-card"><div id="chibi-preview"></div></div>
+        <div class="chibi-gender-col">
+          <button class="chibi-gender sel" onclick="setChibiGender('m')">♂ Male</button>
+          <button class="chibi-gender" onclick="setChibiGender('f')">♀ Female</button>
+        </div>
       </div>
-      <div class="chibi-ctrl-row">
-        <div class="chibi-ctrl-label">Skin Tone</div>
-        <div class="chibi-swatches" id="chibi-skin"></div>
-      </div>
-      <div class="chibi-ctrl-row">
-        <div class="chibi-ctrl-label">Hair</div>
-        <div class="chibi-hair-btns" id="chibi-hair-style"></div>
-      </div>
-      <div class="chibi-ctrl-row">
-        <div class="chibi-ctrl-label">Suit</div>
+      <div class="chibi-ctrl-micro">Skin Tone</div>
+      <div class="chibi-swatches" id="chibi-skin"></div>
+      <div class="chibi-ctrl-micro">Hair</div>
+      <div class="chibi-hair-icons" id="chibi-hair-style"></div>
+      <div class="chibi-ctrl-micro">Suit &amp; Helmet</div>
+      <div class="chibi-suit-helmet-row">
         <div class="chibi-swatches" id="chibi-suit-color"></div>
-      </div>
-      <div class="chibi-ctrl-row">
-        <div class="chibi-ctrl-label">Helmet</div>
+        <span class="chibi-sh-divider">|</span>
         <div class="chibi-swatches" id="chibi-helmet-color"></div>
       </div>
     </div>
-    <div>
-      <label class="flabel">Nationality</label>
-      <div class="nat-grid" id="nat-grid"></div>
-    </div>
-    <div>
-      <label class="flabel">Driving Style</label>
-      <div class="style-grid" id="style-grid">
-        <button class="style-btn sel" onclick="pickStyle('consistent')">
-          <div class="style-icon">🎯</div>
-          <div class="style-name">Consistent</div>
-          <div class="style-desc">Lower variance, steady progress</div>
-        </button>
-        <button class="style-btn" onclick="pickStyle('aggressive')">
-          <div class="style-icon">🔥</div>
-          <div class="style-name">Aggressive</div>
-          <div class="style-desc">High ceiling, more incidents</div>
-        </button>
-        <button class="style-btn" onclick="pickStyle('technical')">
-          <div class="style-icon">🧠</div>
-          <div class="style-name">Technical</div>
-          <div class="style-desc">Wet bonus, precision driving</div>
-        </button>
-      </div>
-    </div>
+
+    <div class="start-rule-grey"></div>
+
     <button class="btn-primary" id="start-btn" onclick="onStart()" disabled>Start Career</button>
   </div>
 </div>
@@ -708,8 +756,10 @@ body{
 <!-- ═══════ GAME SCREEN ═══════ -->
 <div id="screen-game" class="screen hidden">
   <div id="game-header"></div>
+  <div class="game-divider-red"></div>
   <div class="wrap">
     <div id="stats-sec"></div>
+    <div class="game-divider-grey" id="divider-stats-cal" style="display:none"></div>
     <div id="events-sec"></div>
     <div id="log-sec"></div>
     <div id="car-sec" class="hidden"></div>
@@ -1433,11 +1483,7 @@ function setChibiGender(g) {
   pendingChibi.gender = g;
   pendingChibi.hairStyle = 0;
   document.querySelectorAll('.chibi-gender').forEach(b=>b.classList.toggle('sel', b.getAttribute('onclick')===`setChibiGender('${g}')`));
-  const labels = CHIBI_HAIR_LABELS[g];
-  document.querySelectorAll('.chibi-hair-btn').forEach((b,i)=>{
-    b.textContent = labels[i]||'';
-    b.classList.toggle('sel', i===0);
-  });
+  buildHairIcons(g);
   refreshChibiPreview();
 }
 
@@ -1449,7 +1495,7 @@ function setChibiSkin(s) {
 
 function setChibiHairStyle(i) {
   pendingChibi.hairStyle = i;
-  document.querySelectorAll('.chibi-hair-btn').forEach((b,j)=>b.classList.toggle('sel',j===i));
+  document.querySelectorAll('.chibi-hair-icon').forEach((b,j)=>b.classList.toggle('sel',j===i));
   refreshChibiPreview();
 }
 
@@ -1471,22 +1517,64 @@ function setChibiHelmet(c) {
   refreshChibiPreview();
 }
 
+// Hair silhouette icons for the style picker (30×20 viewBox)
+function buildHairIconSVG(g, idx, sel) {
+  const hc = '#333';
+  const iconsM = [
+    // 0 Slick
+    `<rect x="1" y="1" width="28" height="8" rx="4" fill="${hc}"/>
+     <polygon points="5,8 3,14 9,8" fill="${hc}"/>
+     <polygon points="14,8 12,15 18,8" fill="${hc}"/>
+     <polygon points="22,8 20,14 26,8" fill="${hc}"/>`,
+    // 1 Curly
+    `<circle cx="5"  cy="7" r="5" fill="${hc}"/>
+     <circle cx="12" cy="4" r="5" fill="${hc}"/>
+     <circle cx="19" cy="4" r="5" fill="${hc}"/>
+     <circle cx="26" cy="7" r="5" fill="${hc}"/>
+     <rect x="2" y="7" width="26" height="6" fill="${hc}"/>`,
+    // 2 Buzz
+    `<rect x="1" y="1" width="28" height="5" rx="2" fill="${hc}"/>`,
+    // 3 Under
+    `<path d="M1 10 Q4 1 22 1 Q29 1 29 5 Q29 10 22 10 Q12 8 1 10Z" fill="${hc}"/>`
+  ];
+  const iconsF = [
+    // 0 Long
+    `<rect x="1" y="1" width="28" height="7" rx="3" fill="${hc}"/>
+     <rect x="1" y="5" width="5"  height="14" rx="2" fill="${hc}"/>
+     <rect x="24" y="5" width="5" height="14" rx="2" fill="${hc}"/>`,
+    // 1 Ponytail
+    `<rect x="1" y="1" width="28" height="8" rx="3" fill="${hc}"/>
+     <rect x="24" y="7" width="5" height="11" rx="2" fill="${hc}"/>`,
+    // 2 Bob
+    `<path d="M1 10 Q1 1 15 1 Q29 1 29 10 Q29 16 22 18 Q15 20 8 18 Q1 16 1 10Z" fill="${hc}"/>`,
+    // 3 Wavy
+    `<rect x="1" y="1" width="28" height="7" rx="3" fill="${hc}"/>
+     <path d="M1 6 Q1 12 3 14 Q1 16 3 19" stroke="${hc}" stroke-width="4" fill="none" stroke-linecap="round"/>
+     <path d="M29 6 Q29 12 27 14 Q29 16 27 19" stroke="${hc}" stroke-width="4" fill="none" stroke-linecap="round"/>`
+  ];
+  const icons = g==='f' ? iconsF : iconsM;
+  const icon = icons[idx % 4];
+  return `<div class="chibi-hair-icon${sel?' sel':''}" onclick="setChibiHairStyle(${idx})">
+    <svg viewBox="0 0 30 20" width="30" height="20" xmlns="http://www.w3.org/2000/svg">${icon}</svg>
+  </div>`;
+}
+
+function buildHairIcons(g) {
+  const el = document.getElementById('chibi-hair-style');
+  if (!el) return;
+  el.innerHTML = [0,1,2,3].map(i => buildHairIconSVG(g, i, i===pendingChibi.hairStyle)).join('');
+}
+
 function initChibiCreator() {
   pendingChibi = {gender:'m', skin:'#FDDBB4', hairStyle:0, hairColor:'#1a1a1a', suit:'#E8000A', helmet:'#E8000A'};
-  function swatch(c, i, fn, outline) {
-    const border = outline || (c==='#FFFFFF'?'border:2px solid #ccc;':'');
-    return `<div class="chibi-swatch${i===0?' sel':''}" style="background:${c};${border}" data-val="${c}" onclick="${fn}('${c}')"></div>`;
+  function sw(c, i, fn) {
+    const extra = c==='#FFFFFF'?'box-shadow:0 0 0 1px #ccc;':'';
+    return `<div class="chibi-swatch${i===0?' sel':''}" style="background:${c};${extra}" data-val="${c}" onclick="${fn}('${c}')"></div>`;
   }
-  document.getElementById('chibi-skin').innerHTML =
-    CHIBI_SKINS.map((c,i) => swatch(c, i, 'setChibiSkin')).join('');
-  document.getElementById('chibi-suit-color').innerHTML =
-    CHIBI_SUIT_COLORS.map((c,i) => swatch(c, i, 'setChibiSuit')).join('');
-  document.getElementById('chibi-helmet-color').innerHTML =
-    CHIBI_HELMET_COLORS.map((c,i) => swatch(c, i, 'setChibiHelmet')).join('');
-  const labels = CHIBI_HAIR_LABELS.m;
-  document.getElementById('chibi-hair-style').innerHTML = labels.map((l,i)=>
-    `<button class="chibi-hair-btn${i===0?' sel':''}" onclick="setChibiHairStyle(${i})">${l}</button>`
-  ).join('');
+  document.getElementById('chibi-skin').innerHTML       = CHIBI_SKINS.map((c,i)=>sw(c,i,'setChibiSkin')).join('');
+  document.getElementById('chibi-suit-color').innerHTML = CHIBI_SUIT_COLORS.map((c,i)=>sw(c,i,'setChibiSuit')).join('');
+  document.getElementById('chibi-helmet-color').innerHTML = CHIBI_HELMET_COLORS.map((c,i)=>sw(c,i,'setChibiHelmet')).join('');
+  buildHairIcons('m');
   document.querySelectorAll('.chibi-gender').forEach(b=>b.classList.toggle('sel', b.getAttribute('onclick')===`setChibiGender('m')`));
   refreshChibiPreview();
 }
@@ -1636,17 +1724,62 @@ function buildStandings(aiNames, totalCars, rounds, playerPts) {
 // START SCREEN
 // ══════════════════════════════════════════════
 
+let natDropdownOpen = false;
+let natFocusIdx = -1;
+
 function buildNatGrid() {
-  document.getElementById('nat-grid').innerHTML = NATS.map((n,i)=>
-    `<button class="nat-btn" onclick="pickNat(${i})" title="${n.n}">
-      ${n.f}<span class="nat-tip">${n.n}</span>
-    </button>`
-  ).join('');
+  renderNatList('');
+}
+
+function renderNatList(query) {
+  const q = query.toLowerCase();
+  const filtered = NATS.map((n,i)=>({...n,i})).filter(n=>
+    !q || n.n.toLowerCase().includes(q) || n.f.includes(q)
+  );
+  const list = document.getElementById('nat-list');
+  if (!list) return;
+  list.innerHTML = filtered.length
+    ? filtered.map(n=>`<div class="nat-option" data-idx="${n.i}" onclick="pickNat(${n.i})">
+        <span class="nat-opt-flag">${n.f}</span>
+        <span class="nat-opt-name">${n.n}</span>
+      </div>`).join('')
+    : `<div style="padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--dim)">No results</div>`;
+}
+
+function openNatDropdown() {
+  natDropdownOpen = true;
+  natFocusIdx = -1;
+  const list = document.getElementById('nat-list');
+  const input = document.getElementById('nat-search');
+  if (list) list.classList.add('open');
+  if (input) {
+    input.removeAttribute('readonly');
+    input.focus();
+  }
+  renderNatList(input?.value || '');
+}
+
+function closeNatDropdown() {
+  natDropdownOpen = false;
+  const list = document.getElementById('nat-list');
+  const input = document.getElementById('nat-search');
+  if (list) list.classList.remove('open');
+  if (input) input.setAttribute('readonly','');
+}
+
+function filterNat(q) {
+  renderNatList(q);
+  if (!natDropdownOpen) openNatDropdown();
 }
 
 function pickNat(i) {
   selectedNat = i;
-  document.querySelectorAll('.nat-btn').forEach((b,j)=>b.classList.toggle('sel',j===i));
+  const n = NATS[i];
+  const flag = document.getElementById('nat-flag-display');
+  const input = document.getElementById('nat-search');
+  if (flag) flag.textContent = n.f;
+  if (input) { input.value = n.n; input.setAttribute('readonly',''); }
+  closeNatDropdown();
   checkReady();
 }
 
@@ -2411,6 +2544,10 @@ function renderEvents() {
   const total = S.events.length;
   const resolvedCount = S.resolved.length;
 
+  // Show divider between stats and events area
+  const divEl = document.getElementById('divider-stats-cal');
+  if (divEl) divEl.style.display = '';
+
   // Calendar strip
   const stageKey = S.stageIdx === 4 ? 'f1' : S.stageIdx >= 1 ? 'feeder' : 'karting';
   const circuits = CIRCUITS[stageKey];
@@ -2790,7 +2927,11 @@ function restartGame() {
   document.getElementById('screen-gameover').style.display = 'none';
   showScreen('start');
   document.getElementById('driver-name').value = '';
-  document.querySelectorAll('.nat-btn').forEach(b=>b.classList.remove('sel'));
+  const natFlag = document.getElementById('nat-flag-display');
+  const natInput = document.getElementById('nat-search');
+  if (natFlag) natFlag.textContent = '🌍';
+  if (natInput) { natInput.value = ''; natInput.setAttribute('readonly',''); }
+  closeNatDropdown();
   document.querySelectorAll('.style-btn').forEach(b=>b.classList.toggle('sel', b.getAttribute('onclick')==="pickStyle('consistent')"));
   document.getElementById('start-btn').disabled = true;
   initChibiCreator();
@@ -3120,6 +3261,10 @@ document.addEventListener('DOMContentLoaded', () => {
   buildNatGrid();
   initChibiCreator();
   document.getElementById('driver-name').addEventListener('input', checkReady);
+  // Close nat dropdown on outside click
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#nat-dropdown')) closeNatDropdown();
+  });
 
   if (load() && S) {
     if (S.gameOver) {
