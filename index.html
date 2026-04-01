@@ -391,15 +391,43 @@ body{
   border-left:3px solid var(--red);padding-left:12px;margin-bottom:18px;color:var(--text);
 }
 .deltas-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:16px;border:1px solid var(--border)}
-.delta{
-  padding:9px 10px;display:flex;justify-content:space-between;align-items:center;
-  border-bottom:1px solid var(--border);border-right:1px solid var(--border);
-}
+.delta{padding:9px 10px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+.delta-top{display:flex;justify-content:space-between;align-items:center}
 .delta-n{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:1px}
 .delta-v{font-family:'Bebas Neue',sans-serif;font-size:20px;}
 .delta-v.pos{color:var(--green)}
 .delta-v.neg{color:var(--red)}
 .delta-v.neu{color:var(--dim)}
+.delta-r{font-family:'DM Sans',sans-serif;font-size:9px;color:var(--dim);font-style:italic;margin-top:2px;line-height:1.3}
+
+.outcome-flash{border:1px solid var(--border);border-left:3px solid var(--gold);background:var(--surface);padding:10px 12px;margin-bottom:8px}
+.outcome-flash-lbl{font-family:'DM Sans',sans-serif;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.outcome-flash-choice{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px;font-style:italic}
+.outcome-stat-line{font-family:'DM Sans',sans-serif;font-size:11px;line-height:1.5}
+.outcome-stat-line .osv{font-family:'Bebas Neue',sans-serif;font-size:13px;margin-right:3px}
+.outcome-stat-line.pos .osv{color:var(--green)}
+.outcome-stat-line.neg .osv{color:var(--red)}
+
+.race-report{font-family:'DM Sans',sans-serif;font-size:12px;font-style:italic;color:var(--dim);border-left:2px solid var(--border);padding:8px 10px;margin:10px 0;line-height:1.6}
+
+#champ-overlay{position:fixed;inset:0;background:#000;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;overflow-y:auto}
+#champ-overlay.hidden{display:none}
+.champ-logo{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:4px;color:rgba(255,255,255,.3);margin-bottom:28px;text-transform:uppercase}
+.champ-headline{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:3px;color:#fff;text-align:center;line-height:1.1;margin-bottom:8px}
+.champ-rival-name{color:var(--gold)}
+.champ-gap-line{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,.5);text-align:center;margin-bottom:20px;line-height:1.5}
+.champ-desc{font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(255,255,255,.7);text-align:center;max-width:340px;line-height:1.6;margin:0 auto 24px}
+.champ-choices{width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+.champ-choice-btn{background:transparent;border:1.5px solid rgba(255,255,255,.2);color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:14px 16px;text-align:left;line-height:1.4;transition:border-color .15s,background .15s;-webkit-user-select:none;user-select:none}
+.champ-choice-btn:hover,.champ-choice-btn:active{border-color:var(--red);background:rgba(232,0,10,.1)}
+.champ-choice-reason{font-size:10px;font-weight:400;color:rgba(255,255,255,.4);margin-top:4px;display:block}
+#champ-outcome{position:fixed;inset:0;background:#000;z-index:250;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+#champ-outcome.hidden{display:none}
+.champ-lap{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;color:rgba(255,255,255,.4);text-align:center;max-width:360px;line-height:1.5;opacity:0;transition:opacity .6s ease}
+.champ-lap.bright{color:rgba(255,255,255,.85)}
+.champ-lap.result-win{font-size:2.6rem;letter-spacing:5px;color:var(--gold)}
+.champ-lap.result-lose{font-size:2.2rem;letter-spacing:4px;color:var(--red)}
+.champ-lap.result-p2{font-size:2rem;letter-spacing:4px;color:rgba(255,255,255,.85)}
 .earn-banner{
   border-top:2px solid var(--text);
   border-bottom:2px solid var(--text);
@@ -799,6 +827,16 @@ body{
 <!-- ═══════ GAME OVER SCREEN ═══════ -->
 <div id="screen-gameover"></div>
 
+<!-- ═══════ CHAMPIONSHIP DECIDER OVERLAY ═══════ -->
+<div id="champ-overlay" class="hidden">
+  <div id="champ-overlay-inner"></div>
+</div>
+
+<!-- ═══════ CHAMPIONSHIP OUTCOME CINEMATIC ═══════ -->
+<div id="champ-outcome" class="hidden">
+  <div id="champ-lap-text" class="champ-lap"></div>
+</div>
+
 <script>
 // ══════════════════════════════════════════════
 // DATA
@@ -1118,197 +1156,203 @@ const BURNOUT_CRISIS_EVENT = {
 
 // ── EVENTS ──────────────────────────────────────
 const EVENTS = [
-  // TRAINING
-  {id:'e01',cat:'Training',icon:'💪',title:'Winter Workout Regime',
-   desc:'Your trainer designed an intense pre-season programme. Do you go all-in?',
+  // ─── TRAINING ───────────────────────────────
+  {id:'e01',cat:'Training',icon:'💪',title:"Sister's Wedding",
+   desc:"Your fitness coach has booked a brutal pre-season camp — same weekend as your sister's wedding. She hasn't asked you to choose. But you have to.",
    choices:[
-    {text:'Push to the absolute limit', fx:{Pace:+5,Fitness:-5,Morale:-2}},
-    {text:'Balanced approach',          fx:{Pace:+2,Consistency:+2,Fitness:+3}},
-    {text:'Prioritise rest',            fx:{Fitness:+7,Morale:+4,Pace:-2}}
-  ]},
-  {id:'e02',cat:'Training',icon:'🕹️',title:'Simulator Marathon',
-   desc:'The team wants 40 hours in the sim this week. Your back is already aching.',
+    {text:'Attend the wedding',  fx:{Fitness:-8,Morale:+12},
+     reason:'You missed the camp. Your rival trained every day you were celebrating.'},
+    {text:'Skip the wedding',    fx:{Fitness:+12,Pace:+5,Morale:-15},
+     reason:'The numbers improve. The call from your sister goes to voicemail.'}
+   ]},
+  {id:'e02',cat:'Training',icon:'🧪',title:'Grey Area Method',
+   desc:"A sports scientist offers a training protocol that isn't banned — but three rival teams have already asked the FIA to investigate it. Results are real.",
    choices:[
-    {text:'Full 40 hours — no excuses', fx:{Pace:+5,Consistency:+4,Fitness:-5,Morale:-4}},
-    {text:'Do 20 hours, save energy',   fx:{Pace:+2,Consistency:+2}},
-    {text:'Skip it — trust instinct',   fx:{Morale:+5,Pace:-3}}
-  ]},
-  {id:'e03',cat:'Training',icon:'🏔️',title:'Altitude Training Camp',
-   desc:'An invite to train with a cycling team in the Alps. Brutal but legendary.',
+    {text:'Use it', fx:{Pace:+15,Reputation:-10},
+     reason:'You got faster. Whether that cost was worth it is another question.',
+     rollFx:{chance:0.35,fx:{Reputation:-15,Morale:-8}}},
+    {text:'Decline', fx:{Morale:+4},
+     reason:"Clean conscience, slower car. Your rival didn't hesitate."}
+   ]},
+  {id:'e03',cat:'Training',icon:'🕹️',title:'Simulator Overload',
+   desc:"The team wants 60 hours in the sim before testing. Your physio says your wrist can't take it — but the lap data could be the difference in qualifying.",
    choices:[
-    {text:'Full three-week programme',  fx:{Fitness:+9,Racecraft:+2,Morale:-5}},
-    {text:'One week only',              fx:{Fitness:+4,Morale:-1}},
-    {text:'Decline — stay home',        fx:{Morale:+3}}
-  ]},
-  {id:'e04',cat:'Training',icon:'🥗',title:'Nutritionist\'s New Plan',
-   desc:'Your nutritionist wants to cut 2 kg before the season. You love your pizza.',
+    {text:'Do all 60 hours', fx:{Pace:+6,Consistency:+4,Fitness:-8},
+     reason:'The data is gold. Your wrist disagrees.'},
+    {text:'Cap at 25 hours', fx:{Pace:+2,Consistency:+2,Fitness:+2},
+     reason:'A sensible trade-off. Your rival completed the full programme.'}
+   ]},
+  {id:'e04',cat:'Training',icon:'🏔️',title:'Altitude Camp',
+   desc:"An invitation to a high-altitude training programme used by three world champions. Three weeks in the mountains — no phones, no team contact, no PR.",
    choices:[
-    {text:'Commit fully to the diet',   fx:{Fitness:+5,Morale:-3}},
-    {text:'Try to compromise',          fx:{Fitness:+2,Morale:+1}},
-    {text:'Ignore it',                  fx:{Morale:+4,Fitness:-2}}
-  ]},
-  // MEDIA
-  {id:'e05',cat:'Media',icon:'🎙️',title:'Awkward Press Conference',
-   desc:'A journalist asks if your car is genuinely worse than the rivals. Cameras are rolling.',
+    {text:'Commit to the full programme', fx:{Fitness:+9,Racecraft:+2,Morale:-5},
+     reason:'Physically transformed. Three weeks outside the paddock politics cost you.'},
+    {text:'One week only',                fx:{Fitness:+4},
+     reason:'Enough to feel the benefit. Not enough to make the same jump they did.'}
+   ]},
+  // ─── MEDIA ─────────────────────────────────
+  {id:'e05',cat:'Media',icon:'🗞️',title:'The Leak',
+   desc:"A journalist has a story about your team's internal politics. Going on record helps your public image — but burns the team. The story runs either way.",
    choices:[
-    {text:'"We\'re developing fast — watch this space"', fx:{Reputation:+4}},
-    {text:'"Yes, but we\'ll fix it"',                    fx:{Reputation:-2,Morale:+4}},
-    {text:'No comment',                                   fx:{Reputation:-5}}
-  ]},
-  {id:'e06',cat:'Media',icon:'🎬',title:'Netflix Doc Offer',
-   desc:'A streaming giant wants to film your season for a global series.',
+    {text:'Speak on record',  fx:{Reputation:+12,Morale:-18},
+     reason:"Your public image improves. Your seat is now less secure."},
+    {text:'Stay silent',      fx:{Reputation:-8,Morale:+10},
+     reason:"The story runs. Sources described as 'close to the team'."}
+   ]},
+  {id:'e06',cat:'Media',icon:'🎬',title:'Documentary Crew',
+   desc:"A streaming crew wants season-long access. You'd be the story. But nothing stays private — not the bad races, not the arguments, not the doubt.",
    choices:[
-    {text:'Accept — massive exposure', fx:{Reputation:+8,Morale:+3,Fitness:-2}, money:50000},
-    {text:'Partial access only',       fx:{Reputation:+4}, money:20000},
-    {text:'Decline — too intrusive',   fx:{Reputation:-1,Morale:+3}}
-  ]},
-  {id:'e07',cat:'Media',icon:'📱',title:'Social Media Storm',
-   desc:'A tweet you posted has been taken wildly out of context. It\'s going viral.',
+    {text:'Accept full access', fx:{Reputation:+20,Consistency:-6},
+     reason:'The exposure is massive. Cameras caught things you wanted kept quiet.'},
+    {text:'Decline',            fx:{Morale:+3},
+     reason:'Your rival accepts instead. The season belongs to them in the headlines.'}
+   ]},
+  {id:'e07',cat:'Media',icon:'📱',title:'Social Media Firestorm',
+   desc:"A post taken wildly out of context is viral. Your PR team says apologise immediately. You know exactly what you meant.",
    choices:[
-    {text:'Apologise publicly',        fx:{Reputation:+3,Morale:-6}},
-    {text:'Defend your position',      fx:{Reputation:-5,Morale:+3}},
-    {text:'Delete and say nothing',    fx:{Reputation:-3,Morale:-2}}
-  ]},
-  {id:'e08',cat:'Media',icon:'📺',title:'Heated TV Interview',
-   desc:'You let slip live on air that you\'re frustrated with the car setup.',
+    {text:'Apologise publicly',   fx:{Reputation:+3,Morale:-6},
+     reason:'Crisis managed. But you said sorry for something you believe in.'},
+    {text:'Defend your position', fx:{Reputation:-5,Morale:+3},
+     reason:"Standing firm. Some of the paddock respects it. Sponsors don't."}
+   ]},
+  {id:'e08',cat:'Media',icon:'📺',title:'Post-Race Expletive',
+   desc:"You let it fly on team radio after a brutal result. The FIA have reviewed the footage. The fans are already making T-shirts.",
    choices:[
-    {text:'Walk it back in follow-up', fx:{Reputation:+2,Morale:-3}},
-    {text:'Double down — it\'s true',  fx:{Reputation:-6,Morale:+5}},
-    {text:'Blame the journalist',      fx:{Reputation:-5,Morale:+2}}
-  ]},
-  // CONTRACT
-  {id:'e09',cat:'Contract',icon:'📋',title:'Contract Extension Offer',
-   desc:'Your team puts a new deal on the table. The money\'s decent but not amazing.',
+    {text:'Apologise publicly and pay the fine', fx:{Reputation:+3,Morale:-4}, fineByStage:[50000,50000,100000,250000,500000],
+     reason:'Gracious under pressure. The fine still stings.'},
+    {text:'Double down. The fans loved it.',     fx:{Reputation:+5,Morale:+3}, fineByStage:[50000,50000,100000,250000,500000], fiaTone:true,
+     reason:"The clip goes viral. The FIA adds it to your file."}
+   ]},
+  // ─── CONTRACT ──────────────────────────────
+  {id:'e09',cat:'Contract',icon:'📋',title:'Three-Year Lock-In',
+   desc:"A solid mid-tier team offers a 3-year deal with a no-release clause. Security is real — but if a top team comes calling in year two, you can't move.",
    choices:[
-    {text:'Sign immediately — security first', fx:{Reputation:+3,Morale:+4}, contractLocked:true},
-    {text:'Negotiate for better terms',        fx:{Reputation:+1,Morale:+2}, negotiate:true},
-    {text:'Decline — test the market',         fx:{Reputation:-3,Morale:-2}, freeAgent:true}
-  ]},
-  {id:'e10',cat:'Contract',icon:'🔀',title:'Rival Team Approaches You',
-   desc:'A faster team\'s agent calls yours. Your current principal finds out.',
+    {text:'Sign it',        fx:{Morale:+10}, contractLocked:true,
+     reason:'Guaranteed seat for three seasons. You just closed the door on anything better.'},
+    {text:'Turn it down',   fx:{Morale:-5}, freeAgent:true,
+     reason:"No safety net. If this season goes badly, there may be nothing at all."}
+   ]},
+  {id:'e10',cat:'Contract',icon:'👥',title:'Rival Teammate',
+   desc:"Your team wants to sign the driver who's been fastest in feeder series as your teammate. You can push back — but it'll cost you politically.",
    choices:[
-    {text:'Explore it openly',      fx:{Reputation:-3,Morale:+5}, freeAgent:true},
-    {text:'Stay loyal',             fx:{Reputation:+6,Morale:-2}},
-    {text:'Take a secret meeting',  fx:{Reputation:-7,Morale:+3}, freeAgent:true}
-  ]},
-  // INCIDENTS
-  {id:'e11',cat:'Incident',icon:'💥',title:'Turn One Collision',
-   desc:'A rival takes you out at the first corner. The press want someone to blame.',
+    {text:'Block the signing', fx:{Morale:-15,Reputation:-5},
+     reason:'He signs with a rival. They give him better machinery.'},
+    {text:'Accept it',         fx:{Morale:+8,Consistency:-6},
+     reason:'He joins. Development focus immediately splits.'}
+   ]},
+  {id:'e11',cat:'Contract',icon:'🚪',title:'Seat Under Threat',
+   desc:"A younger driver is impressing in testing. The team have given him extra sessions. Your agent says act before you're replaced.",
    choices:[
-    {text:'Accept partial blame gracefully', fx:{Reputation:+4,Morale:-4}},
-    {text:'Publicly blame the other driver', fx:{Reputation:-6,Morale:+5}},
-    {text:'"It was just a racing incident"', fx:{Reputation:+1,Morale:+1}}
-  ]},
-  {id:'e12',cat:'Incident',icon:'🔧',title:'DNF While Leading',
-   desc:'You were cruising to a certain win when the engine failed. Pure heartbreak.',
+    {text:'Demand clarity from the team',    fx:{Reputation:-3,Morale:+5},
+     reason:"They said the right things. The simulator sessions continued."},
+    {text:'Say nothing — let results decide', fx:{Consistency:+3,Morale:-4},
+     reason:'You drove. The uncertainty sat with you for months.'}
+   ]},
+  // ─── INCIDENTS ─────────────────────────────
+  {id:'e12',cat:'Incident',icon:'🔧',title:'Damaged But Driveable',
+   desc:"You clipped the barrier in qualifying. Car is fixable but compromised. Your championship rival is on pole. Race or pull out?",
    choices:[
-    {text:'Channel it into training',  fx:{Racecraft:+4,Morale:-2,Fitness:+2}},
-    {text:'Vent publicly',             fx:{Reputation:-4,Morale:+3}},
-    {text:'Move on without comment',   fx:{Morale:-6,Consistency:+3}}
-  ]},
-  {id:'e13',cat:'Incident',icon:'🏳️',title:'Controversial Penalty',
-   desc:'The stewards hand you a 5-place grid penalty. Half the paddock thinks it\'s harsh.',
+    {text:'Race from pit lane',     fx:{Consistency:-5},
+     reason:'Points still possible from the back. The championship gap stayed manageable.',
+     rollFx:{chance:0.25,fx:{Morale:-8,Fitness:-3}}},
+    {text:'Withdraw and recover',   fx:{Fitness:+3,Morale:-8},
+     reason:'Zero points. Your rival scored maximum. The gap widened.'}
+   ]},
+  {id:'e13',cat:'Incident',icon:'📻',title:'Team Orders',
+   desc:"You're faster than your teammate in the final laps. The pit wall says hold position. Thousands are watching. So is the team principal.",
    choices:[
-    {text:'Accept and focus',                fx:{Consistency:+3,Morale:-3}},
-    {text:'Challenge it publicly',           fx:{Reputation:-4,Morale:+5}},
-    {text:'Let your manager handle it',      fx:{Reputation:+1,Morale:-1}}
-  ]},
-  {id:'e14',cat:'Incident',icon:'😤',title:'Paddock Bust-Up',
-   desc:'You\'ve clashed with your race engineer over strategy. It got heated.',
+    {text:'Hold position',    fx:{Morale:+15,Reputation:+5},
+     reason:'The team trusts you. You finished P4 instead of P2.'},
+    {text:'Overtake anyway',  fx:{Racecraft:+5,Morale:-20},
+     reason:"You passed him. The team will not forget this."}
+   ]},
+  {id:'e14',cat:'Incident',icon:'💥',title:'First Corner Contact',
+   desc:"A rival takes you out at turn one. Damage is cosmetic but the pace is gone. The press want a villain.",
    choices:[
-    {text:'Apologise and reset',         fx:{Reputation:+3,Morale:-3}},
-    {text:'Stand your ground',           fx:{Racecraft:+2,Morale:+2,Reputation:-5}},
-    {text:'Request a new engineer',      fx:{Reputation:-3,Consistency:-2,Morale:+5}}
-  ]},
-  // PERSONAL
-  {id:'e15',cat:'Personal',icon:'💰',title:'Energy Drink Deal',
-   desc:'MegaBoost Energy want you as their global brand ambassador.',
+    {text:'Accept partial blame gracefully', fx:{Reputation:+4,Morale:-4},
+     reason:"Gracious. The paddock respected it. It wasn't your fault."},
+    {text:'Publicly blame the other driver', fx:{Reputation:-5,Morale:+5},
+     reason:"The data backed you up. Your rivals think you're difficult to race."}
+   ]},
+  {id:'e15',cat:'Incident',icon:'⏱️',title:'Time Penalty Controversy',
+   desc:"A 5-second penalty drops you a place. Half the paddock thinks it's harsh. The data is ambiguous.",
    choices:[
-    {text:'Accept the deal',            fx:{Reputation:+5,Morale:+3}, money:200000},
-    {text:'Counter-negotiate',          fx:{Reputation:+3,Morale:+2}, money:120000},
-    {text:'Decline — not your image',   fx:{Morale:+3}}
-  ]},
-  {id:'e16',cat:'Personal',icon:'👨‍👩‍👧',title:'Family Asking for Time',
-   desc:'Your family haven\'t seen you in months. They\'re asking for a real break.',
+    {text:'Protest via official channels', fx:{Morale:-3},
+     reason:'The protest was noted. The result stood.',
+     rollFx:{chance:0.3,fx:{Consistency:+2}}},
+    {text:'Accept the result and focus',   fx:{Consistency:+2,Morale:+1},
+     reason:'Moving on proved harder than you expected.'}
+   ]},
+  // ─── PERSONAL ──────────────────────────────
+  {id:'e16',cat:'Personal',icon:'💰',title:'The Dirty Deal',
+   desc:"A lucrative sponsorship from a brand you don't believe in. The money would fund your own junior programme one day. Fans would notice.",
    choices:[
-    {text:'Take a full week off',               fx:{Morale:+9,Fitness:+3,Pace:-2}},
-    {text:'Promise a holiday after the season', fx:{Morale:+3}},
-    {text:'Keep pushing',                        fx:{Morale:-6,Fitness:+2}}
-  ]},
-  {id:'e17',cat:'Personal',icon:'🤕',title:'Training Injury',
-   desc:'You\'ve tweaked your wrist in the gym. Nothing broken, but it\'s sore.',
+    {text:'Sign it',     fx:{Reputation:-10,Morale:+5}, money:2000000,
+     reason:"£2 million in the account. Some fans never forgive a sellout."},
+    {text:'Walk away',   fx:{Morale:+4},
+     reason:'Integrity intact. Your rival took the deal and the visibility.'}
+   ]},
+  {id:'e17',cat:'Personal',icon:'💛',title:'The Ultimatum',
+   desc:"Your partner says it's them or the sport. You're in the middle of a title fight. They mean it.",
    choices:[
-    {text:'Rest for a week',           fx:{Fitness:+4,Pace:-2,Consistency:-2}},
-    {text:'Push through the pain',     fx:{Fitness:-7,Pace:+2}},
-    {text:'Physiotherapy programme',   fx:{Fitness:+2,Morale:-2}}
-  ]},
-  {id:'e18',cat:'Personal',icon:'🌱',title:'Charity Partnership',
-   desc:'A children\'s karting charity wants you as their patron.',
+    {text:'Choose racing',       fx:{Consistency:+8,Morale:-20},
+     reason:'Alone at the top. The focus sharpens — but the cost compounds over seasons.'},
+    {text:'Step back for them',  fx:{Morale:+15,Consistency:-8},
+     reason:'You stepped back. The championship gap grew.'}
+   ]},
+  {id:'e18',cat:'Personal',icon:'🤕',title:'Race Through Pain',
+   desc:"Wrist injury from the gym. Nothing broken. It'll affect your inputs in high-speed corners — and you could hide it from the team for now.",
    choices:[
-    {text:'Accept — great cause',       fx:{Reputation:+7,Morale:+5}},
-    {text:'Donate privately',           fx:{Morale:+4}},
-    {text:'No time right now',          fx:{Reputation:-2}}
-  ]},
-  // TEAM ORDERS
-  {id:'e19',cat:'Team Orders',icon:'📻',title:'"Hold Position"',
-   desc:'You\'re clearly faster than your teammate, but the pit wall says "hold". Thousands are watching.',
+    {text:'Race through it',  fx:{Fitness:-7,Pace:+2},
+     reason:'You hid it. Two races later, the team physio found out anyway.'},
+    {text:'Rest for a week',  fx:{Fitness:+4,Consistency:-3},
+     reason:'Fully recovered but your rival had more preparation time.'}
+   ]},
+  {id:'e19',cat:'Personal',icon:'🖤',title:'Driver Death', grave:true,
+   desc:"A rival driver dies in a crash this weekend. The paddock is silent. Someone you knew — not well, but you knew them.",
    choices:[
-    {text:'Obey the order',                      fx:{Reputation:+5,Morale:-10}},
-    {text:'Ignore it and attack',                fx:{Reputation:-8,Morale:+8,Racecraft:+3}},
-    {text:'Slow slightly but don\'t yield',      fx:{Reputation:-3,Morale:-4}}
-  ]},
-  {id:'e20',cat:'Team Orders',icon:'🔄',title:'Give Up Your Points',
-   desc:'The team asks you to slow at the finish and gift your championship-chasing teammate a place.',
+    {text:'Dedicate the rest of your season to them', fx:{Morale:+6,Reputation:+5},
+     reason:'Something shifted in how you approach every corner.'},
+    {text:'Stay focused. Say nothing.',               fx:{Reputation:-5,Morale:-3},
+     reason:'Professionalism respected. Coldness noted.'}
+   ]},
+  // ─── RACE ───────────────────────────────────
+  {id:'e20',cat:'Race',icon:'🟡',title:'Safety Car Window',
+   desc:"Safety car mid-race. Everyone's strategy is live. Your engineer is already on the radio.",
    choices:[
-    {text:'Do it — team first',         fx:{Reputation:+7,Morale:-12}},
-    {text:'Refuse outright',            fx:{Reputation:-10,Morale:+7}},
-    {text:'Slow but protect your place',fx:{Reputation:-3,Morale:-5}}
-  ]},
-  {id:'e21',cat:'Team Orders',icon:'🔩',title:'Engineer\'s Risky Setup',
-   desc:'Your engineer wants a radical qualifying setup. Genius or disaster — no middle ground.',
+    {text:'Pit now — gamble on the restart',  fx:{}, safetyCarChoice:'gamble',
+     reason:'All or nothing at the restart.'},
+    {text:'Stay out — protect the position',  fx:{}, safetyCarChoice:'safe',
+     reason:'Clean and conservative. Left some points on the table.'}
+   ]},
+  {id:'e21',cat:'Team Orders',icon:'🔩',title:"Engineer's Setup Gamble",
+   desc:"Your race engineer wants a radical setup for qualifying. Pure gamble — half a second or a disaster, no middle ground.",
    choices:[
-    {text:'Trust the engineer',          fx:{Consistency:+4,Pace:+3,Morale:+3}},
-    {text:'Go conservative',             fx:{Consistency:+2,Pace:-1}},
-    {text:'Override with your instinct', fx:{Pace:+6,Consistency:-5,Reputation:-2}}
-  ]},
-  // NEW EVENTS
-  {id:'e22',cat:'Contract',icon:'🚪',title:'Lost Your Seat',
-   desc:'A rival signs with your team mid-season. You\'re out. The paddock is already talking.',
-   choices:[
-    {text:'Fight it publicly — this isn\'t over', fx:{Reputation:+5,Morale:-8},  freeAgent:true},
-    {text:'Accept quietly and move on',            fx:{Morale:-4},                freeAgent:true}
-  ]},
-  {id:'e23',cat:'Personal',icon:'🖤',title:'Driver Death', grave:true,
-   desc:'A rival driver loses their life in a crash this weekend. The paddock is silent. Racing feels different right now.',
-   choices:[
-    {text:'Dedicate the rest of your season to them', fx:{Morale:+6,Reputation:+5}},
-    {text:'Stay focused. Say nothing.',               fx:{Reputation:-6}}
-  ]},
-  {id:'e24',cat:'Media',icon:'📻',title:'Post-Race Expletive Fine',
-   desc:'You let it fly on team radio after a brutal result. The FIA have reviewed the footage.',
-   choices:[
-    {text:'Apologise publicly and pay the fine', fx:{Reputation:+3}, fineByStage:[50000,50000,100000,250000,500000]},
-    {text:'Double down. The fans loved it.',     fx:{Reputation:+5}, fineByStage:[50000,50000,100000,250000,500000], fiaTone:true}
-  ]},
-  {id:'e25',cat:'Incident',icon:'⏱️',title:'Time Penalty Controversy',
-   desc:'A 5-second penalty drops you one position. Half the paddock thinks it\'s wrong. The other half thinks you\'re lucky.',
-   choices:[
-    {text:'Protest via official channels', fx:{Morale:-3}, rollFx:{chance:0.3,fx:{Consistency:+2}}},
-    {text:'Accept the result and move on', fx:{Consistency:+2,Morale:+1}}
-  ]},
-  {id:'e26',cat:'Incident',icon:'💢',title:'Lance Stroll Incident',
-   desc:'Lance Stroll makes contact with you on track. It costs you time.',
-   choices:[
-    {text:'Blame him publicly. The data backs you up.', fx:{Reputation:-3,Morale:+6}},
-    {text:'"Racing incident." Stay professional.',       fx:{Reputation:+5,Morale:-2}}
-  ]},
-  {id:'e27',cat:'Race',icon:'🟡',title:'Safety Car Deployed',
-   desc:'The safety car is out mid-race and everyone\'s strategy is suddenly in play. Your engineer is on the radio.',
-   choices:[
-    {text:'Pit now — go for the gamble',    fx:{}, safetyCarChoice:'gamble'},
-    {text:'Stay out — protect the position',fx:{}, safetyCarChoice:'safe'}
-  ]}
+    {text:'Trust the engineer',          fx:{Consistency:+4,Pace:+3,Morale:+3},
+     reason:'It worked. The relationship strengthened.'},
+    {text:'Override with your instinct', fx:{Pace:+6,Consistency:-5,Reputation:-2},
+     reason:'Faster in sector one, inconsistent for the rest. The engineer took notes.'}
+   ]}
 ];
+
+function makeChampDeciderEvent() {
+  const rivalName = (S.seasonRivals && S.seasonRivals.length)
+    ? S.seasonRivals[0].name : 'your closest rival';
+  const gap = rnd(4, 18);
+  return {
+    id:'champ_decider', cat:'Championship', icon:'🏆',
+    title:'Championship Decider',
+    isChampDecider:true,
+    _rivalName: rivalName, _gap: gap,
+    desc:`The title comes down to this. ${rivalName} is ${gap} points ahead. You need to win and hope they falter. Your engineer has found a risky engine mode that could give you the pace — but it risks a DNF on the last lap.`,
+    choices:[
+      {text:'Use the engine mode', fx:{}, champMode:'engine',
+       reason:'60% chance of the win you need. 40% chance of losing it on the final lap.'},
+      {text:'Race within yourself', fx:{}, champMode:'safe',
+       reason:`P2 is guaranteed. The title is yours only if ${rivalName} doesn't finish.`}
+    ]
+  };
+}
 
 // ══════════════════════════════════════════════
 // STATE
@@ -1320,6 +1364,7 @@ let selectedStyle = 'consistent';
 let currentStep = 0;
 let activeTab = 'season';
 let pendingChibi = {skin:'fddbb4', hair:'short01', hairColor:'1a1a1a', clothing:'e8000a'};
+let lastEventOutcome = null;
 
 const DB_SKINS         = [{hex:'fddbb4'},{hex:'f1a96a'},{hex:'c68642'},{hex:'8d5524'},{hex:'3d1c02'}];
 const DB_HAIR_STYLES   = [
@@ -1608,7 +1653,9 @@ function defaultState() {
     burnoutEventTriggered:false, burnoutRetired:false,
     unlockedStats: ['Reputation'],
     pendingUnlocks: [],
-    chibi: {skin:'fddbb4', hair:'short01', hairColor:'1a1a1a', clothing:'e8000a'}
+    chibi: {skin:'fddbb4', hair:'short01', hairColor:'1a1a1a', clothing:'e8000a'},
+    champDeciderShown: false,
+    champDeciderChoice: null
   };
 }
 
@@ -1942,6 +1989,12 @@ function genEvents() {
     [picked[i],picked[j]] = [picked[j],picked[i]];
   }
 
+  // Championship decider (F1 only, once per career — always the final event)
+  if (S.stageIdx === 4 && S.seasonsInF1 >= 1 && !S.champDeciderShown) {
+    S.champDeciderShown = true;
+    picked.push(makeChampDeciderEvent());
+  }
+
   S.events = picked;
   S.resolved = [];
   S.contractLocked = false;
@@ -2114,6 +2167,14 @@ function resolveEvent(ei, ci) {
   const ev = S.events[ei];
   const ch = ev.choices[ci];
   const STATS = ['Pace','Racecraft','Consistency','Fitness','Reputation','Morale'];
+
+  // Build outcome for the narrative flash
+  const outcomeChanges = [];
+  for (const k of STATS) {
+    if (k in (ch.fx||{}) && ch.fx[k] !== 0) outcomeChanges.push({k, v:ch.fx[k]});
+  }
+  if (ch.champMode) S.champDeciderChoice = ch.champMode;
+
   for (const k of STATS) {
     if (k in (ch.fx||{})) S[k] = clamp(S[k] + ch.fx[k], 0, 100);
   }
@@ -2123,7 +2184,10 @@ function resolveEvent(ei, ci) {
   if (ch.freeAgent) S.freeAgent = true;
   if (ch.rollFx && Math.random() < ch.rollFx.chance) {
     for (const k of STATS) {
-      if (k in (ch.rollFx.fx||{})) S[k] = clamp(S[k] + ch.rollFx.fx[k], 0, 100);
+      if (k in (ch.rollFx.fx||{})) {
+        outcomeChanges.push({k, v:ch.rollFx.fx[k]});
+        S[k] = clamp(S[k] + ch.rollFx.fx[k], 0, 100);
+      }
     }
   }
   if (ch.safetyCarChoice === 'gamble') {
@@ -2159,6 +2223,8 @@ function resolveEvent(ei, ci) {
   if (cat === 'Incident' || cat === 'Rivalry') tryUnlock('Racecraft', 'Your first wheel-to-wheel battle has revealed how you race under pressure.');
   if ('Fitness' in (ch.fx||{})) tryUnlock('Fitness', 'Training has become part of your weekly routine.');
   if (cat === 'Team' || cat === 'Contract' || cat === 'Career') tryUnlock('Morale', 'Your relationship with the team shapes how you perform on track.');
+  // Store outcome for narrative flash
+  lastEventOutcome = {choiceText: ch.text, changes: outcomeChanges, reason: ch.reason || ''};
   S.resolved.push(ei);
   save();
   const card = document.getElementById('tinder-card');
@@ -2180,9 +2246,19 @@ function raceTheSeason() {
   const st = stage();
   const positions = [];
   let playerPts = 0, playerWins = 0, playerPodiums = 0;
+  const champDeciderChoice = S.champDeciderChoice;
+  S.champDeciderChoice = null;
 
   for (let r=0; r<st.rounds; r++) {
-    const p = simRace(st.cars);
+    let p = simRace(st.cars);
+    // Championship decider affects the final round
+    if (champDeciderChoice && r === st.rounds - 1) {
+      if (champDeciderChoice === 'engine') {
+        p = Math.random() < 0.60 ? 1 : st.cars; // 60% win / 40% DNF
+      } else {
+        p = Math.min(2, p); // guaranteed at most P2
+      }
+    }
     positions.push(p);
     playerPts += ptsFor(p);
     if (p===1) playerWins++;
@@ -2247,19 +2323,30 @@ function raceTheSeason() {
 
   // Stat changes from season performance
   const deltas = {};
-  function addDelta(k, v) { deltas[k] = (deltas[k]||0) + v; S[k] = clamp(S[k]+v, 0, 100); }
-
-  if (avgPos <= 3) { addDelta('Racecraft',3); }
-  if (avgPos <= Math.ceil(st.cars/2)) {
-    addDelta('Consistency',2); addDelta('Morale',3); addDelta('Reputation',3);
-  } else {
-    addDelta('Morale',-4); addDelta('Reputation',-3);
+  const deltaReasons = {};
+  function addDelta(k, v, reason) {
+    deltas[k] = (deltas[k]||0) + v;
+    S[k] = clamp(S[k]+v, 0, 100);
+    if (reason) deltaReasons[k] = reason;
   }
-  if (champPos===1) { addDelta('Reputation',8); addDelta('Morale',6); }
-  if (playerWins >= 3) addDelta('Reputation',4);
+
+  if (avgPos <= 3) { addDelta('Racecraft',3,'Consistently fighting at the front honed your wheel-to-wheel instincts.'); }
+  if (avgPos <= Math.ceil(st.cars/2)) {
+    addDelta('Consistency',2,'Finishing in the top half all season proved your reliability.');
+    addDelta('Morale',3,'Strong results kept your head in a good place across the campaign.');
+    addDelta('Reputation',3,'Consistent performances raised your profile in the paddock.');
+  } else {
+    addDelta('Morale',-4,'A difficult season away from the points ground you down.');
+    addDelta('Reputation',-3,'Results below the midfield hurt your standing with the teams.');
+  }
+  if (champPos===1) {
+    addDelta('Reputation',8,'A championship win is the highest possible statement of intent.');
+    addDelta('Morale',6,'The title fills you with the kind of pride that stays with you.');
+  }
+  if (playerWins >= 3) addDelta('Reputation',4,'Three or more race wins put you in elite company.');
   // Small natural pace growth
   const paceGrow = rnd(0,2);
-  if (paceGrow > 0) addDelta('Pace', paceGrow);
+  if (paceGrow > 0) addDelta('Pace', paceGrow, 'Experience and conditioning bring natural improvement season on season.');
 
   // Promotion / firing / team movement
   let promoted = false, fired = false, promotedTo = null, newTeamName = null;
@@ -2317,8 +2404,10 @@ function raceTheSeason() {
   S.log.unshift(logEntry);
 
   S.lastResult = {
-    ...logEntry, deltas, standings:standings.slice(0,5), totalCars:st.cars,
-    sponsorResults
+    ...logEntry, deltas, deltaReasons, standings:standings.slice(0,5), totalCars:st.cars,
+    sponsorResults, champDeciderUsed: !!champDeciderChoice,
+    champDeciderFinalPos: champDeciderChoice ? positions[st.rounds-1] : null,
+    champDeciderChoice
   };
 
   S.age++;
@@ -2414,8 +2503,15 @@ function showScreen(name) {
 }
 
 function showResults() {
-  document.getElementById('results-overlay').classList.remove('hidden');
-  renderResultsCard();
+  if (S.lastResult && S.lastResult.champDeciderUsed) {
+    showChampOutcomeCinematic(S.lastResult.champDeciderFinalPos, S.lastResult.champPos, S.lastResult.champDeciderChoice, () => {
+      document.getElementById('results-overlay').classList.remove('hidden');
+      renderResultsCard();
+    });
+  } else {
+    document.getElementById('results-overlay').classList.remove('hidden');
+    renderResultsCard();
+  }
 }
 
 function closeResults() {
@@ -2627,6 +2723,34 @@ function renderEvents() {
   const ei = S.events.findIndex((_, i) => !S.resolved.includes(i));
   const ev = S.events[ei];
 
+  // Championship decider — show cinematic overlay instead of tinder card
+  if (ev.isChampDecider) {
+    document.getElementById('events-sec').innerHTML = `${calStrip}${unlockHtml}
+      <div class="tinder-wrap"><div class="tinder-dots">${dots}</div>
+        <div style="padding:20px 0;text-align:center;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--dim)">
+          🏆 Championship Decider — prepare yourself
+        </div>
+      </div>`;
+    showChampDecider(ei);
+    return;
+  }
+
+  // Outcome flash from last resolved event
+  const outcomeHtml = lastEventOutcome && lastEventOutcome.changes.length ? `
+    <div class="outcome-flash">
+      <div class="outcome-flash-lbl">Last decision</div>
+      <div class="outcome-flash-choice">"${esc(lastEventOutcome.choiceText)}"</div>
+      ${lastEventOutcome.changes.map(c=>`
+        <div class="outcome-stat-line ${c.v>0?'pos':'neg'}">
+          <span class="osv">${c.v>0?'+':''}${c.v} ${c.k.toUpperCase()}</span>${lastEventOutcome.reason ? ` — ${esc(lastEventOutcome.reason)}` : ''}
+        </div>`).join('')}
+    </div>` : (lastEventOutcome && lastEventOutcome.reason ? `
+    <div class="outcome-flash">
+      <div class="outcome-flash-lbl">Last decision</div>
+      <div class="outcome-flash-choice">"${esc(lastEventOutcome.choiceText)}"</div>
+      <div class="outcome-stat-line" style="color:var(--dim);font-size:11px">${esc(lastEventOutcome.reason)}</div>
+    </div>` : '');
+
   const choices = ev.choices.map((c, ci) => {
     const tags = Object.entries(c.fx||{}).filter(([,v])=>v!==0).map(([k,v]) => {
       const cls = v>0?'pos':v<0?'neg':'neu';
@@ -2635,7 +2759,7 @@ function renderEvents() {
     if (c.money) tags.push(`<span class="fx-tag pos">+${fmtMoney(c.money)}</span>`);
     if (c.fineByStage) tags.push(`<span class="fx-tag neg">−${fmtMoney(c.fineByStage[S.stageIdx])}</span>`);
     if (c.fiaTone) tags.push(`<span class="fx-tag neu">FIA unhappy</span>`);
-    if (c.rollFx) tags.push(`<span class="fx-tag neu">30% chance reversed</span>`);
+    if (c.rollFx) tags.push(`<span class="fx-tag neu">chance of penalty</span>`);
     if (c.safetyCarChoice==='gamble') tags.push(`<span class="fx-tag neu">Big swing</span>`);
     if (c.safetyCarChoice==='safe') tags.push(`<span class="fx-tag pos">Safe gain</span>`);
     if (c.burnoutChange > 0) tags.push(`<span class="fx-tag neg">🔥 +${c.burnoutChange}</span>`);
@@ -2649,6 +2773,7 @@ function renderEvents() {
   document.getElementById('events-sec').innerHTML = `
     ${calStrip}
     ${unlockHtml}
+    ${outcomeHtml}
     <div class="tinder-wrap">
       <div class="tinder-dots">${dots}</div>
       <div id="tinder-card" class="enter${ev.grave?' grave':''}" data-cat="${ev.cat}">
@@ -2731,6 +2856,113 @@ function updateRaceBtn() {
     : `Resolve all events first (${S.resolved.length}/${S.events.length})`;
 }
 
+function generateRaceReport(r) {
+  const pace = S.Pace, racecraft = S.Racecraft, consistency = S.Consistency;
+  const fitness = S.Fitness, morale = S.Morale;
+  const rounds = stage().rounds;
+  if (morale < 35) return "The psychological weight of the season showed on track. You never fully found your rhythm across the campaign.";
+  if (consistency < 50) return "Laptime swings cost you positions at critical moments — sustaining pace across the full distance remained a struggle throughout the season.";
+  if (fitness < 40 && rounds >= 16) return "The physical demands of the later rounds exposed your conditioning. You conceded places in the closing stints that should have been yours.";
+  if (pace > 75 && racecraft < 45) return "The raw pace was there all season, but converting opportunities proved costly. Two overtakes that should have stuck, didn't.";
+  if (consistency > 70 && morale > 60) return "You delivered exactly what the team needed — consistent laptimes and no costly mistakes across the full campaign.";
+  if (fitness > 75 && rounds >= 16) return "Your conditioning showed in the closing rounds. You were regularly among the fastest drivers on track when others were fading.";
+  if (r.champWon) return "A dominant campaign. Every metric — pace, racecraft, reliability — pointed to a worthy champion.";
+  if (r.champPos <= 3) return "A consistent challenger all season. Points accumulated steadily and the paddock began to take notice.";
+  if (r.champPos <= Math.ceil(stage().cars / 2)) return "A season of mixed results — flashes of real pace scattered among moments that cost you points.";
+  return "A difficult year. The car and the stats tell the same story — more work needed before this level becomes comfortable.";
+}
+
+function showChampDecider(ei) {
+  const ev = S.events[ei];
+  const rivalName = ev._rivalName || 'your closest rival';
+  const gap = ev._gap || 12;
+  const overlay = document.getElementById('champ-overlay');
+  const inner = document.getElementById('champ-overlay-inner');
+  if (!overlay || !inner) return;
+  inner.innerHTML = `
+    <div class="champ-logo">PitLife · Championship Decider</div>
+    <div class="champ-headline">The Title<br>Comes Down<br>To This</div>
+    <div class="champ-gap-line" id="champ-typewriter"></div>
+    <div class="champ-desc">${esc(ev.desc)}</div>
+    <div class="champ-choices">
+      ${ev.choices.map((c,ci)=>`
+        <button class="champ-choice-btn" onclick="resolveChampDecider(${ei},${ci})">
+          ${esc(c.text)}
+          <span class="champ-choice-reason">${esc(c.reason||'')}</span>
+        </button>`).join('')}
+    </div>`;
+  overlay.classList.remove('hidden');
+  // Typewriter effect on gap line
+  const msg = `${esc(rivalName)} is <span class="champ-rival-name">${gap} points</span> ahead`;
+  const plain = `${rivalName} is ${gap} points ahead`;
+  const tw = document.getElementById('champ-typewriter');
+  if (tw) {
+    let i = 0;
+    const timer = setInterval(() => {
+      tw.innerHTML = plain.slice(0, i) + (i < plain.length ? '<span style="opacity:.4">|</span>' : '');
+      if (i >= plain.length) {
+        clearInterval(timer);
+        tw.innerHTML = msg; // swap in styled version
+      }
+      i++;
+    }, 40);
+  }
+}
+
+function resolveChampDecider(ei, ci) {
+  document.getElementById('champ-overlay').classList.add('hidden');
+  resolveEvent(ei, ci);
+}
+
+function showChampOutcomeCinematic(finalPos, champPos, choice, callback) {
+  const outcome = document.getElementById('champ-outcome');
+  const lapText = document.getElementById('champ-lap-text');
+  if (!outcome || !lapText) { callback(); return; }
+
+  const won = champPos === 1;
+  const dnf = choice === 'engine' && finalPos > 3;
+  const p2title = choice === 'safe' && finalPos <= 2;
+
+  const sequence = [
+    {text:'RACE DAY', cls:'bright', ms:1400},
+    {text:'LAP 1 OF 57\nYou build your pace', cls:'', ms:1600},
+    {text:'LAP 30\nThe gap to the leader is closing', cls:'bright', ms:1600},
+    {text:'FINAL LAP\nEverything on the line', cls:'bright', ms:2000},
+    won
+      ? {text:'CHAMPION', cls:'result-win', ms:2500}
+      : dnf
+        ? {text:'DNF\nThe engine let go\non the last lap', cls:'result-lose', ms:2500}
+        : {text:'P2\nYou gave everything\nyou had', cls:'result-p2', ms:2500}
+  ];
+
+  outcome.classList.remove('hidden');
+  lapText.className = 'champ-lap';
+  lapText.style.opacity = '0';
+  lapText.textContent = '';
+
+  let idx = 0;
+  function showNext() {
+    if (idx >= sequence.length) {
+      outcome.classList.add('hidden');
+      callback();
+      return;
+    }
+    const s = sequence[idx++];
+    lapText.className = 'champ-lap ' + (s.cls || '');
+    lapText.style.whiteSpace = 'pre-line';
+    lapText.textContent = s.text;
+    lapText.style.opacity = '0';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { lapText.style.opacity = '1'; });
+    });
+    setTimeout(() => {
+      lapText.style.opacity = '0';
+      setTimeout(showNext, 600);
+    }, s.ms);
+  }
+  showNext();
+}
+
 function renderResultsCard() {
   const r = S.lastResult;
   if (!r) return;
@@ -2739,14 +2971,21 @@ function renderResultsCard() {
   const asfx = ordSuffix(r.avgPos);
   const headline = pickHeadline(r);
 
-  // Deltas
+  // Race report
+  const raceReport = generateRaceReport(r);
+
+  // Deltas with reasons
   const KEYS = ['Pace','Racecraft','Consistency','Fitness','Reputation','Morale'];
   const deltaHtml = KEYS.filter(k=>r.deltas[k]!==undefined).map(k=>{
     const v = r.deltas[k];
     const cls = v>0?'pos':v<0?'neg':'neu';
+    const reason = (r.deltaReasons||{})[k] || '';
     return `<div class="delta">
-      <span class="delta-n">${k}</span>
-      <span class="delta-v ${cls}">${v>0?'+':''}${v}</span>
+      <div class="delta-top">
+        <span class="delta-n">${k}</span>
+        <span class="delta-v ${cls}">${v>0?'+':''}${v}</span>
+      </div>
+      ${reason ? `<div class="delta-r">${esc(reason)}</div>` : ''}
     </div>`;
   }).join('');
 
@@ -2783,6 +3022,7 @@ function renderResultsCard() {
     <div class="res-sublabel">Championship · Avg P${r.avgPos}${asfx} per race</div>
     <div class="res-headline">"${effectiveNickname()}" — ${esc(headline)}</div>
     ${champBanner}
+    <div class="race-report">"${esc(raceReport)}"</div>
     ${deltaHtml ? `<div class="deltas-grid">${deltaHtml}</div>` : ''}
     <div class="earn-banner">
       <span class="earn-b-lbl">Season Earnings</span>
