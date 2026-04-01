@@ -117,32 +117,13 @@ body{
 .finput::placeholder{color:var(--border)}
 /* ─── CHIBI CREATOR ─── */
 #chibi-creator{width:100%}
-.chibi-top{display:flex;align-items:flex-end;gap:12px;margin-bottom:10px}
-.chibi-preview-card{
-  flex-shrink:0;
-  display:flex;justify-content:center;align-items:flex-end;
-  height:130px;
-}
-.chibi-gender-col{display:flex;flex-direction:column;gap:4px;justify-content:flex-end}
-.chibi-gender{background:transparent;border:1.5px solid var(--border);cursor:pointer;
-  font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;
-  padding:5px 12px;text-transform:uppercase;transition:border-color .12s,background .12s,color .12s;
-  color:var(--dim);border-radius:40px}
-.chibi-gender.sel{border-color:var(--red);background:var(--red);color:#fff}
 .chibi-ctrl-micro{font-family:'DM Sans',sans-serif;font-size:8px;font-weight:700;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:4px;margin-top:8px}
-.chibi-ctrl-row{margin-top:0}
 .chibi-swatches{display:flex;gap:5px;flex-wrap:wrap}
 .chibi-swatch{width:22px;height:22px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:border-color .12s,transform .12s;box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .chibi-swatch.sel{border-color:var(--red);transform:scale(1.15)}
-.chibi-hair-icons{display:flex;gap:5px}
-.chibi-hair-icon{
-  width:38px;height:26px;border:2px solid var(--border);background:var(--surface);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:border-color .12s;overflow:hidden;padding:2px;
-}
-.chibi-hair-icon.sel{border-color:var(--red)}
-.chibi-suit-helmet-row{display:flex;align-items:center;gap:8px}
-.chibi-sh-divider{font-family:'DM Sans',sans-serif;font-size:11px;color:var(--border);flex-shrink:0}
+.chibi-style-pills{display:flex;gap:5px;flex-wrap:wrap}
+.chibi-style-pill{background:transparent;border:1.5px solid var(--border);border-radius:20px;color:var(--dim);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;padding:4px 10px;transition:border-color .12s,background .12s,color .12s}
+.chibi-style-pill.sel{background:var(--red);border-color:var(--red);color:#fff}
 
 .nat-dropdown{position:relative;width:100%}
 .nat-input{
@@ -775,20 +756,14 @@ body{
         <div style="display:flex;justify-content:center;margin-bottom:12px">
           <div id="chibi-preview"></div>
         </div>
-        <div class="chibi-gender-col" style="flex-direction:row;justify-content:center;margin-bottom:10px">
-          <button class="chibi-gender sel" onclick="setChibiGender('m')">♂ Male</button>
-          <button class="chibi-gender" onclick="setChibiGender('f')">♀ Female</button>
-        </div>
         <div class="chibi-ctrl-micro">Skin Tone</div>
         <div class="chibi-swatches" id="chibi-skin"></div>
-        <div class="chibi-ctrl-micro">Hair</div>
-        <div class="chibi-hair-icons" id="chibi-hair-style"></div>
-        <div class="chibi-ctrl-micro">Suit &amp; Helmet</div>
-        <div class="chibi-suit-helmet-row">
-          <div class="chibi-swatches" id="chibi-suit-color"></div>
-          <span class="chibi-sh-divider">|</span>
-          <div class="chibi-swatches" id="chibi-helmet-color"></div>
-        </div>
+        <div class="chibi-ctrl-micro">Hair Style</div>
+        <div class="chibi-style-pills" id="chibi-hair-style"></div>
+        <div class="chibi-ctrl-micro">Hair Colour</div>
+        <div class="chibi-swatches" id="chibi-hair-color"></div>
+        <div class="chibi-ctrl-micro">Clothing Colour</div>
+        <div class="chibi-swatches" id="chibi-clothing-color"></div>
       </div>
       <button class="step-btn" onclick="onStart()">Start Career →</button>
     </div>
@@ -1344,17 +1319,26 @@ let selectedNat = null;
 let selectedStyle = 'consistent';
 let currentStep = 0;
 let activeTab = 'season';
-let pendingChibi = {gender:'m', skin:'#FDDBB4', hairStyle:0, hairColor:'#1a1a1a', suit:'#E8000A', helmet:'#E8000A'};
+let pendingChibi = {skin:'fddbb4', hair:'short01', hairColor:'1a1a1a', clothing:'e8000a'};
 
-const CHIBI_SKINS = ['#FDDBB4','#F1A96A','#C68642','#8D5524','#3D1C02'];
-const CHIBI_SUIT_COLORS = ['#E8000A','#003399','#1A7A3C','#F5A623','#7B3FBE','#0A0A0A'];
-const CHIBI_HELMET_COLORS = ['#E8000A','#003399','#F5A623','#1A7A3C','#FFFFFF','#0A0A0A'];
-const CHIBI_HAIR_LABELS = {
-  m: ['Slick','Curly','Buzz','Under'],
-  f: ['Long','Ponytail','Bob','Wavy']
-};
+const DB_SKINS         = [{hex:'fddbb4'},{hex:'f1a96a'},{hex:'c68642'},{hex:'8d5524'},{hex:'3d1c02'}];
+const DB_HAIR_STYLES   = [
+  {id:'short01',label:'Short'},{id:'short05',label:'Styled'},{id:'short12',label:'Curly'},
+  {id:'long01',label:'Long'},{id:'long05',label:'Wavy'},{id:'long12',label:'Bob'}
+];
+const DB_HAIR_COLORS   = [{hex:'1a1a1a'},{hex:'3d1a00'},{hex:'8b4513'},{hex:'c4892a'},{hex:'e8e8e8'},{hex:'e8000a'}];
+const DB_CLOTHING_COLORS = [{hex:'e8000a'},{hex:'003399'},{hex:'1a7a3c'},{hex:'f5a623'},{hex:'7b3fbe'},{hex:'0a0a0a'}];
 
 function buildChibiSVG(cfg, w) {
+  const skin    = (cfg.skin      || 'fddbb4').replace('#','');
+  const hair    =  cfg.hair      || 'short01';
+  const hairClr = (cfg.hairColor || '1a1a1a').replace('#','');
+  const cloth   = (cfg.clothing  || 'e8000a').replace('#','');
+  const url = `https://api.dicebear.com/9.x/adventurer/svg?seed=pitlife&skinColor=${skin}&hairColor=${hairClr}&hair=${hair}&clothingColor=${cloth}`;
+  return `<img src="${url}" width="${w}" height="${w}" style="display:block" alt="">`;
+}
+// (old hand-drawn chibi internals replaced by DiceBear)
+function _buildChibiSVG_unused(cfg, w) {
   const gn = cfg.gender || 'm';
   const sk  = cfg.skin      || '#FDDBB4';
   const hi  = cfg.hairStyle || 0;
@@ -1540,15 +1524,7 @@ function buildChibiSVG(cfg, w) {
 
 function refreshChibiPreview() {
   const el = document.getElementById('chibi-preview');
-  if (el) el.innerHTML = buildChibiSVG(pendingChibi, 100);
-}
-
-function setChibiGender(g) {
-  pendingChibi.gender = g;
-  pendingChibi.hairStyle = 0;
-  document.querySelectorAll('.chibi-gender').forEach(b=>b.classList.toggle('sel', b.getAttribute('onclick')===`setChibiGender('${g}')`));
-  buildHairIcons(g);
-  refreshChibiPreview();
+  if (el) el.innerHTML = buildChibiSVG(pendingChibi, 120);
 }
 
 function setChibiSkin(s) {
@@ -1557,9 +1533,9 @@ function setChibiSkin(s) {
   refreshChibiPreview();
 }
 
-function setChibiHairStyle(i) {
-  pendingChibi.hairStyle = i;
-  document.querySelectorAll('.chibi-hair-icon').forEach((b,j)=>b.classList.toggle('sel',j===i));
+function setChibiHairStyle(id) {
+  pendingChibi.hair = id;
+  document.querySelectorAll('#chibi-hair-style .chibi-style-pill').forEach(b=>b.classList.toggle('sel', b.dataset.val===id));
   refreshChibiPreview();
 }
 
@@ -1569,77 +1545,29 @@ function setChibiHairColor(c) {
   refreshChibiPreview();
 }
 
-function setChibiSuit(c) {
-  pendingChibi.suit = c;
-  document.querySelectorAll('#chibi-suit-color .chibi-swatch').forEach(b=>b.classList.toggle('sel', b.dataset.val===c));
-  refreshChibiPreview();
-}
-
-function setChibiHelmet(c) {
-  pendingChibi.helmet = c;
-  document.querySelectorAll('#chibi-helmet-color .chibi-swatch').forEach(b=>b.classList.toggle('sel', b.dataset.val===c));
+function setChibiClothing(c) {
+  pendingChibi.clothing = c;
+  document.querySelectorAll('#chibi-clothing-color .chibi-swatch').forEach(b=>b.classList.toggle('sel', b.dataset.val===c));
   refreshChibiPreview();
 }
 
 // Hair silhouette icons for the style picker (30×20 viewBox)
-function buildHairIconSVG(g, idx, sel) {
-  const hc = '#333';
-  const iconsM = [
-    // 0 Slick
-    `<rect x="1" y="1" width="28" height="8" rx="4" fill="${hc}"/>
-     <polygon points="5,8 3,14 9,8" fill="${hc}"/>
-     <polygon points="14,8 12,15 18,8" fill="${hc}"/>
-     <polygon points="22,8 20,14 26,8" fill="${hc}"/>`,
-    // 1 Curly
-    `<circle cx="5"  cy="7" r="5" fill="${hc}"/>
-     <circle cx="12" cy="4" r="5" fill="${hc}"/>
-     <circle cx="19" cy="4" r="5" fill="${hc}"/>
-     <circle cx="26" cy="7" r="5" fill="${hc}"/>
-     <rect x="2" y="7" width="26" height="6" fill="${hc}"/>`,
-    // 2 Buzz
-    `<rect x="1" y="1" width="28" height="5" rx="2" fill="${hc}"/>`,
-    // 3 Under
-    `<path d="M1 10 Q4 1 22 1 Q29 1 29 5 Q29 10 22 10 Q12 8 1 10Z" fill="${hc}"/>`
-  ];
-  const iconsF = [
-    // 0 Long
-    `<rect x="1" y="1" width="28" height="7" rx="3" fill="${hc}"/>
-     <rect x="1" y="5" width="5"  height="14" rx="2" fill="${hc}"/>
-     <rect x="24" y="5" width="5" height="14" rx="2" fill="${hc}"/>`,
-    // 1 Ponytail
-    `<rect x="1" y="1" width="28" height="8" rx="3" fill="${hc}"/>
-     <rect x="24" y="7" width="5" height="11" rx="2" fill="${hc}"/>`,
-    // 2 Bob
-    `<path d="M1 10 Q1 1 15 1 Q29 1 29 10 Q29 16 22 18 Q15 20 8 18 Q1 16 1 10Z" fill="${hc}"/>`,
-    // 3 Wavy
-    `<rect x="1" y="1" width="28" height="7" rx="3" fill="${hc}"/>
-     <path d="M1 6 Q1 12 3 14 Q1 16 3 19" stroke="${hc}" stroke-width="4" fill="none" stroke-linecap="round"/>
-     <path d="M29 6 Q29 12 27 14 Q29 16 27 19" stroke="${hc}" stroke-width="4" fill="none" stroke-linecap="round"/>`
-  ];
-  const icons = g==='f' ? iconsF : iconsM;
-  const icon = icons[idx % 4];
-  return `<div class="chibi-hair-icon${sel?' sel':''}" onclick="setChibiHairStyle(${idx})">
-    <svg viewBox="0 0 30 20" width="30" height="20" xmlns="http://www.w3.org/2000/svg">${icon}</svg>
-  </div>`;
-}
-
-function buildHairIcons(g) {
-  const el = document.getElementById('chibi-hair-style');
-  if (!el) return;
-  el.innerHTML = [0,1,2,3].map(i => buildHairIconSVG(g, i, i===pendingChibi.hairStyle)).join('');
-}
-
 function initChibiCreator() {
-  pendingChibi = {gender:'m', skin:'#FDDBB4', hairStyle:0, hairColor:'#1a1a1a', suit:'#E8000A', helmet:'#E8000A'};
-  function sw(c, i, fn) {
-    const extra = c==='#FFFFFF'?'box-shadow:0 0 0 1px #ccc;':'';
-    return `<div class="chibi-swatch${i===0?' sel':''}" style="background:${c};${extra}" data-val="${c}" onclick="${fn}('${c}')"></div>`;
+  pendingChibi = {skin:'fddbb4', hair:'short01', hairColor:'1a1a1a', clothing:'e8000a'};
+  function sw(hex, i, fn) {
+    const extra = hex==='e8e8e8' ? 'box-shadow:0 0 0 1px #ccc;' : '';
+    return `<div class="chibi-swatch${i===0?' sel':''}" style="background:#${hex};${extra}" data-val="${hex}" onclick="${fn}('${hex}')"></div>`;
   }
-  document.getElementById('chibi-skin').innerHTML       = CHIBI_SKINS.map((c,i)=>sw(c,i,'setChibiSkin')).join('');
-  document.getElementById('chibi-suit-color').innerHTML = CHIBI_SUIT_COLORS.map((c,i)=>sw(c,i,'setChibiSuit')).join('');
-  document.getElementById('chibi-helmet-color').innerHTML = CHIBI_HELMET_COLORS.map((c,i)=>sw(c,i,'setChibiHelmet')).join('');
-  buildHairIcons('m');
-  document.querySelectorAll('.chibi-gender').forEach(b=>b.classList.toggle('sel', b.getAttribute('onclick')===`setChibiGender('m')`));
+  document.getElementById('chibi-skin').innerHTML =
+    DB_SKINS.map((s,i) => sw(s.hex, i, 'setChibiSkin')).join('');
+  document.getElementById('chibi-hair-style').innerHTML =
+    DB_HAIR_STYLES.map((s,i) =>
+      `<button class="chibi-style-pill${i===0?' sel':''}" data-val="${s.id}" onclick="setChibiHairStyle('${s.id}')">${s.label}</button>`
+    ).join('');
+  document.getElementById('chibi-hair-color').innerHTML =
+    DB_HAIR_COLORS.map((s,i) => sw(s.hex, i, 'setChibiHairColor')).join('');
+  document.getElementById('chibi-clothing-color').innerHTML =
+    DB_CLOTHING_COLORS.map((s,i) => sw(s.hex, i, 'setChibiClothing')).join('');
   refreshChibiPreview();
 }
 
@@ -1680,7 +1608,7 @@ function defaultState() {
     burnoutEventTriggered:false, burnoutRetired:false,
     unlockedStats: ['Reputation'],
     pendingUnlocks: [],
-    chibi: {gender:'m', skin:'#FDDBB4', hairStyle:0, hairColor:'#1a1a1a', suit:'#E8000A', helmet:'#E8000A'}
+    chibi: {skin:'fddbb4', hair:'short01', hairColor:'1a1a1a', clothing:'e8000a'}
   };
 }
 
