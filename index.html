@@ -801,8 +801,6 @@ body{
         <div class="hc-pills" id="hc-pattern"></div>
         <div class="hc-micro">Pattern Colour</div>
         <div class="hc-swatches" id="hc-pat-color"></div>
-        <div class="hc-micro">Sponsor Stripe</div>
-        <div class="hc-swatches" id="hc-sponsor"></div>
       </div>
       <button class="step-btn" onclick="onStart()">Start Career →</button>
     </div>
@@ -1374,7 +1372,7 @@ let selectedNat = null;
 let selectedStyle = 'consistent';
 let currentStep = 0;
 let activeTab = 'season';
-let pendingHelmet = {base:'e8000a', visor:1, pattern:'solid', patternColor:'ffffff', sponsor:'f5a623', number:1};
+let pendingHelmet = {base:'e8000a', visor:1, pattern:'solid', patternColor:'ffffff', number:1};
 let lastEventOutcome = null;
 
 const HM_BASE = [
@@ -1382,20 +1380,16 @@ const HM_BASE = [
   {hex:'f5a623'},{hex:'00bcd4'},{hex:'7b3fbe'},{hex:'1a7a3c'}
 ];
 const HM_VISOR = [
-  {color:'rgba(200,230,255,0.35)', label:'Clear',  mirror:false},
-  {color:'rgba(15,15,15,0.9)',     label:'Dark',   mirror:false},
-  {color:'rgba(160,20,20,0.75)',   label:'Red',    mirror:false},
-  {color:'rgba(20,60,180,0.75)',   label:'Blue',   mirror:false},
-  {color:null,                     label:'Mirror', mirror:true}
+  {color:'rgba(200,230,255,0.45)', label:'Clear'},
+  {color:'rgba(10,10,10,0.92)',    label:'Dark'},
+  {color:'rgba(160,20,20,0.78)',   label:'Red'},
+  {color:'rgba(20,60,180,0.78)',   label:'Blue'},
+  {color:'rgba(180,190,200,0.85)', label:'Mirror'}
 ];
 const HM_PATTERNS = [
   {id:'solid',label:'Solid'},{id:'split',label:'Split'},
   {id:'stripes',label:'Stripes'},{id:'geo',label:'Geo'},
   {id:'flames',label:'Flames'},{id:'flag',label:'Flag'}
-];
-const HM_SPONSOR = [
-  {hex:'ffffff'},{hex:'f5a623'},{hex:'e8000a'},
-  {hex:'003399'},{hex:'1a1a1a'},{hex:'00bcd4'}
 ];
 
 function darkenHex(hex, pct) {
@@ -1406,74 +1400,59 @@ function darkenHex(hex, pct) {
   return `rgb(${r},${g},${b})`;
 }
 
-const _HB = 'M147.825,23.273C133.898,8.265,114.527,0,93.281,0h-5.766C44.73,0,9.766,34.041,8.222,76.465c-0.017,0.14-0.074,0.268-0.074,0.412v2.509v35.298v0.694c0,0.07,0.036,0.133,0.041,0.203c0.215,19.012,7.194,37.295,19.771,51.562c0.673,0.766,1.636,1.186,2.625,1.186c0.308,0,0.617-0.041,0.923-0.123l127.589-34.857c1.189-0.325,2.119-1.254,2.449-2.441c1.432-5.158,2.358-10.463,2.755-15.764l2.673-35.701C168.562,58.239,161.76,38.291,147.825,23.273z M15.149,79.84l72.902-12.175c5.932-0.988,10.652,0.103,12.941,2.997c2.287,2.895,2.259,7.735-0.075,13.279l-11.412,27.094l-74.356,0.804V79.84z M159.995,78.924l-2.673,35.701c-0.314,4.194-0.991,8.391-2.017,12.503L31.802,160.867c-9.869-11.894-15.588-26.622-16.473-42.029l76.547-0.825c1.394-0.014,2.647-0.858,3.187-2.143l12.303-29.21c3.406-8.084,3.093-15.306-0.882-20.337c-3.975-5.031-10.934-7.003-19.585-5.561L15.487,72.687C18.881,35.905,49.872,7,87.515,7h5.766c19.277,0,36.825,7.472,49.414,21.034C155.29,41.607,161.434,59.681,159.995,78.924z';
+// Outer helmet silhouette (sub-path 1 of original compound path)
+const _HSHELL = 'M147.825,23.273C133.898,8.265,114.527,0,93.281,0h-5.766C44.73,0,9.766,34.041,8.222,76.465c-0.017,0.14-0.074,0.268-0.074,0.412v2.509v35.298v0.694c0,0.07,0.036,0.133,0.041,0.203c0.215,19.012,7.194,37.295,19.771,51.562c0.673,0.766,1.636,1.186,2.625,1.186c0.308,0,0.617-0.041,0.923-0.123l127.589-34.857c1.189-0.325,2.119-1.254,2.449-2.441c1.432-5.158,2.358-10.463,2.755-15.764l2.673-35.701C168.562,58.239,161.76,38.291,147.825,23.273z';
+// Visor window — the face panel opening (sub-path 2 of original compound path)
+const _HVISORWIN = 'M15.149,79.84l72.902-12.175c5.932-0.988,10.652,0.103,12.941,2.997c2.287,2.895,2.259,7.735-0.075,13.279l-11.412,27.094l-74.356,0.804V79.84z';
 
 function buildHelmet(cfg, w) {
   const base   = '#' + (cfg.base || 'e8000a').replace('#','');
   const patC   = '#' + (cfg.patternColor || 'ffffff').replace('#','');
-  const spon   = '#' + (cfg.sponsor || 'f5a623').replace('#','');
   const pat    = cfg.pattern || 'solid';
   const vi     = Math.min(typeof cfg.visor==='number' ? cfg.visor : 1, HM_VISOR.length-1);
   const vc     = HM_VISOR[vi];
   const uid    = Math.random().toString(36).slice(2,8);
   const detail = darkenHex(base, 0.2);
 
-  // Mirror visor gradient
-  const mirrorDef = vc.mirror ? `<linearGradient id="hmirror${uid}" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%"   stop-color="#b0b8c8"/>
-    <stop offset="35%"  stop-color="#eef2f6"/>
-    <stop offset="65%"  stop-color="#c8d0dc"/>
-    <stop offset="100%" stop-color="#8890a0"/>
-  </linearGradient>` : '';
-  const visorFill = vc.mirror ? `url(#hmirror${uid})` : vc.color;
-
-  // Pattern overlay shapes — all clipped to helmet body
+  // Pattern overlay shapes — all clipped to outer shell
   let patShapes = '';
   if (pat === 'split') {
-    // Top 45% of viewBox height = 175.349 * 0.45 = 78.907
-    patShapes = `<rect x="0" y="0" width="175.349" height="78.907" fill="${patC}"/>`;
+    // Top 40% of viewBox height
+    patShapes = `<rect x="0" y="0" width="175.349" height="70.14" fill="${patC}"/>`;
   } else if (pat === 'stripes') {
-    // 4 diagonal lines at 40° from horizontal, stroke-width 8
-    // tan(40°) ≈ 0.839; across 200px width → Δy ≈ 168
-    patShapes = [70, 120, 170, 220].map(yo =>
-      `<line x1="-10" y1="${yo}" x2="190" y2="${yo - 168}" stroke="${patC}" stroke-width="8"/>`
+    // 5 diagonal lines at 45° (tan45=1, dx=200 → dy=200), stroke-width 10
+    patShapes = [30, 80, 130, 180, 230].map(yo =>
+      `<line x1="-10" y1="${yo}" x2="190" y2="${yo - 200}" stroke="${patC}" stroke-width="10"/>`
     ).join('');
   } else if (pat === 'geo') {
-    // 6×6 grid of diamonds, 0.6 opacity
+    // 6×6 grid of rotated squares (diamonds), opacity 0.5
     const step = 175.349 / 6;
-    const s    = 8;
+    const s    = 9;
     const rows = [];
     for (let r = 0; r < 6; r++) {
       for (let c = 0; c < 6; c++) {
         const cx = step * (c + 0.5);
         const cy = step * (r + 0.5);
-        rows.push(`<polygon points="${cx},${cy-s} ${cx+s},${cy} ${cx},${cy+s} ${cx-s},${cy}" fill="${patC}" opacity="0.6"/>`);
+        rows.push(`<polygon points="${cx},${cy-s} ${cx+s},${cy} ${cx},${cy+s} ${cx-s},${cy}" fill="${patC}" opacity="0.5"/>`);
       }
     }
     patShapes = rows.join('');
   } else if (pat === 'flames') {
-    // 3 teardrop flames rising from bottom, pointed top rounded bottom
-    patShapes = [[38,168,85,20],[87.7,168,80,20],[137,168,85,20]].map(([cx,by,h,hw]) =>
-      `<path d="M ${cx},${by-h} C ${cx+hw},${by-h*0.55} ${cx+hw},${by} ${cx},${by} C ${cx-hw},${by} ${cx-hw},${by-h*0.55} ${cx},${by-h} Z" fill="${patC}" opacity="0.72"/>`
+    // 3 elongated teardrop paths at bottom of helmet
+    patShapes = [[38,168,85,20],[87.7,168,80,18],[137,168,85,20]].map(([cx,by,h,hw]) =>
+      `<path d="M ${cx},${by-h} C ${cx+hw},${by-h*0.55} ${cx+hw},${by} ${cx},${by} C ${cx-hw},${by} ${cx-hw},${by-h*0.55} ${cx},${by-h} Z" fill="${patC}" opacity="0.75"/>`
     ).join('');
-  } else if (pat === 'flag') {
-    // Three equal vertical rects: outer two = base colour, middle = white
-    const tw = 175.349 / 3;
-    patShapes = `<rect x="0"        y="0" width="${tw}" height="175.349" fill="${base}"/>` +
-                `<rect x="${tw}"    y="0" width="${tw}" height="175.349" fill="#ffffff"/>` +
-                `<rect x="${tw*2}"  y="0" width="${tw}" height="175.349" fill="${base}"/>`;
   }
 
   return `<svg viewBox="0 0 175.349 175.349" width="${w}" height="${w}" xmlns="http://www.w3.org/2000/svg" style="display:block">
   <defs>
-    <clipPath id="hbody${uid}"><path d="${_HB}"/></clipPath>
-    ${mirrorDef}
+    <clipPath id="hbody${uid}"><path d="${_HSHELL}"/></clipPath>
   </defs>
-  <path fill="${base}" d="${_HB}"/>
+  <path fill="${base}" d="${_HSHELL}"/>
   <g clip-path="url(#hbody${uid})">${patShapes}</g>
-  <path fill="${visorFill}" d="M130.648,77c-7.72,0-14,6.279-14,14s6.28,14,14,14c7.72,0,14-6.279,14-14S138.367,77,130.648,77z M130.648,98c-3.86,0-7-3.141-7-7s3.139-7,7-7s7,3.141,7,7S134.508,98,130.648,98z"/>
+  <path fill="${vc.color}" d="${_HVISORWIN}"/>
+  <path fill="#1a1a1a" d="M130.648,77c-7.72,0-14,6.279-14,14s6.28,14,14,14c7.72,0,14-6.279,14-14S138.367,77,130.648,77z M130.648,98c-3.86,0-7-3.141-7-7s3.139-7,7-7s7,3.141,7,7S134.508,98,130.648,98z"/>
   <path fill="${detail}" d="M94.623,74.526c-1.367-1.367-3.582-1.367-4.949,0l-10.5,10.5c-1.367,1.367-1.367,3.582,0,4.949C79.857,90.658,80.752,91,81.648,91s1.791-0.342,2.475-1.025l10.5-10.5C95.99,78.108,95.99,75.893,94.623,74.526z"/>
-  <path fill="${spon}" d="M153.598,138.093L42.341,168.472c-1.866,0.509-2.965,2.434-2.456,4.3c0.426,1.555,1.835,2.577,3.375,2.577c0.304,0,0.615-0.041,0.923-0.123l111.257-30.379c1.866-0.509,2.965-2.434,2.456-4.3C157.385,138.684,155.454,137.587,153.598,138.093z"/>
 </svg>`;
 }
 
@@ -1515,11 +1494,6 @@ function setHelmPatternColor(v) {
   document.querySelectorAll('#hc-pat-color .hc-swatch').forEach(b=>b.classList.toggle('sel',b.dataset.val===v));
   refreshHelmetPreview();
 }
-function setHelmSponsor(v) {
-  pendingHelmet.sponsor = v;
-  document.querySelectorAll('#hc-sponsor .hc-swatch').forEach(b=>b.classList.toggle('sel',b.dataset.val===v));
-  refreshHelmetPreview();
-}
 function startEditNum(el) {
   if (!el || el.querySelector('input')) return;
   const cur = pendingHelmet.number;
@@ -1535,7 +1509,7 @@ function commitNum(inp) {
 }
 
 function initHelmetCreator() {
-  pendingHelmet = {base:'e8000a', visor:1, pattern:'solid', patternColor:'ffffff', sponsor:'f5a623', number:1};
+  pendingHelmet = {base:'e8000a', visor:1, pattern:'solid', patternColor:'ffffff', number:1};
   function sw(hex, sel, fn) {
     const light = ['ffffff','f5e6c8','e8c090','f0f0f0','e8e8e8','b0b0b0','d4eaf7','f5a623'].includes(hex);
     const extra = light ? 'box-shadow:0 0 0 1px #ccc;' : '';
@@ -1549,8 +1523,6 @@ function initHelmetCreator() {
     HM_PATTERNS.map((p,i)=>`<button class="hc-pill${i===0?' sel':''}" data-val="${p.id}" onclick="setHelmPattern('${p.id}')">${p.label}</button>`).join('');
   document.getElementById('hc-pat-color').innerHTML =
     HM_BASE.map((s,i)=>sw(s.hex,i===1,'setHelmPatternColor')).join('');
-  document.getElementById('hc-sponsor').innerHTML =
-    HM_SPONSOR.map((s,i)=>sw(s.hex,i===0,'setHelmSponsor')).join('');
   const nd = document.getElementById('hnum-preview');
   if (nd) nd.textContent = '1';
   refreshHelmetPreview();
@@ -1593,7 +1565,7 @@ function defaultState() {
     burnoutEventTriggered:false, burnoutRetired:false,
     unlockedStats: ['Reputation'],
     pendingUnlocks: [],
-    helmet: {base:'e8000a', visor:1, pattern:'solid', patternColor:'ffffff', sponsor:'f5a623', number:1},
+    helmet: {base:'e8000a', visor:1, pattern:'solid', patternColor:'ffffff', number:1},
     champDeciderShown: false,
     champDeciderChoice: null
   };
