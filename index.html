@@ -184,24 +184,24 @@ body{
 #game-header{
   position:sticky;top:0;
   background:#0A0A0A;
-  padding:10px 16px 0;z-index:100;
+  padding:16px 16px 0;z-index:100;
   width:100%;max-width:480px;
 }
-.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding-bottom:8px}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding-bottom:14px}
 .hdr-name{
   font-family:'Bebas Neue',sans-serif;
-  font-size:26px;letter-spacing:1px;
+  font-size:32px;letter-spacing:1px;
   color:#fff;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
-.hdr-team{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;font-family:'DM Sans',sans-serif}
-.hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.hdr-age{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.45)}
+.hdr-team{font-size:14px;color:rgba(255,255,255,.6);margin-top:3px;font-family:'DM Sans',sans-serif;font-weight:500}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.hdr-age{font-family:'Bebas Neue',sans-serif;font-size:26px;color:rgba(255,255,255,.7);letter-spacing:1px}
 .stage-pill{
   background:var(--red);
   font-family:'Bebas Neue',sans-serif;
-  font-size:12px;letter-spacing:1.5px;
-  padding:2px 9px;text-transform:uppercase;white-space:nowrap;color:#fff;
+  font-size:14px;letter-spacing:1.5px;
+  padding:4px 11px;text-transform:uppercase;white-space:nowrap;color:#fff;
 }
 .wrap{width:100%;max-width:480px;padding:0 12px 100px}
 .section-title{
@@ -322,6 +322,10 @@ body{
 .log-pos.gold{color:var(--gold)}
 .log-pos.silver{color:#999}
 .log-detail{font-size:11px;color:var(--dim);margin-top:2px;font-family:'DM Sans',sans-serif}
+.log-career-summary{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.log-stat{display:flex;flex-direction:column;align-items:center;background:var(--surface);border:1px solid var(--border);padding:8px 12px;min-width:60px;flex:1}
+.log-stat-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--text);letter-spacing:1px}
+.log-stat-key{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-top:1px}
 
 /* ─── BOTTOM BAR ─── */
 #bottom-bar{
@@ -880,7 +884,34 @@ const NATS = [
   {f:'🇵🇱',n:'Polska',           e:'Poland Polish'},
   {f:'🇭🇺',n:'Magyarország',     e:'Hungary Hungarian'},
   {f:'🇨🇭',n:'Schweiz',          e:'Switzerland Swiss'},
-  {f:'🇵🇹',n:'Portugal',         e:'Portugal Portuguese'}
+  {f:'🇵🇹',n:'Portugal',         e:'Portugal Portuguese'},
+  {f:'🇳🇿',n:'Aotearoa',         e:'New Zealand Kiwi'},
+  {f:'🇮🇳',n:'भारत',             e:'India Indian'},
+  {f:'🇹🇷',n:'Türkiye',          e:'Turkey Turkish'},
+  {f:'🇸🇦',n:'المملكة العربية السعودية', e:'Saudi Arabia Saudi'},
+  {f:'🇦🇪',n:'الإمارات',         e:'UAE Emirates'},
+  {f:'🇨🇿',n:'Česko',            e:'Czech Republic Czech'},
+  {f:'🇷🇴',n:'România',          e:'Romania Romanian'},
+  {f:'🇬🇷',n:'Ελλάδα',           e:'Greece Greek'},
+  {f:'🇸🇰',n:'Slovensko',        e:'Slovakia Slovak'},
+  {f:'🇭🇷',n:'Hrvatska',         e:'Croatia Croatian'},
+  {f:'🇷🇸',n:'Srbija',           e:'Serbia Serbian'},
+  {f:'🇮🇱',n:'ישראל',            e:'Israel Israeli'},
+  {f:'🇰🇷',n:'대한민국',           e:'South Korea Korean'},
+  {f:'🇹🇭',n:'ประเทศไทย',         e:'Thailand Thai'},
+  {f:'🇲🇾',n:'Malaysia',         e:'Malaysia Malaysian'},
+  {f:'🇮🇩',n:'Indonesia',        e:'Indonesia Indonesian'},
+  {f:'🇵🇭',n:'Pilipinas',        e:'Philippines Filipino'},
+  {f:'🇻🇳',n:'Việt Nam',         e:'Vietnam Vietnamese'},
+  {f:'🇨🇱',n:'Chile',            e:'Chile Chilean'},
+  {f:'🇨🇴',n:'Colombia',         e:'Colombia Colombian'},
+  {f:'🇵🇪',n:'Perú',             e:'Peru Peruvian'},
+  {f:'🇪🇨',n:'Ecuador',          e:'Ecuador Ecuadorian'},
+  {f:'🇺🇾',n:'Uruguay',          e:'Uruguay Uruguayan'},
+  {f:'🇳🇬',n:'Nigeria',          e:'Nigeria Nigerian'},
+  {f:'🇰🇪',n:'Kenya',            e:'Kenya Kenyan'},
+  {f:'🇲🇦',n:'المغرب',           e:'Morocco Moroccan'},
+  {f:'🇪🇬',n:'مصر',              e:'Egypt Egyptian'}
 ];
 
 const NICKNAMES = [
@@ -903,13 +934,13 @@ const F1_TEAMS = [
   {name:'Silver Arrow',     tier:1, pay:28000000},
   {name:'Scuderia Rossa',   tier:1, pay:24000000},
   {name:'Papaya Racing',    tier:1, pay:21000000},
-  {name:'Azure Racing',     tier:2, pay:9000000},
-  {name:'Hawthorn F1',      tier:2, pay:7500000},
-  {name:'Britannia Racing', tier:2, pay:6000000},
-  {name:'Orion Motorsport', tier:2, pay:4500000},
-  {name:'Torino Motorsport',tier:3, pay:3000000},
-  {name:'Steppe Racing',    tier:3, pay:2500000},
-  {name:'Veloce F1',        tier:3, pay:2000000}
+  {name:'Red Serpent',      tier:1, pay:18000000},
+  {name:'Aston Blue',       tier:2, pay:9000000},
+  {name:'Grove Racing',     tier:2, pay:7500000},
+  {name:'Haas Factory',     tier:2, pay:6000000},
+  {name:'Visa Cash Racing', tier:2, pay:4500000},
+  {name:'Kick Sauber',      tier:3, pay:3000000},
+  {name:'RB Academy',       tier:3, pay:2000000}
 ];
 
 const FEEDER_AI = ['Kowalski','Mercer','Fontaine','De Silva','Okafor',
@@ -923,7 +954,12 @@ const F1_AI = ['Hamilton Jr','Schumacher III','Alonso II','Verstappen II',
 const PTS_TABLE = [25,18,15,12,10,8,6,4,2,1];
 
 const RIVAL_FLAGS = ['🇩🇪','🇫🇷','🇮🇹','🇪🇸','🇳🇱','🇫🇮','🇧🇷','🇲🇽','🇦🇺','🇨🇦','🇺🇸','🇯🇵','🇦🇹','🇧🇪','🇩🇰','🇸🇪','🇳🇿','🇨🇴','🇬🇧'];
-const FEEDER_TEAMS = ['Apex Racing','Elite Motorsport','Speed Factory','Nordic Speed','Iron Cross','Titan Motorsport','Prestige Racing','Storm Racing','Alpha Academy','Lightning MS'];
+const STAGE_TEAMS = [
+  ['Tony Kart Racing','Birel ART','CRG Factory','FA Kart','Exprit Noesis','Kosmic Racing'],
+  ['Prema Academy','Van Amersfoort Racing','US Racing','PHM Racing','KIC Motorsport'],
+  ['Prema Racing','Trident Motorsport','Hitech Grand Prix','ART Grand Prix','Campos Racing','MP Motorsport'],
+  ['Prema Racing','DAMS','ART Grand Prix','Carlin Motorsport','Virtuosi Racing','Hitech Grand Prix','MP Motorsport','Trident']
+];
 
 const CIRCUITS = {
   karting:[
@@ -1566,6 +1602,7 @@ function defaultState() {
     unlockedStats: ['Reputation'],
     pendingUnlocks: [],
     helmet: {base:'e8000a', visor:1, pattern:'solid', patternColor:'ffffff', number:1},
+    feederTeam: null,
     champDeciderShown: false,
     champDeciderChoice: null
   };
@@ -1802,6 +1839,7 @@ function onStart() {
   S.nickname = NICKNAMES[rnd(0,NICKNAMES.length-1)];
   S.drivingStyle = selectedStyle || 'consistent';
   S.helmet = {...pendingHelmet};
+  assignFeederTeam();
   genEvents();
   save();
   showScreen('game');
@@ -1918,7 +1956,7 @@ function genEvents() {
   S.seasonRivals = aiPool.slice(0, rivalCount).map((name, i) => ({
     name,
     flag: RIVAL_FLAGS[i % RIVAL_FLAGS.length],
-    team: S.stageIdx === 4 ? F1_TEAMS[i % F1_TEAMS.length].name : FEEDER_TEAMS[i % FEEDER_TEAMS.length],
+    team: S.stageIdx === 4 ? F1_TEAMS[i % F1_TEAMS.length].name : STAGE_TEAMS[S.stageIdx][i % STAGE_TEAMS[S.stageIdx].length],
     tier: S.stageIdx === 4 ? F1_TEAMS[i % F1_TEAMS.length].tier : null
   }));
 }
@@ -2310,7 +2348,7 @@ function raceTheSeason() {
     season:S.seasonNum, stage:st.label, avgPos, champPos,
     wins:playerWins, podiums:playerPodiums, earnings:seasonEarn,
     champWon:champPos===1, promoted, fired, promotedTo, newTeamName,
-    team: S.stageIdx===4 ? f1team()?.name : null,
+    team: S.stageIdx===4 ? f1team()?.name : (S.feederTeam||null),
     wasRain, circuitName
   };
   S.log.unshift(logEntry);
@@ -2373,6 +2411,8 @@ function raceTheSeason() {
     if (S.stageIdx === 4) {
       assignF1Team();
       if (S.firedCount > 0) S.recoveredToF1 = true;
+    } else {
+      assignFeederTeam();
     }
   } else if (fired) {
     S.firedCount++;
@@ -2402,6 +2442,10 @@ function assignF1Team() {
   const pool = F1_TEAMS.filter(t=>t.tier===tier);
   S.f1TeamIdx = F1_TEAMS.indexOf(pool[rnd(0,pool.length-1)]);
   S.teamCarRating = tier===1 ? rnd(72,88) : tier===2 ? rnd(50,68) : rnd(28,46);
+}
+function assignFeederTeam() {
+  const teams = STAGE_TEAMS[S.stageIdx];
+  if (teams) S.feederTeam = teams[rnd(0, teams.length-1)];
 }
 
 // ══════════════════════════════════════════════
@@ -2443,21 +2487,23 @@ function closeResults() {
 function renderAll() {
   renderHeader();
   const onSeason = activeTab === 'season';
-  const onCar = activeTab === 'car';
+  const onCar    = activeTab === 'car';
   const onLeague = activeTab === 'league';
+  const onLog    = activeTab === 'log';
   document.getElementById('stats-sec').classList.toggle('hidden', !onSeason);
   document.getElementById('events-sec').classList.toggle('hidden', !onSeason);
-  document.getElementById('log-sec').classList.toggle('hidden', !onSeason);
+  document.getElementById('log-sec').classList.toggle('hidden', !onLog);
   document.getElementById('bottom-bar').classList.toggle('hidden', !onSeason);
   document.getElementById('car-sec').classList.toggle('hidden', !onCar);
   document.getElementById('league-sec').classList.toggle('hidden', !onLeague);
   if (onSeason) {
     renderStats();
     renderEvents();
-    renderLog();
     updateRaceBtn();
   } else if (onLeague) {
     renderLeague();
+  } else if (onLog) {
+    renderLog();
   } else {
     renderCarTab();
   }
@@ -2474,7 +2520,7 @@ function switchTab(tab) {
 function renderHeader() {
   const st = stage();
   const t = f1team();
-  const teamStr = S.stageIdx===4 && t ? t.name : st.label;
+  const teamStr = S.stageIdx===4 && t ? t.name : (S.feederTeam || st.label);
   const helmet = S.helmetColor || '#e8000a';
   const numBadge = S.raceNumber
     ? ` <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.4);font-weight:600">#${esc(S.raceNumber)}</span>`
@@ -2485,7 +2531,7 @@ function renderHeader() {
         <button class="btn-home" onclick="goHome()">🏠</button>
         <div style="min-width:0">
           <div class="hdr-name">
-            <span style="display:inline-block;vertical-align:middle;margin-right:5px;flex-shrink:0;line-height:0">${buildHelmet(S.helmet||{}, 40)}</span>${esc(S.natFlag)} ${esc(S.name)}${numBadge}
+            <span style="display:inline-block;vertical-align:middle;margin-right:7px;flex-shrink:0;line-height:0">${buildHelmet(S.helmet||{}, 50)}</span>${esc(S.natFlag)} ${esc(S.name)}${numBadge}
           </div>
           <div class="hdr-team">${esc(teamStr)} · Season ${S.seasonNum}</div>
           ${S.currentCircuit ? `<div class="circuit-badge">🏁 ${esc(S.currentCircuit.name)}${S.weatherRainForecast?'<span class="rain-tag">· 🌧️ Rain</span>':''}</div>` : ''}
@@ -2501,6 +2547,7 @@ function renderHeader() {
       <button class="tab-pill${activeTab==='season'?' active':''}" onclick="switchTab('season')">Season</button>
       <button class="tab-pill${activeTab==='car'?' active':''}" onclick="switchTab('car')">🚗 My Car</button>
       <button class="tab-pill${activeTab==='league'?' active':''}" onclick="switchTab('league')">🏆 League</button>
+      <button class="tab-pill${activeTab==='log'?' active':''}" onclick="switchTab('log')">📋 Log</button>
     </div>
     <div class="season-progress"><div class="season-progress-fill" style="width:${Math.round((S.resolved||[]).length/Math.max(1,(S.events||[]).length)*100)}%"></div></div>`;
   // Apply tier glow
@@ -2699,25 +2746,41 @@ function renderEvents() {
 }
 
 function renderLog() {
-  if (!S.log.length) { document.getElementById('log-sec').innerHTML=''; return; }
-  const entries = S.log.slice(0,10).map(e => {
+  const el = document.getElementById('log-sec');
+  if (!S.log.length) {
+    el.innerHTML = '<div style="padding:32px 0;text-align:center;color:var(--dim);font-family:\'DM Sans\',sans-serif;font-size:13px">Complete your first season to see your career log</div>';
+    return;
+  }
+  const champs = S.log.filter(e => e.champWon).length;
+  const summaryHtml = `<div class="log-career-summary">
+    <div class="log-stat"><span class="log-stat-num">${S.log.length}</span><span class="log-stat-key">Seasons</span></div>
+    <div class="log-stat"><span class="log-stat-num">${S.wins||0}</span><span class="log-stat-key">Wins</span></div>
+    <div class="log-stat"><span class="log-stat-num">${S.podiums||0}</span><span class="log-stat-key">Podiums</span></div>
+    <div class="log-stat"><span class="log-stat-num">${champs}</span><span class="log-stat-key">Titles</span></div>
+    <div class="log-stat"><span class="log-stat-num">${fmtMoney(S.earnings||0)}</span><span class="log-stat-key">Earned</span></div>
+  </div>`;
+  const entries = S.log.map(e => {
     const pc = posClass(e.champPos);
     const sfx = ordSuffix(e.champPos);
+    const teamStr = e.team ? ` — ${e.team}` : '';
     let detail = `Avg P${e.avgPos} · ${fmtMoney(e.earnings)}`;
+    if (e.wins) detail += ` · ${e.wins} win${e.wins>1?'s':''}`;
     if (e.champWon) detail += ' · 🏆 Champion';
-    if (e.newTeamName) detail += ` · → ${e.newTeamName}`;
-    else if (e.promotedTo && !e.newTeamName) detail += ` · → ${e.promotedTo}`;
+    if (e.newTeamName) detail += ` · Signed: ${esc(e.newTeamName)}`;
+    else if (e.promotedTo) detail += ` · → ${e.promotedTo}`;
     if (e.fired) detail += ' · 🔴 Lost seat';
     return `<div class="log-entry">
       <div class="log-h">
-        <span class="log-stage">${e.stage}${e.team?` — ${e.team}`:''}</span>
+        <span class="log-stage">S${e.season} · ${e.stage}${teamStr}</span>
         <span class="log-pos ${pc}">P${e.champPos}${sfx}</span>
       </div>
       <div class="log-detail">${detail}</div>
     </div>`;
   }).join('');
-  document.getElementById('log-sec').innerHTML = `
-    <div class="section-title">Career Log</div>
+  el.innerHTML = `
+    <div class="section-title">Career Overview</div>
+    ${summaryHtml}
+    <div class="section-title">Season History</div>
     <div class="log-list">${entries}</div>`;
 }
 
