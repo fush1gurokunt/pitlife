@@ -785,11 +785,14 @@ body{
     <div class="step-panel hidden" id="step-3">
       <div class="step-heading">Build your driver</div>
       <div id="helmet-creator">
-        <div style="text-align:center;margin-bottom:10px" id="helmet-preview-wrap">
+        <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:6px" id="helmet-preview-wrap">
+          <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0">
+            <div id="hnum-preview" style="font-family:'Bebas Neue',sans-serif;font-size:64px;line-height:1;color:var(--text);letter-spacing:1px;cursor:pointer;min-width:52px;text-align:center" onclick="startEditNum(this)">1</div>
+            <div style="font-size:11px;color:var(--dim);margin-top:1px;cursor:pointer;line-height:1" onclick="startEditNum(document.getElementById('hnum-preview'))">✏️</div>
+          </div>
           <div id="helmet-preview" style="display:inline-block"></div>
-          <div id="hnum-preview" style="font-family:'Bebas Neue',sans-serif;font-size:72px;line-height:1;color:var(--text);letter-spacing:1px;margin-top:2px">1</div>
-          <div id="hname-preview" style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-top:2px"></div>
         </div>
+        <div id="hname-preview" style="text-align:center;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px"></div>
         <div class="hc-micro">Base Colour</div>
         <div class="hc-swatches" id="hc-base"></div>
         <div class="hc-micro">Visor</div>
@@ -800,12 +803,6 @@ body{
         <div class="hc-swatches" id="hc-pat-color"></div>
         <div class="hc-micro">Sponsor Stripe</div>
         <div class="hc-swatches" id="hc-sponsor"></div>
-        <div class="hc-micro">Race Number</div>
-        <div class="hnum-row">
-          <button class="hnum-btn" onclick="stepHelmetNumber(-1)">&#8249;</button>
-          <div class="hnum-label" id="hnum-label">1</div>
-          <button class="hnum-btn" onclick="stepHelmetNumber(1)">&#8250;</button>
-        </div>
       </div>
       <button class="step-btn" onclick="onStart()">Start Career →</button>
     </div>
@@ -1401,64 +1398,87 @@ const HM_SPONSOR = [
   {hex:'003399'},{hex:'1a1a1a'},{hex:'00bcd4'}
 ];
 
-// Helmet SVG paths (200×140 viewBox, facing right)
-const _HS = 'M 58,14 C 78,8 104,7 128,10 C 152,13 170,22 182,36 C 192,50 196,68 192,86 C 188,104 178,116 162,122 C 146,128 126,130 100,128 C 74,126 54,118 44,108 C 36,100 34,92 38,86 L 22,74 C 18,68 18,60 22,54 C 26,46 36,36 46,28 C 50,22 54,16 58,14 Z';
-const _HV = 'M 62,20 C 76,14 94,12 110,14 C 122,16 130,24 132,36 C 134,48 130,62 122,72 C 114,82 100,90 84,90 C 66,90 50,80 44,68 C 40,58 42,46 48,36 C 52,28 58,22 62,20 Z';
+// Helmet SVG paths (180×150 viewBox, back-left / face-right)
+const _HS = 'M 20,115 C 4,92 3,58 18,36 C 30,18 44,12 55,15 C 85,10 113,12 140,20 C 155,24 163,52 161,76 C 160,83 159,88 158,92 C 157,97 156,102 155,106 C 142,114 112,120 80,120 C 55,120 34,118 20,115 Z';
+const _HV = 'M 62,48 C 92,44 122,46 148,52 C 149,60 150,72 150,82 C 122,86 90,84 58,76 C 58,68 60,58 62,48 Z';
 
 function buildHelmet(cfg, w) {
-  const base  = '#' + (cfg.base || 'e8000a').replace('#','');
-  const patC  = '#' + (cfg.patternColor || 'ffffff').replace('#','');
-  const spon  = '#' + (cfg.sponsor || 'f5a623').replace('#','');
-  const pat   = cfg.pattern || 'solid';
-  const vc    = HM_VISOR[Math.min(typeof cfg.visor==='number'?cfg.visor:1, HM_VISOR.length-1)];
-  const uid   = Math.random().toString(36).slice(2,8);
-  const h     = Math.round(w * 140 / 200);
+  const base = '#' + (cfg.base || 'e8000a').replace('#','');
+  const patC = '#' + (cfg.patternColor || 'ffffff').replace('#','');
+  const spon = '#' + (cfg.sponsor || 'f5a623').replace('#','');
+  const pat  = cfg.pattern || 'solid';
+  const vc   = HM_VISOR[Math.min(typeof cfg.visor==='number'?cfg.visor:1, HM_VISOR.length-1)];
+  const uid  = Math.random().toString(36).slice(2,8);
+  const h    = Math.round(w * 150 / 180);
 
+  // Pattern shapes (all clipped to shell)
   let patShapes = '';
-  if (pat==='split') {
-    patShapes = `<rect x="0" y="0" width="100" height="140" fill="${patC}" opacity="0.42"/>`;
-  } else if (pat==='stripes') {
-    patShapes = `<rect x="-20" y="50" width="240" height="13" fill="${patC}" opacity="0.5" transform="rotate(-10 100 56)"/>
-                 <rect x="-20" y="76" width="240" height="8"  fill="${patC}" opacity="0.35" transform="rotate(-10 100 80)"/>`;
+  if (pat==='stripes') {
+    patShapes = `<line x1="-10" y1="55" x2="195" y2="38" stroke="${patC}" stroke-width="4" stroke-opacity="0.52"/>
+    <line x1="-10" y1="73" x2="195" y2="56" stroke="${patC}" stroke-width="4" stroke-opacity="0.52"/>
+    <line x1="-10" y1="91" x2="195" y2="74" stroke="${patC}" stroke-width="4" stroke-opacity="0.52"/>
+    <line x1="-10" y1="109" x2="195" y2="92" stroke="${patC}" stroke-width="4" stroke-opacity="0.52"/>`;
+  } else if (pat==='split') {
+    patShapes = `<path d="M 20,115 C 4,92 3,58 18,36 C 30,18 44,12 55,15 C 70,12 85,60 60,90 L 40,120 Z" fill="${patC}" opacity="0.46"/>`;
   } else if (pat==='geo') {
-    patShapes = `<polygon points="58,14 148,14 148,78 82,100" fill="${patC}" opacity="0.35"/>
-                 <polygon points="148,78 196,72 196,128 108,128" fill="${patC}" opacity="0.22"/>`;
+    patShapes = `<polygon points="88,14 138,52 88,76 38,52" fill="${patC}" opacity="0.32"/>
+    <polygon points="138,52 165,76 145,112 118,88" fill="${patC}" opacity="0.22"/>`;
   } else if (pat==='flames') {
-    patShapes = `<path d="M 192,86 C 180,68 175,50 183,34 C 166,50 160,72 172,96 C 152,68 148,48 160,30 C 142,50 136,72 150,98 C 128,68 125,46 137,28 C 120,50 116,74 130,102 L 100,128 L 162,122 Z" fill="${patC}" opacity="0.44"/>`;
+    patShapes = `<path d="M 20,115 C 28,96 18,76 28,56 C 14,70 10,90 18,110 C 6,86 4,62 16,42 C 2,58 -2,82 8,106 L 16,114 Z" fill="${patC}" opacity="0.52"/>`;
   } else if (pat==='flag') {
-    patShapes = `<rect x="0"   y="0" width="67" height="140" fill="${patC}" opacity="0.36"/>
-                 <rect x="133" y="0" width="67" height="140" fill="${spon}"  opacity="0.36"/>`;
+    patShapes = `<rect x="0"  y="0" width="60"  height="150" fill="${patC}"              opacity="0.40"/>
+    <rect x="60" y="0" width="60"  height="150" fill="rgba(255,255,255,0.32)"/>
+    <rect x="120" y="0" width="60" height="150" fill="${spon}"              opacity="0.40"/>`;
   }
 
-  const stripe = `<rect x="-10" y="94" width="220" height="9" fill="${spon}" transform="rotate(-2 100 98.5)"/>`;
+  // Sponsor stripe (clipped)
+  const stripe = `<rect x="-5" y="97" width="192" height="8" fill="${spon}"/>`;
 
-  const topVent = `<path d="M 90,9 L 118,9 C 120,9 122,11 122,13 L 122,15 C 122,17 120,18 118,18 L 90,18 C 88,18 86,17 86,15 L 86,13 C 86,11 88,9 90,9 Z" fill="rgba(0,0,0,0.35)"/>
-  <line x1="96" y1="10" x2="96" y2="16" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-  <line x1="104" y1="10" x2="104" y2="16" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-  <line x1="112" y1="10" x2="112" y2="16" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>`;
+  // Top vent: x=75 y=12 w=30 h=10 rx=4
+  const topVent = `<rect x="75" y="12" width="30" height="10" rx="4" fill="rgba(0,0,0,0.32)"/>
+  <line x1="83" y1="13" x2="83" y2="21" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="90" y1="13" x2="90" y2="21" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="97" y1="13" x2="97" y2="21" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>`;
 
-  const chinVent = `<path d="M 22,66 C 22,62 25,60 29,60 L 38,60 C 42,60 44,62 44,66 L 44,70 C 44,74 42,76 38,76 L 29,76 C 25,76 22,74 22,70 Z" fill="rgba(0,0,0,0.42)"/>
-  <line x1="28" y1="62" x2="28" y2="74" stroke="rgba(255,255,255,0.14)" stroke-width="0.8"/>
-  <line x1="33" y1="62" x2="33" y2="74" stroke="rgba(255,255,255,0.14)" stroke-width="0.8"/>
-  <line x1="38" y1="62" x2="38" y2="74" stroke="rgba(255,255,255,0.14)" stroke-width="0.8"/>`;
+  // Chin vent: x=130 y=88 w=22 h=10 rx=3
+  const chinVent = `<rect x="130" y="88" width="22" height="10" rx="3" fill="rgba(0,0,0,0.32)"/>
+  <line x1="138" y1="89" x2="138" y2="97" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="145" y1="89" x2="145" y2="97" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>`;
 
-  const refl = `<path d="M 68,28 C 78,22 92,18 108,18 C 120,18 130,22 136,28" fill="none" stroke="rgba(255,255,255,0.38)" stroke-width="2.2" stroke-linecap="round"/>
-  <path d="M 64,44 C 72,38 84,34 96,32" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.4" stroke-linecap="round"/>`;
+  // Back ridge
+  const ridge = `<path d="M 22,110 C 7,88 5,60 20,36 C 32,18 44,12 55,15" fill="none" stroke="rgba(0,0,0,0.13)" stroke-width="3" stroke-linecap="round"/>`;
 
-  const chinEdge = `<path d="M 22,74 C 18,68 18,60 22,54 C 26,46 36,36 46,28" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2" stroke-linecap="round"/>`;
+  // Visor highlight strip + screws
+  const vRefl  = `<path d="M 64,49 C 92,45 124,47 146,53" fill="none" stroke="rgba(255,255,255,0.44)" stroke-width="3" stroke-linecap="round"/>`;
+  const screws = `<circle cx="62" cy="53" r="2.5" fill="#888" stroke="#555" stroke-width="1"/>
+  <circle cx="62" cy="71" r="2.5" fill="#888" stroke="#555" stroke-width="1"/>
+  <circle cx="149" cy="57" r="2.5" fill="#888" stroke="#555" stroke-width="1"/>
+  <circle cx="149" cy="77" r="2.5" fill="#888" stroke="#555" stroke-width="1"/>`;
 
-  return `<svg viewBox="0 0 200 140" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" style="display:block">
-  <defs><clipPath id="hc${uid}"><path d="${_HS}"/></clipPath></defs>
+  // Glossy sheen
+  const sheen = `<ellipse cx="75" cy="45" rx="28" ry="18" fill="rgba(255,255,255,0.12)"/>`;
+
+  return `<svg viewBox="0 0 180 150" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <defs>
+    <clipPath id="hc${uid}"><path d="${_HS}"/></clipPath>
+    <radialGradient id="hg${uid}" cx="32%" cy="28%" r="70%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.22)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.18)"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="90" cy="118" rx="72" ry="8" fill="rgba(0,0,0,0.15)"/>
   <path d="${_HS}" fill="${base}"/>
+  <path d="${_HS}" fill="url(#hg${uid})"/>
   <g clip-path="url(#hc${uid})">${patShapes}</g>
   <g clip-path="url(#hc${uid})">${stripe}</g>
-  <path d="${_HS}" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="2.5"/>
+  ${ridge}
   ${topVent}
   <path d="${_HV}" fill="${vc.hex}" opacity="${vc.op}"/>
   <path d="${_HV}" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/>
-  ${refl}
+  ${vRefl}
+  ${screws}
   ${chinVent}
-  ${chinEdge}
+  ${sheen}
 </svg>`;
 }
 
@@ -1475,7 +1495,7 @@ function refreshHelmetPreview() {
   const flag = (typeof selectedNat==='number' && NATS[selectedNat]) ? NATS[selectedNat].f : '';
   if (el) el.innerHTML = buildHelmet(pendingHelmet, 168);
   const nd = document.getElementById('hnum-preview');
-  if (nd) nd.textContent = pendingHelmet.number;
+  if (nd && !nd.querySelector('input')) nd.textContent = pendingHelmet.number;
   const dn = document.getElementById('hname-preview');
   if (dn) dn.textContent = (flag ? flag+' ' : '') + (name || 'YOUR NAME');
 }
@@ -1505,11 +1525,18 @@ function setHelmSponsor(v) {
   document.querySelectorAll('#hc-sponsor .hc-swatch').forEach(b=>b.classList.toggle('sel',b.dataset.val===v));
   refreshHelmetPreview();
 }
-function stepHelmetNumber(dir) {
-  pendingHelmet.number = ((pendingHelmet.number - 1 + dir + 99) % 99) + 1;
-  const lbl = document.getElementById('hnum-label');
-  if (lbl) lbl.textContent = pendingHelmet.number;
-  refreshHelmetPreview();
+function startEditNum(el) {
+  if (!el || el.querySelector('input')) return;
+  const cur = pendingHelmet.number;
+  el.innerHTML = `<input type="text" inputmode="numeric" maxlength="2" value="${cur}" style="font-family:'Bebas Neue',sans-serif;font-size:64px;width:72px;background:transparent;border:none;border-bottom:2px solid var(--red);color:var(--text);letter-spacing:1px;text-align:center;outline:none;padding:0;display:block" onclick="event.stopPropagation()" onblur="commitNum(this)" onkeydown="if(event.key==='Enter')this.blur()">`;
+  const inp = el.querySelector('input');
+  if (inp) { inp.focus(); inp.select(); }
+}
+function commitNum(inp) {
+  const v = parseInt(inp.value);
+  pendingHelmet.number = (isNaN(v)||v<1) ? 1 : Math.min(99, v);
+  const el = document.getElementById('hnum-preview');
+  if (el) el.textContent = pendingHelmet.number;
 }
 
 function initHelmetCreator() {
@@ -1529,8 +1556,8 @@ function initHelmetCreator() {
     HM_BASE.map((s,i)=>sw(s.hex,i===1,'setHelmPatternColor')).join('');
   document.getElementById('hc-sponsor').innerHTML =
     HM_SPONSOR.map((s,i)=>sw(s.hex,i===0,'setHelmSponsor')).join('');
-  const lbl = document.getElementById('hnum-label');
-  if (lbl) lbl.textContent = '1';
+  const nd = document.getElementById('hnum-preview');
+  if (nd) nd.textContent = '1';
   refreshHelmetPreview();
 }
 
