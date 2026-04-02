@@ -1382,11 +1382,11 @@ const HM_BASE = [
   {hex:'f5a623'},{hex:'00bcd4'},{hex:'7b3fbe'},{hex:'1a7a3c'}
 ];
 const HM_VISOR = [
-  {hex:'d4eaf7',op:0.32,label:'Clear'},
-  {hex:'111111',op:0.82,label:'Dark'},
-  {hex:'5a0000',op:0.72,label:'Red'},
-  {hex:'00196b',op:0.72,label:'Blue'},
-  {hex:'a8bcc8',op:0.68,label:'Mirror'}
+  {color:'rgba(200,230,255,0.4)',label:'Clear'},
+  {color:'rgba(20,20,20,0.85)',label:'Dark'},
+  {color:'rgba(180,30,30,0.7)',label:'Red'},
+  {color:'rgba(30,80,180,0.7)',label:'Blue'},
+  {color:'rgba(192,192,192,0.8)',label:'Mirror'}
 ];
 const HM_PATTERNS = [
   {id:'solid',label:'Solid'},{id:'split',label:'Split'},
@@ -1398,9 +1398,7 @@ const HM_SPONSOR = [
   {hex:'003399'},{hex:'1a1a1a'},{hex:'00bcd4'}
 ];
 
-// Helmet SVG paths (180×150 viewBox, back-left / face-right)
-const _HS = 'M 20,115 C 4,92 3,58 18,36 C 30,18 44,12 55,15 C 85,10 113,12 140,20 C 155,24 163,52 161,76 C 160,83 159,88 158,92 C 157,97 156,102 155,106 C 142,114 112,120 80,120 C 55,120 34,118 20,115 Z';
-const _HV = 'M 62,48 C 92,44 122,46 148,52 C 149,60 150,72 150,82 C 122,86 90,84 58,76 C 58,68 60,58 62,48 Z';
+const _HB = 'M147.825,23.273C133.898,8.265,114.527,0,93.281,0h-5.766C44.73,0,9.766,34.041,8.222,76.465c-0.017,0.14-0.074,0.268-0.074,0.412v2.509v35.298v0.694c0,0.07,0.036,0.133,0.041,0.203c0.215,19.012,7.194,37.295,19.771,51.562c0.673,0.766,1.636,1.186,2.625,1.186c0.308,0,0.617-0.041,0.923-0.123l127.589-34.857c1.189-0.325,2.119-1.254,2.449-2.441c1.432-5.158,2.358-10.463,2.755-15.764l2.673-35.701C168.562,58.239,161.76,38.291,147.825,23.273z M15.149,79.84l72.902-12.175c5.932-0.988,10.652,0.103,12.941,2.997c2.287,2.895,2.259,7.735-0.075,13.279l-11.412,27.094l-74.356,0.804V79.84z M159.995,78.924l-2.673,35.701c-0.314,4.194-0.991,8.391-2.017,12.503L31.802,160.867c-9.869-11.894-15.588-26.622-16.473-42.029l76.547-0.825c1.394-0.014,2.647-0.858,3.187-2.143l12.303-29.21c3.406-8.084,3.093-15.306-0.882-20.337c-3.975-5.031-10.934-7.003-19.585-5.561L15.487,72.687C18.881,35.905,49.872,7,87.515,7h5.766c19.277,0,36.825,7.472,49.414,21.034C155.29,41.607,161.434,59.681,159.995,78.924z';
 
 function buildHelmet(cfg, w) {
   const base = '#' + (cfg.base || 'e8000a').replace('#','');
@@ -1409,76 +1407,36 @@ function buildHelmet(cfg, w) {
   const pat  = cfg.pattern || 'solid';
   const vc   = HM_VISOR[Math.min(typeof cfg.visor==='number'?cfg.visor:1, HM_VISOR.length-1)];
   const uid  = Math.random().toString(36).slice(2,8);
-  const h    = Math.round(w * 150 / 180);
 
-  // Pattern shapes (all clipped to shell)
+  // Pattern overlays clipped to helmet body
   let patShapes = '';
   if (pat==='stripes') {
-    patShapes = `<line x1="-10" y1="55" x2="195" y2="38" stroke="${patC}" stroke-width="4" stroke-opacity="0.52"/>
-    <line x1="-10" y1="73" x2="195" y2="56" stroke="${patC}" stroke-width="4" stroke-opacity="0.52"/>
-    <line x1="-10" y1="91" x2="195" y2="74" stroke="${patC}" stroke-width="4" stroke-opacity="0.52"/>
-    <line x1="-10" y1="109" x2="195" y2="92" stroke="${patC}" stroke-width="4" stroke-opacity="0.52"/>`;
+    patShapes = `<line x1="-20" y1="90" x2="120" y2="-30" stroke="${patC}" stroke-width="6" stroke-opacity="0.55"/>
+    <line x1="18" y1="130" x2="158" y2="-22" stroke="${patC}" stroke-width="6" stroke-opacity="0.55"/>
+    <line x1="58" y1="176" x2="198" y2="-14" stroke="${patC}" stroke-width="6" stroke-opacity="0.55"/>`;
   } else if (pat==='split') {
-    patShapes = `<path d="M 20,115 C 4,92 3,58 18,36 C 30,18 44,12 55,15 C 70,12 85,60 60,90 L 40,120 Z" fill="${patC}" opacity="0.46"/>`;
+    patShapes = `<rect x="0" y="0" width="87.675" height="175.349" fill="${patC}" opacity="0.46"/>`;
   } else if (pat==='geo') {
-    patShapes = `<polygon points="88,14 138,52 88,76 38,52" fill="${patC}" opacity="0.32"/>
-    <polygon points="138,52 165,76 145,112 118,88" fill="${patC}" opacity="0.22"/>`;
+    patShapes = [[44,40],[88,30],[132,40],[22,80],[66,70],[110,80],[154,70],[44,120],[88,110],[132,120]]
+      .map(([x,y])=>`<polygon points="${x},${y-10} ${x+10},${y} ${x},${y+10} ${x-10},${y}" fill="${patC}" opacity="0.35"/>`).join('');
   } else if (pat==='flames') {
-    patShapes = `<path d="M 20,115 C 28,96 18,76 28,56 C 14,70 10,90 18,110 C 6,86 4,62 16,42 C 2,58 -2,82 8,106 L 16,114 Z" fill="${patC}" opacity="0.52"/>`;
+    patShapes = `<path d="M 22,135 C 16,114 26,98 18,76 C 10,90 8,108 14,124 C 5,103 4,82 12,62 C 3,76 0,96 8,116 L 14,132 Z" fill="${patC}" opacity="0.55"/>
+    <path d="M 55,145 C 47,122 57,104 50,80 C 41,95 39,114 46,130 C 36,108 36,86 44,65 C 34,80 30,101 38,122 L 46,140 Z" fill="${patC}" opacity="0.45"/>`;
   } else if (pat==='flag') {
-    patShapes = `<rect x="0"  y="0" width="60"  height="150" fill="${patC}"              opacity="0.40"/>
-    <rect x="60" y="0" width="60"  height="150" fill="rgba(255,255,255,0.32)"/>
-    <rect x="120" y="0" width="60" height="150" fill="${spon}"              opacity="0.40"/>`;
+    patShapes = `<rect x="0"   y="0" width="58.45"  height="175.349" fill="${patC}" opacity="0.42"/>
+    <rect x="58.45" y="0" width="58.45"  height="175.349" fill="rgba(255,255,255,0.38)"/>
+    <rect x="116.9" y="0" width="58.45" height="175.349" fill="${spon}" opacity="0.42"/>`;
   }
 
-  // Sponsor stripe (clipped)
-  const stripe = `<rect x="-5" y="97" width="192" height="8" fill="${spon}"/>`;
-
-  // Top vent: x=75 y=12 w=30 h=10 rx=4
-  const topVent = `<rect x="75" y="12" width="30" height="10" rx="4" fill="rgba(0,0,0,0.32)"/>
-  <line x1="83" y1="13" x2="83" y2="21" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-  <line x1="90" y1="13" x2="90" y2="21" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-  <line x1="97" y1="13" x2="97" y2="21" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>`;
-
-  // Chin vent: x=130 y=88 w=22 h=10 rx=3
-  const chinVent = `<rect x="130" y="88" width="22" height="10" rx="3" fill="rgba(0,0,0,0.32)"/>
-  <line x1="138" y1="89" x2="138" y2="97" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-  <line x1="145" y1="89" x2="145" y2="97" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>`;
-
-  // Back ridge
-  const ridge = `<path d="M 22,110 C 7,88 5,60 20,36 C 32,18 44,12 55,15" fill="none" stroke="rgba(0,0,0,0.13)" stroke-width="3" stroke-linecap="round"/>`;
-
-  // Visor highlight strip + screws
-  const vRefl  = `<path d="M 64,49 C 92,45 124,47 146,53" fill="none" stroke="rgba(255,255,255,0.44)" stroke-width="3" stroke-linecap="round"/>`;
-  const screws = `<circle cx="62" cy="53" r="2.5" fill="#888" stroke="#555" stroke-width="1"/>
-  <circle cx="62" cy="71" r="2.5" fill="#888" stroke="#555" stroke-width="1"/>
-  <circle cx="149" cy="57" r="2.5" fill="#888" stroke="#555" stroke-width="1"/>
-  <circle cx="149" cy="77" r="2.5" fill="#888" stroke="#555" stroke-width="1"/>`;
-
-  // Glossy sheen
-  const sheen = `<ellipse cx="75" cy="45" rx="28" ry="18" fill="rgba(255,255,255,0.12)"/>`;
-
-  return `<svg viewBox="0 0 180 150" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  return `<svg viewBox="0 0 175.349 175.349" width="${w}" height="${w}" xmlns="http://www.w3.org/2000/svg" style="display:block">
   <defs>
-    <clipPath id="hc${uid}"><path d="${_HS}"/></clipPath>
-    <radialGradient id="hg${uid}" cx="32%" cy="28%" r="70%">
-      <stop offset="0%" stop-color="rgba(255,255,255,0.22)"/>
-      <stop offset="100%" stop-color="rgba(0,0,0,0.18)"/>
-    </radialGradient>
+    <clipPath id="hbody${uid}"><path d="${_HB}"/></clipPath>
   </defs>
-  <ellipse cx="90" cy="118" rx="72" ry="8" fill="rgba(0,0,0,0.15)"/>
-  <path d="${_HS}" fill="${base}"/>
-  <path d="${_HS}" fill="url(#hg${uid})"/>
-  <g clip-path="url(#hc${uid})">${patShapes}</g>
-  <g clip-path="url(#hc${uid})">${stripe}</g>
-  ${ridge}
-  ${topVent}
-  <path d="${_HV}" fill="${vc.hex}" opacity="${vc.op}"/>
-  <path d="${_HV}" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/>
-  ${vRefl}
-  ${screws}
-  ${chinVent}
-  ${sheen}
+  <path id="helmet-body-${uid}" fill="${base}" d="${_HB}"/>
+  <g clip-path="url(#hbody${uid})">${patShapes}</g>
+  <path id="helmet-visor-${uid}" fill="${vc.color}" d="M130.648,77c-7.72,0-14,6.279-14,14s6.28,14,14,14c7.72,0,14-6.279,14-14S138.367,77,130.648,77z M130.648,98c-3.86,0-7-3.141-7-7s3.139-7,7-7s7,3.141,7,7S134.508,98,130.648,98z"/>
+  <path id="helmet-detail-${uid}" fill="${patC}" d="M94.623,74.526c-1.367-1.367-3.582-1.367-4.949,0l-10.5,10.5c-1.367,1.367-1.367,3.582,0,4.949C79.857,90.658,80.752,91,81.648,91s1.791-0.342,2.475-1.025l10.5-10.5C95.99,78.108,95.99,75.893,94.623,74.526z"/>
+  <path id="helmet-strap-${uid}" fill="${spon}" d="M153.598,138.093L42.341,168.472c-1.866,0.509-2.965,2.434-2.456,4.3c0.426,1.555,1.835,2.577,3.375,2.577c0.304,0,0.615-0.041,0.923-0.123l111.257-30.379c1.866-0.509,2.965-2.434,2.456-4.3C157.385,138.684,155.454,137.587,153.598,138.093z"/>
 </svg>`;
 }
 
