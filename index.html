@@ -115,28 +115,19 @@ body{
 }
 .finput:focus{border-bottom-color:var(--red)}
 .finput::placeholder{color:var(--border)}
-/* ─── CHIBI CREATOR ─── */
-#chibi-creator{width:100%}
-.chibi-ctrl-micro{font-family:'DM Sans',sans-serif;font-size:8px;font-weight:700;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:5px;margin-top:10px}
-.chibi-swatches{display:flex;gap:5px;flex-wrap:wrap}
-.chibi-swatch{width:22px;height:22px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:border-color .12s,transform .12s;box-shadow:0 1px 3px rgba(0,0,0,.14)}
-.chibi-swatch.sel{border-color:var(--red);transform:scale(1.18)}
-.chibi-style-pills{display:flex;gap:5px;flex-wrap:wrap}
-.chibi-style-pill{background:transparent;border:1.5px solid var(--border);border-radius:20px;color:var(--dim);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;padding:4px 10px;transition:border-color .12s,background .12s,color .12s}
-.chibi-style-pill.sel{background:var(--red);border-color:var(--red);color:#fff}
-.chibi-gender-row{display:flex;gap:6px;justify-content:center;margin-bottom:4px}
-.chibi-gender-btn{background:transparent;border:1.5px solid var(--border);border-radius:20px;color:var(--dim);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;padding:5px 14px;transition:border-color .12s,background .12s,color .12s}
-.chibi-gender-btn.sel{background:var(--red);border-color:var(--red);color:#fff}
-.chibi-eyes-row{display:flex;align-items:center;gap:8px;margin-top:2px}
-.chibi-eyes-btn{background:transparent;border:1.5px solid var(--border);color:var(--text);cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:18px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;padding:0;transition:border-color .12s,color .12s;line-height:1}
-.chibi-eyes-btn:hover{border-color:var(--red);color:var(--red)}
-.chibi-eyes-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:var(--text);min-width:58px;text-align:center}
-.avatar-ring{position:relative;border-radius:50%;border:2.5px solid var(--red);flex-shrink:0;overflow:hidden;background:var(--bg3);display:inline-block;vertical-align:middle}
-.avatar-spinner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;border-radius:50%}
-.avatar-spinner::after{content:'';width:35%;height:35%;min-width:8px;min-height:8px;border-radius:50%;border:2px solid rgba(0,0,0,.1);border-top-color:var(--red);animation:avatarSpin .7s linear infinite}
-@keyframes avatarSpin{to{transform:rotate(360deg)}}
-.avatar-ring .avatar-img{display:block;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .25s;position:relative;z-index:2;border-radius:50%}
-.avatar-helmet{position:absolute;bottom:1px;right:1px;z-index:3;line-height:1;pointer-events:none}
+/* ─── HELMET CREATOR ─── */
+#helmet-creator{width:100%}
+.hc-micro{font-family:'DM Sans',sans-serif;font-size:8px;font-weight:700;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:5px;margin-top:10px}
+.hc-swatches{display:flex;gap:5px;flex-wrap:wrap}
+.hc-swatch{width:22px;height:22px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:border-color .12s,transform .12s;box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.hc-swatch.sel{border-color:var(--red);transform:scale(1.18)}
+.hc-pills{display:flex;gap:5px;flex-wrap:wrap}
+.hc-pill{background:transparent;border:1.5px solid var(--border);border-radius:20px;color:var(--dim);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;padding:4px 10px;transition:border-color .12s,background .12s,color .12s}
+.hc-pill.sel{background:var(--red);border-color:var(--red);color:#fff}
+.hnum-row{display:flex;align-items:center;gap:8px;margin-top:4px}
+.hnum-btn{background:transparent;border:1.5px solid var(--border);color:var(--text);cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:20px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;padding:0;transition:border-color .12s,color .12s;line-height:1}
+.hnum-btn:hover{border-color:var(--red);color:var(--red)}
+.hnum-label{font-family:'Bebas Neue',sans-serif;font-size:28px;font-weight:400;color:var(--text);min-width:42px;text-align:center;line-height:1}
 
 .nat-dropdown{position:relative;width:100%}
 .nat-input{
@@ -793,24 +784,27 @@ body{
     <!-- ── Step 4: Build Your Driver ── -->
     <div class="step-panel hidden" id="step-3">
       <div class="step-heading">Build your driver</div>
-      <div id="chibi-creator">
-        <div style="display:flex;justify-content:center;margin-bottom:12px">
-          <div id="chibi-preview"></div>
+      <div id="helmet-creator">
+        <div style="text-align:center;margin-bottom:10px" id="helmet-preview-wrap">
+          <div id="helmet-preview" style="display:inline-block"></div>
+          <div id="hnum-preview" style="font-family:'Bebas Neue',sans-serif;font-size:72px;line-height:1;color:var(--text);letter-spacing:1px;margin-top:2px">1</div>
+          <div id="hname-preview" style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-top:2px"></div>
         </div>
-        <div class="chibi-ctrl-micro">Skin Tone</div>
-        <div class="chibi-swatches" id="chibi-skin"></div>
-        <div class="chibi-ctrl-micro">Hair Style</div>
-        <div class="chibi-gender-row" id="chibi-gender-row"></div>
-        <div class="chibi-style-pills" id="chibi-hair-style"></div>
-        <div class="chibi-ctrl-micro">Hair Colour</div>
-        <div class="chibi-swatches" id="chibi-hair-color"></div>
-        <div class="chibi-ctrl-micro">Clothing Colour</div>
-        <div class="chibi-swatches" id="chibi-clothing-color"></div>
-        <div class="chibi-ctrl-micro">Eyes</div>
-        <div class="chibi-eyes-row">
-          <button class="chibi-eyes-btn" onclick="stepChibiEyes(-1)">&#8249;</button>
-          <div class="chibi-eyes-label" id="chibi-eyes-label">variant01</div>
-          <button class="chibi-eyes-btn" onclick="stepChibiEyes(1)">&#8250;</button>
+        <div class="hc-micro">Base Colour</div>
+        <div class="hc-swatches" id="hc-base"></div>
+        <div class="hc-micro">Visor</div>
+        <div class="hc-pills" id="hc-visor"></div>
+        <div class="hc-micro">Design Pattern</div>
+        <div class="hc-pills" id="hc-pattern"></div>
+        <div class="hc-micro">Pattern Colour</div>
+        <div class="hc-swatches" id="hc-pat-color"></div>
+        <div class="hc-micro">Sponsor Stripe</div>
+        <div class="hc-swatches" id="hc-sponsor"></div>
+        <div class="hc-micro">Race Number</div>
+        <div class="hnum-row">
+          <button class="hnum-btn" onclick="stepHelmetNumber(-1)">&#8249;</button>
+          <div class="hnum-label" id="hnum-label">1</div>
+          <button class="hnum-btn" onclick="stepHelmetNumber(1)">&#8250;</button>
         </div>
       </div>
       <button class="step-btn" onclick="onStart()">Start Career →</button>
@@ -1383,114 +1377,161 @@ let selectedNat = null;
 let selectedStyle = 'consistent';
 let currentStep = 0;
 let activeTab = 'season';
-let pendingChibi = {skin:'f8d25c', hair:'short01', hairColor:'1a1a1a', bg:'e8000a', eyes:'variant01', gender:'m'};
+let pendingHelmet = {base:'e8000a', visor:1, pattern:'solid', patternColor:'ffffff', sponsor:'f5a623', number:1};
 let lastEventOutcome = null;
 
-const DB_SKINS = [
-  {hex:'f8d25c'},{hex:'f4d150'},{hex:'daa520'},{hex:'cb6820'},
-  {hex:'ac6511'},{hex:'8b5a2b'},{hex:'562306'},{hex:'3d1c02'}
+const HM_BASE = [
+  {hex:'e8000a'},{hex:'ffffff'},{hex:'1a1a1a'},{hex:'003399'},
+  {hex:'f5a623'},{hex:'00bcd4'},{hex:'7b3fbe'},{hex:'1a7a3c'}
 ];
-const DB_HAIR_STYLES_SHORT = [
-  {id:'short01',label:'Crop'},{id:'short02',label:'Slick'},{id:'short03',label:'Waves'},
-  {id:'short04',label:'Fade'},{id:'short05',label:'Spiky'}
+const HM_VISOR = [
+  {hex:'d4eaf7',op:0.32,label:'Clear'},
+  {hex:'111111',op:0.82,label:'Dark'},
+  {hex:'5a0000',op:0.72,label:'Red'},
+  {hex:'00196b',op:0.72,label:'Blue'},
+  {hex:'a8bcc8',op:0.68,label:'Mirror'}
 ];
-const DB_HAIR_STYLES_LONG = [
-  {id:'long01',label:'Straight'},{id:'long02',label:'Parted'},{id:'long03',label:'Wavy'},
-  {id:'long04',label:'Curly'},{id:'long05',label:'Braids'}
+const HM_PATTERNS = [
+  {id:'solid',label:'Solid'},{id:'split',label:'Split'},
+  {id:'stripes',label:'Stripes'},{id:'geo',label:'Geo'},
+  {id:'flames',label:'Flames'},{id:'flag',label:'Flag'}
 ];
-const DB_HAIR_COLORS = [
-  {hex:'0e0e0e'},{hex:'1a1a1a'},{hex:'3b1f0a'},{hex:'5c3317'},{hex:'8b4513'},
-  {hex:'a0522d'},{hex:'c47b30'},{hex:'d4a017'},{hex:'e8c090'},{hex:'f5e6c8'},
-  {hex:'f0f0f0'},{hex:'e8e8e8'},{hex:'b0b0b0'},{hex:'e8000a'},{hex:'ff69b4'},
-  {hex:'8b008b'},{hex:'00008b'}
+const HM_SPONSOR = [
+  {hex:'ffffff'},{hex:'f5a623'},{hex:'e8000a'},
+  {hex:'003399'},{hex:'1a1a1a'},{hex:'00bcd4'}
 ];
-const DB_BG_COLORS = [{hex:'e8000a'},{hex:'003399'},{hex:'1a7a3c'},{hex:'f5a623'},{hex:'7b3fbe'},{hex:'0a0a0a'}];
-const DB_EYES = Array.from({length:26},(_,i)=>`variant${String(i+1).padStart(2,'0')}`);
 
-function buildChibiSVG(cfg, w) {
-  const skin    = (cfg.skin      || 'f8d25c').replace('#','');
-  const hair    =  cfg.hair      || 'short01';
-  const hairClr = (cfg.hairColor || '1a1a1a').replace('#','');
-  const bg      = (cfg.bg || cfg.clothing || 'e8000a').replace('#','');
-  const eyes    =  cfg.eyes      || 'variant01';
-  const seed    = encodeURIComponent(cfg.seed || cfg.name || 'pitlife');
-  const url = `https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&skinColor=${skin}&hairColor=${hairClr}&hair=${hair}&backgroundColor=${bg}&eyes=${eyes}`;
-  const helmetSize = Math.max(10, Math.round(w * 0.32));
-  return `<div class="avatar-ring" style="width:${w}px;height:${w}px"><div class="avatar-spinner"></div><img class="avatar-img" src="${url}" alt="" onload="this.style.opacity=1;this.previousElementSibling.style.display='none'"><span class="avatar-helmet" style="font-size:${helmetSize}px">🏎</span></div>`;
-}
+// Helmet SVG paths (200×140 viewBox, facing right)
+const _HS = 'M 58,14 C 78,8 104,7 128,10 C 152,13 170,22 182,36 C 192,50 196,68 192,86 C 188,104 178,116 162,122 C 146,128 126,130 100,128 C 74,126 54,118 44,108 C 36,100 34,92 38,86 L 22,74 C 18,68 18,60 22,54 C 26,46 36,36 46,28 C 50,22 54,16 58,14 Z';
+const _HV = 'M 62,20 C 76,14 94,12 110,14 C 122,16 130,24 132,36 C 134,48 130,62 122,72 C 114,82 100,90 84,90 C 66,90 50,80 44,68 C 40,58 42,46 48,36 C 52,28 58,22 62,20 Z';
 
-function refreshChibiPreview() {
-  const el = document.getElementById('chibi-preview');
-  const name = (document.getElementById('driver-name')||{}).value||'';
-  if (el) el.innerHTML = buildChibiSVG({...pendingChibi, seed: name||'pitlife'}, 140);
-}
+function buildHelmet(cfg, w) {
+  const base  = '#' + (cfg.base || 'e8000a').replace('#','');
+  const patC  = '#' + (cfg.patternColor || 'ffffff').replace('#','');
+  const spon  = '#' + (cfg.sponsor || 'f5a623').replace('#','');
+  const pat   = cfg.pattern || 'solid';
+  const vc    = HM_VISOR[Math.min(typeof cfg.visor==='number'?cfg.visor:1, HM_VISOR.length-1)];
+  const uid   = Math.random().toString(36).slice(2,8);
+  const h     = Math.round(w * 140 / 200);
 
-function setChibiSkin(s) {
-  pendingChibi.skin = s;
-  document.querySelectorAll('#chibi-skin .chibi-swatch').forEach(b=>b.classList.toggle('sel', b.dataset.val===s));
-  refreshChibiPreview();
-}
-
-function setChibiHairStyle(id) {
-  pendingChibi.hair = id;
-  document.querySelectorAll('#chibi-hair-style .chibi-style-pill').forEach(b=>b.classList.toggle('sel', b.dataset.val===id));
-  refreshChibiPreview();
-}
-
-function setChibiHairColor(c) {
-  pendingChibi.hairColor = c;
-  document.querySelectorAll('#chibi-hair-color .chibi-swatch').forEach(b=>b.classList.toggle('sel', b.dataset.val===c));
-  refreshChibiPreview();
-}
-
-function setChibiBg(c) {
-  pendingChibi.bg = c;
-  document.querySelectorAll('#chibi-clothing-color .chibi-swatch').forEach(b=>b.classList.toggle('sel', b.dataset.val===c));
-  refreshChibiPreview();
-}
-
-function setChibiGender(g) {
-  pendingChibi.gender = g;
-  document.querySelectorAll('.chibi-gender-btn').forEach(b=>b.classList.toggle('sel', b.dataset.gender===g));
-  const styles = g==='f' ? DB_HAIR_STYLES_LONG : DB_HAIR_STYLES_SHORT;
-  pendingChibi.hair = styles[0].id;
-  document.getElementById('chibi-hair-style').innerHTML = styles.map((s,i) =>
-    `<button class="chibi-style-pill${i===0?' sel':''}" data-val="${s.id}" onclick="setChibiHairStyle('${s.id}')">${s.label}</button>`
-  ).join('');
-  refreshChibiPreview();
-}
-
-function stepChibiEyes(dir) {
-  const cur = DB_EYES.indexOf(pendingChibi.eyes||'variant01');
-  const next = (cur + dir + DB_EYES.length) % DB_EYES.length;
-  pendingChibi.eyes = DB_EYES[next];
-  const lbl = document.getElementById('chibi-eyes-label');
-  if (lbl) lbl.textContent = DB_EYES[next];
-  refreshChibiPreview();
-}
-
-function initChibiCreator() {
-  pendingChibi = {skin:'f8d25c', hair:'short01', hairColor:'1a1a1a', bg:'e8000a', eyes:'variant01', gender:'m'};
-  function sw(hex, sel, fn) {
-    const extra = (hex==='e8e8e8'||hex==='f0f0f0'||hex==='f5e6c8'||hex==='e8c090') ? 'box-shadow:0 0 0 1px #ccc;' : '';
-    return `<div class="chibi-swatch${sel?' sel':''}" style="background:#${hex};${extra}" data-val="${hex}" onclick="${fn}('${hex}')"></div>`;
+  let patShapes = '';
+  if (pat==='split') {
+    patShapes = `<rect x="0" y="0" width="100" height="140" fill="${patC}" opacity="0.42"/>`;
+  } else if (pat==='stripes') {
+    patShapes = `<rect x="-20" y="50" width="240" height="13" fill="${patC}" opacity="0.5" transform="rotate(-10 100 56)"/>
+                 <rect x="-20" y="76" width="240" height="8"  fill="${patC}" opacity="0.35" transform="rotate(-10 100 80)"/>`;
+  } else if (pat==='geo') {
+    patShapes = `<polygon points="58,14 148,14 148,78 82,100" fill="${patC}" opacity="0.35"/>
+                 <polygon points="148,78 196,72 196,128 108,128" fill="${patC}" opacity="0.22"/>`;
+  } else if (pat==='flames') {
+    patShapes = `<path d="M 192,86 C 180,68 175,50 183,34 C 166,50 160,72 172,96 C 152,68 148,48 160,30 C 142,50 136,72 150,98 C 128,68 125,46 137,28 C 120,50 116,74 130,102 L 100,128 L 162,122 Z" fill="${patC}" opacity="0.44"/>`;
+  } else if (pat==='flag') {
+    patShapes = `<rect x="0"   y="0" width="67" height="140" fill="${patC}" opacity="0.36"/>
+                 <rect x="133" y="0" width="67" height="140" fill="${spon}"  opacity="0.36"/>`;
   }
-  document.getElementById('chibi-skin').innerHTML =
-    DB_SKINS.map((s,i) => sw(s.hex, i===0, 'setChibiSkin')).join('');
-  document.getElementById('chibi-gender-row').innerHTML =
-    `<button class="chibi-gender-btn sel" data-gender="m" onclick="setChibiGender('m')">Male</button>` +
-    `<button class="chibi-gender-btn" data-gender="f" onclick="setChibiGender('f')">Female</button>`;
-  document.getElementById('chibi-hair-style').innerHTML =
-    DB_HAIR_STYLES_SHORT.map((s,i) =>
-      `<button class="chibi-style-pill${i===0?' sel':''}" data-val="${s.id}" onclick="setChibiHairStyle('${s.id}')">${s.label}</button>`
-    ).join('');
-  document.getElementById('chibi-hair-color').innerHTML =
-    DB_HAIR_COLORS.map((s,i) => sw(s.hex, i===1, 'setChibiHairColor')).join('');
-  document.getElementById('chibi-clothing-color').innerHTML =
-    DB_BG_COLORS.map((s,i) => sw(s.hex, i===0, 'setChibiBg')).join('');
-  const lbl = document.getElementById('chibi-eyes-label');
-  if (lbl) lbl.textContent = 'variant01';
-  refreshChibiPreview();
+
+  const stripe = `<rect x="-10" y="94" width="220" height="9" fill="${spon}" transform="rotate(-2 100 98.5)"/>`;
+
+  const topVent = `<path d="M 90,9 L 118,9 C 120,9 122,11 122,13 L 122,15 C 122,17 120,18 118,18 L 90,18 C 88,18 86,17 86,15 L 86,13 C 86,11 88,9 90,9 Z" fill="rgba(0,0,0,0.35)"/>
+  <line x1="96" y1="10" x2="96" y2="16" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="104" y1="10" x2="104" y2="16" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="112" y1="10" x2="112" y2="16" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>`;
+
+  const chinVent = `<path d="M 22,66 C 22,62 25,60 29,60 L 38,60 C 42,60 44,62 44,66 L 44,70 C 44,74 42,76 38,76 L 29,76 C 25,76 22,74 22,70 Z" fill="rgba(0,0,0,0.42)"/>
+  <line x1="28" y1="62" x2="28" y2="74" stroke="rgba(255,255,255,0.14)" stroke-width="0.8"/>
+  <line x1="33" y1="62" x2="33" y2="74" stroke="rgba(255,255,255,0.14)" stroke-width="0.8"/>
+  <line x1="38" y1="62" x2="38" y2="74" stroke="rgba(255,255,255,0.14)" stroke-width="0.8"/>`;
+
+  const refl = `<path d="M 68,28 C 78,22 92,18 108,18 C 120,18 130,22 136,28" fill="none" stroke="rgba(255,255,255,0.38)" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M 64,44 C 72,38 84,34 96,32" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.4" stroke-linecap="round"/>`;
+
+  const chinEdge = `<path d="M 22,74 C 18,68 18,60 22,54 C 26,46 36,36 46,28" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2" stroke-linecap="round"/>`;
+
+  return `<svg viewBox="0 0 200 140" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <defs><clipPath id="hc${uid}"><path d="${_HS}"/></clipPath></defs>
+  <path d="${_HS}" fill="${base}"/>
+  <g clip-path="url(#hc${uid})">${patShapes}</g>
+  <g clip-path="url(#hc${uid})">${stripe}</g>
+  <path d="${_HS}" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="2.5"/>
+  ${topVent}
+  <path d="${_HV}" fill="${vc.hex}" opacity="${vc.op}"/>
+  <path d="${_HV}" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/>
+  ${refl}
+  ${chinVent}
+  ${chinEdge}
+</svg>`;
+}
+
+function buildHelmetCard(cfg, name, flag, w) {
+  const num     = cfg.number || 1;
+  const numSize = Math.round(w * 0.55);
+  const nameSize= Math.max(9, Math.round(w * 0.1));
+  return `<div style="display:flex;flex-direction:column;align-items:center;gap:0">${buildHelmet(cfg,w)}<div style="font-family:'Bebas Neue',sans-serif;font-size:${numSize}px;line-height:1;color:var(--text);letter-spacing:1px;margin-top:2px">${num}</div><div style="font-family:'DM Sans',sans-serif;font-size:${nameSize}px;font-weight:700;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-top:2px">${flag} ${esc(name)}</div></div>`;
+}
+
+function refreshHelmetPreview() {
+  const el   = document.getElementById('helmet-preview');
+  const name = (document.getElementById('driver-name')||{}).value||'';
+  const flag = (typeof selectedNat==='number' && NATS[selectedNat]) ? NATS[selectedNat].f : '';
+  if (el) el.innerHTML = buildHelmet(pendingHelmet, 168);
+  const nd = document.getElementById('hnum-preview');
+  if (nd) nd.textContent = pendingHelmet.number;
+  const dn = document.getElementById('hname-preview');
+  if (dn) dn.textContent = (flag ? flag+' ' : '') + (name || 'YOUR NAME');
+}
+
+function setHelmBase(v) {
+  pendingHelmet.base = v;
+  document.querySelectorAll('#hc-base .hc-swatch').forEach(b=>b.classList.toggle('sel',b.dataset.val===v));
+  refreshHelmetPreview();
+}
+function setHelmVisor(i) {
+  pendingHelmet.visor = i;
+  document.querySelectorAll('#hc-visor .hc-pill').forEach(b=>b.classList.toggle('sel',+b.dataset.val===i));
+  refreshHelmetPreview();
+}
+function setHelmPattern(v) {
+  pendingHelmet.pattern = v;
+  document.querySelectorAll('#hc-pattern .hc-pill').forEach(b=>b.classList.toggle('sel',b.dataset.val===v));
+  refreshHelmetPreview();
+}
+function setHelmPatternColor(v) {
+  pendingHelmet.patternColor = v;
+  document.querySelectorAll('#hc-pat-color .hc-swatch').forEach(b=>b.classList.toggle('sel',b.dataset.val===v));
+  refreshHelmetPreview();
+}
+function setHelmSponsor(v) {
+  pendingHelmet.sponsor = v;
+  document.querySelectorAll('#hc-sponsor .hc-swatch').forEach(b=>b.classList.toggle('sel',b.dataset.val===v));
+  refreshHelmetPreview();
+}
+function stepHelmetNumber(dir) {
+  pendingHelmet.number = ((pendingHelmet.number - 1 + dir + 99) % 99) + 1;
+  const lbl = document.getElementById('hnum-label');
+  if (lbl) lbl.textContent = pendingHelmet.number;
+  refreshHelmetPreview();
+}
+
+function initHelmetCreator() {
+  pendingHelmet = {base:'e8000a', visor:1, pattern:'solid', patternColor:'ffffff', sponsor:'f5a623', number:1};
+  function sw(hex, sel, fn) {
+    const light = ['ffffff','f5e6c8','e8c090','f0f0f0','e8e8e8','b0b0b0','d4eaf7','f5a623'].includes(hex);
+    const extra = light ? 'box-shadow:0 0 0 1px #ccc;' : '';
+    return `<div class="hc-swatch${sel?' sel':''}" style="background:#${hex};${extra}" data-val="${hex}" onclick="${fn}('${hex}')"></div>`;
+  }
+  document.getElementById('hc-base').innerHTML =
+    HM_BASE.map((s,i)=>sw(s.hex,i===0,'setHelmBase')).join('');
+  document.getElementById('hc-visor').innerHTML =
+    HM_VISOR.map((v,i)=>`<button class="hc-pill${i===1?' sel':''}" data-val="${i}" onclick="setHelmVisor(${i})">${v.label}</button>`).join('');
+  document.getElementById('hc-pattern').innerHTML =
+    HM_PATTERNS.map((p,i)=>`<button class="hc-pill${i===0?' sel':''}" data-val="${p.id}" onclick="setHelmPattern('${p.id}')">${p.label}</button>`).join('');
+  document.getElementById('hc-pat-color').innerHTML =
+    HM_BASE.map((s,i)=>sw(s.hex,i===1,'setHelmPatternColor')).join('');
+  document.getElementById('hc-sponsor').innerHTML =
+    HM_SPONSOR.map((s,i)=>sw(s.hex,i===0,'setHelmSponsor')).join('');
+  const lbl = document.getElementById('hnum-label');
+  if (lbl) lbl.textContent = '1';
+  refreshHelmetPreview();
 }
 
 const HELMET_COLORS = [
@@ -1530,7 +1571,7 @@ function defaultState() {
     burnoutEventTriggered:false, burnoutRetired:false,
     unlockedStats: ['Reputation'],
     pendingUnlocks: [],
-    chibi: {skin:'f8d25c', hair:'short01', hairColor:'1a1a1a', bg:'e8000a', eyes:'variant01', gender:'m'},
+    helmet: {base:'e8000a', visor:1, pattern:'solid', patternColor:'ffffff', sponsor:'f5a623', number:1},
     champDeciderShown: false,
     champDeciderChoice: null
   };
@@ -1766,7 +1807,7 @@ function onStart() {
   S.nat = NATS[selectedNat].n;
   S.nickname = NICKNAMES[rnd(0,NICKNAMES.length-1)];
   S.drivingStyle = selectedStyle || 'consistent';
-  S.chibi = {...pendingChibi};
+  S.helmet = {...pendingHelmet};
   genEvents();
   save();
   showScreen('game');
@@ -2450,7 +2491,7 @@ function renderHeader() {
         <button class="btn-home" onclick="goHome()">🏠</button>
         <div style="min-width:0">
           <div class="hdr-name">
-            <span style="display:inline-block;vertical-align:middle;margin-right:5px;flex-shrink:0;line-height:0">${buildChibiSVG({...S.chibi||{},seed:S.name||'pitlife'}, 32)}</span>${esc(S.natFlag)} ${esc(S.name)}${numBadge}
+            <span style="display:inline-block;vertical-align:middle;margin-right:5px;flex-shrink:0;line-height:0">${buildHelmet(S.helmet||{}, 40)}</span>${esc(S.natFlag)} ${esc(S.name)}${numBadge}
           </div>
           <div class="hdr-team">${esc(teamStr)} · Season ${S.seasonNum}</div>
           ${S.currentCircuit ? `<div class="circuit-badge">🏁 ${esc(S.currentCircuit.name)}${S.weatherRainForecast?'<span class="rain-tag">· 🌧️ Rain</span>':''}</div>` : ''}
@@ -2893,7 +2934,7 @@ function renderResultsCard() {
   const btnLabel = S.gameOver ? 'See Career Summary →' : 'Continue →';
 
   document.getElementById('res-card').innerHTML = `
-    <div style="display:flex;justify-content:center;margin-bottom:8px">${buildChibiSVG({...S.chibi||{},seed:S.name||'pitlife'}, 80)}</div>
+    <div style="display:flex;justify-content:center;margin-bottom:8px">${buildHelmetCard(S.helmet||{},S.name,S.natFlag,80)}</div>
     <div class="res-season">${r.stage} · Season ${r.season}</div>
     <div class="res-pos ${pc}">${r.champPos}${sfx}</div>
     <div class="res-sublabel">Championship · Avg P${r.avgPos}${asfx} per race</div>
@@ -3000,7 +3041,7 @@ function renderGameOver() {
 
   el.innerHTML = `
     <div class="go-title">
-      <div style="display:flex;justify-content:center;margin-bottom:12px">${buildChibiSVG({...S.chibi||{},seed:S.name||'pitlife'}, 120)}</div>
+      <div style="display:flex;justify-content:center;margin-bottom:12px">${buildHelmetCard(S.helmet||{},S.name,S.natFlag,120)}</div>
       <h1>Career Over</h1>
       <p>${esc(reason)}</p>
     </div>
@@ -3097,7 +3138,7 @@ function restartGame() {
   closeNatDropdown();
   // Reset style
   document.querySelectorAll('.style-btn').forEach(b=>b.classList.toggle('sel', b.dataset.style==='consistent'));
-  initChibiCreator();
+  initHelmetCreator();
 }
 
 // ══════════════════════════════════════════════
@@ -3422,7 +3463,7 @@ function setCustomNickname(val) {
 
 document.addEventListener('DOMContentLoaded', () => {
   buildNatGrid();
-  initChibiCreator();
+  initHelmetCreator();
   // Close nat dropdown on outside click
   document.addEventListener('click', e => {
     if (!e.target.closest('#nat-dropdown')) closeNatDropdown();
