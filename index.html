@@ -663,9 +663,40 @@ body{
 .lg-pts{font-family:'Bebas Neue',sans-serif;font-size:16px;text-align:right;white-space:nowrap;color:var(--text)}
 .lg-gap{font-size:10px;color:var(--dim);text-align:right;margin-top:1px;font-family:'DM Sans',sans-serif}
 .lg-form{display:flex;gap:3px;justify-content:flex-end;align-items:center}
-.form-dot{width:6px;height:6px;border-radius:50%;background:var(--border)}
-.form-dot.pod{background:var(--gold)}
-.form-dot.pts{background:var(--green)}
+.form-dot{width:10px;height:10px;border-radius:50%;background:#888}
+.form-dot.win{background:#FFD700}
+.form-dot.pts{background:#00D68F}
+.form-dot.dnf{background:#E8000A}
+.me-row .form-dot{width:12px;height:12px}
+
+/* ─── QUALIFYING ─── */
+#qualify-overlay{position:fixed;inset:0;background:#000;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+#qualify-overlay.hidden{display:none}
+.quali-title{font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:3px;margin-bottom:4px}
+.quali-track{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:28px;font-family:'DM Sans',sans-serif}
+.quali-lap-bar{width:100%;max-width:360px;height:4px;background:rgba(255,255,255,.12);border-radius:2px;margin-bottom:32px;overflow:hidden}
+.quali-lap-bar-fill{height:100%;background:var(--red);border-radius:2px;width:0%;transition:width .05s linear}
+.quali-grid{width:100%;max-width:360px;display:flex;flex-direction:column;gap:5px}
+.quali-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(255,255,255,.05);font-family:'DM Sans',sans-serif}
+.quali-row.me{background:rgba(232,0,10,.14);border-left:3px solid var(--red)}
+.quali-pos{font-family:'Bebas Neue',sans-serif;font-size:18px;color:rgba(255,255,255,.4);width:22px;text-align:right}
+.quali-pos.p1{color:#FFD700}
+.quali-name{flex:1;font-size:13px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.quali-time{font-size:11px;color:rgba(255,255,255,.55);font-family:'DM Sans',sans-serif}
+.quali-continue-btn{margin-top:28px;padding:12px 36px;background:var(--red);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;border:none;cursor:pointer}
+
+/* ─── TEAM CHOICE ─── */
+#team-choice-overlay{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+#team-choice-overlay.hidden{display:none}
+.tc-title{font-family:'Bebas Neue',sans-serif;font-size:30px;color:#fff;letter-spacing:3px;margin-bottom:4px}
+.tc-series{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:22px;font-family:'DM Sans',sans-serif}
+.tc-cards{width:100%;max-width:400px;display:flex;flex-direction:column;gap:10px}
+.tc-card{padding:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:border-color .15s,background .15s}
+.tc-card:hover{border-color:var(--red);background:rgba(232,0,10,.08)}
+.tc-card.locked{opacity:.42;cursor:not-allowed;pointer-events:none}
+.tc-team{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;letter-spacing:1px}
+.tc-detail{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;font-family:'DM Sans',sans-serif}
+.tc-lock{font-size:11px;color:#E8000A;margin-top:4px;font-family:'DM Sans',sans-serif}
 
 /* ─── DRIVING STYLE ─── */
 .style-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px}
@@ -825,11 +856,23 @@ body{
     <div id="league-sec" class="hidden"></div>
   </div>
   <div id="bottom-bar">
-    <button id="race-btn" onclick="raceTheSeason()" disabled>
+    <button id="race-btn" onclick="showQualifying()" disabled>
       Race the Season
       <span class="sub" id="race-sub">Resolve all events first</span>
     </button>
   </div>
+</div>
+<div id="qualify-overlay" class="hidden">
+  <div class="quali-title">QUALIFYING</div>
+  <div class="quali-track" id="quali-track-name"></div>
+  <div class="quali-lap-bar"><div class="quali-lap-bar-fill" id="quali-fill"></div></div>
+  <div class="quali-grid" id="quali-grid"></div>
+  <button class="quali-continue-btn hidden" id="quali-continue-btn" onclick="continueToRace()">START RACE →</button>
+</div>
+<div id="team-choice-overlay" class="hidden">
+  <div class="tc-title">CHOOSE YOUR TEAM</div>
+  <div class="tc-series" id="tc-series-name"></div>
+  <div class="tc-cards" id="tc-cards"></div>
 </div>
 
 <!-- ═══════ RESULTS OVERLAY ═══════ -->
@@ -1377,6 +1420,24 @@ const EVENTS = [
      reason:'It worked. The relationship strengthened.'},
     {text:'Override with your instinct', fx:{Pace:+6,Consistency:-5,Reputation:-2},
      reason:'Faster in sector one, inconsistent for the rest. The engineer took notes.'}
+   ]},
+  {id:'e22',cat:'Career',icon:'🔄',title:'Emergency Seat',
+   minStage:1,
+   desc:"A rival team lost their driver overnight. They're offering you a seat — but your current contract demands an £800,000 release fee.",
+   choices:[
+    {text:'Pay the release fee (£800k)', money:-800000, fx:{Reputation:+5,Morale:+6},
+     reason:'Bold move. The paddock noticed.'},
+    {text:'Honour your contract',        fx:{Morale:+3,Reputation:+2},
+     reason:'Reliable and professional. Your team appreciated the loyalty.'}
+   ]},
+  {id:'e23',cat:'Career',icon:'⚠️',title:'Replacement Threat',
+   minStage:1,
+   desc:"Midseason slump. The team is considering a replacement driver. Fight your corner in the debrief — or accept the situation gracefully.",
+   choices:[
+    {text:'Fight for your seat',         fx:{},contractFight:true,
+     reason:'Your heart is racing. Everything is on the line.'},
+    {text:'Accept gracefully',           fx:{Morale:-8,Reputation:+3},freeAgent:true,
+     reason:'Dignified. But your seat is gone.'}
    ]}
 ];
 
@@ -1604,7 +1665,11 @@ function defaultState() {
     helmet: {base:'e8000a', visor:1, pattern:'solid', patternColor:'ffffff', number:1},
     feederTeam: null,
     champDeciderShown: false,
-    champDeciderChoice: null
+    champDeciderChoice: null,
+    qualiPos: null,
+    pendingPromotion: false,
+    _debutDone: false,
+    _f1DebutDone: false
   };
 }
 
@@ -1689,6 +1754,7 @@ function simRace(totalCars) {
   score += (S.weatherEffect || 0);
 
   score += (S.safetyCarEffect || 0);
+  if (S.qualiPos) score += (4.5 - S.qualiPos) * 0.022;
   score = clamp(score, 0, 1);
   return clamp(Math.round((1-score)*(totalCars-1))+1, 1, totalCars);
 }
@@ -1869,6 +1935,7 @@ function genEvents() {
   const preferredCats = styleCatMap[style] || [];
   const pool = [];
   EVENTS.forEach(ev => {
+    if (ev.minStage !== undefined && S.stageIdx < ev.minStage) return;
     pool.push(ev);
     if (preferredCats.includes(ev.cat)) pool.push(ev); // 2x weight for matching category
   });
@@ -2157,6 +2224,17 @@ function resolveEvent(ei, ci) {
     if (!S.Burnout) S.Burnout = 0;
     S.Burnout = clamp(S.Burnout + ch.burnoutChange, 0, 100);
   }
+  if (ch.contractFight) {
+    if (Math.random() < 0.55) {
+      S.Morale = clamp(S.Morale + 5, 0, 100);
+      S.Reputation = clamp(S.Reputation + 3, 0, 100);
+      lastEventOutcome.reason = 'The board backed you. You keep your seat — for now.';
+    } else {
+      S.Morale = clamp(S.Morale - 12, 0, 100);
+      S.Reputation = clamp(S.Reputation - 6, 0, 100);
+      lastEventOutcome.reason = 'The fight made things worse. The paddock is watching.';
+    }
+  }
   if (ev.cat === 'Incident') {
     S.incidentCount = (S.incidentCount || 0) + 1;
   }
@@ -2225,12 +2303,14 @@ function raceTheSeason() {
   S.leagueStandings = standings.map(d => {
     const rival = rivals.find(r => r.name === d.name);
     const avgPts = d.pts / st.rounds;
-    const form = Array.from({length:5}, () => {
-      const rv = Math.random();
-      if (avgPts >= 12) return rv < 0.55 ? 'pod' : rv < 0.9 ? 'pts' : 'none';
-      if (avgPts >= 4)  return rv < 0.15 ? 'pod' : rv < 0.65 ? 'pts' : 'none';
-      return rv < 0.05 ? 'pod' : rv < 0.3 ? 'pts' : 'none';
-    });
+    const form = d.me
+      ? positions.slice(-5).map(p => p===1?'win':ptsFor(p)>0?'pts':'none')
+      : Array.from({length:5}, () => {
+          const rv = Math.random();
+          if (avgPts >= 12) return rv < 0.45 ? 'win' : rv < 0.88 ? 'pts' : rv < 0.96 ? 'none' : 'dnf';
+          if (avgPts >= 4)  return rv < 0.10 ? 'win' : rv < 0.60 ? 'pts' : rv < 0.90 ? 'none' : 'dnf';
+          return rv < 0.03 ? 'win' : rv < 0.28 ? 'pts' : rv < 0.80 ? 'none' : 'dnf';
+        });
     const teamName = d.me
       ? (S.stageIdx===4 && f1team() ? f1team().name : st.label)
       : (rival ? rival.team : '');
@@ -2267,6 +2347,7 @@ function raceTheSeason() {
     if (champPos===1) seasonEarn = Math.round(seasonEarn * 1.3);
   }
   S.earnings += seasonEarn;
+  const winsBeforeRace = S.wins;
   S.wins += playerWins;
   S.podiums += playerPodiums;
   if (champPos===1) S.championships++;
@@ -2406,14 +2487,10 @@ function raceTheSeason() {
   }
 
   // Apply promotion/demotion to stage
+  const isFirstWin = playerWins > 0 && winsBeforeRace === 0;
   if (promoted && S.stageIdx < 4) {
-    S.stageIdx++;
-    if (S.stageIdx === 4) {
-      assignF1Team();
-      if (S.firedCount > 0) S.recoveredToF1 = true;
-    } else {
-      assignFeederTeam();
-    }
+    S.pendingPromotion = S.stageIdx + 1;
+    if (S.stageIdx + 1 === 4 && S.firedCount > 0) S.recoveredToF1 = true;
   } else if (fired) {
     S.firedCount++;
     if (S.stageIdx === 4) {
@@ -2433,8 +2510,48 @@ function raceTheSeason() {
   if (S.age >= 40) S.gameOver = true;
   if (!S.gameOver) genEvents();
 
+  // Pick cinematic (priority order: debut > f1debut > fired > first win > retirement)
+  let cinematicLines = null;
+  if (!S._debutDone) {
+    S._debutDone = true;
+    cinematicLines = [
+      {text:'YOUR CAREER\nBEGINS', cls:'bright', ms:1800},
+      {text:S.name.toUpperCase()+'\n'+S.natFlag+' '+S.nat, cls:'', ms:1800},
+      {text:'THE FIRST LAP\nOF MANY', cls:'', ms:2000}
+    ];
+  } else if (S.stageIdx===4 && S.seasonsInF1===1 && !S._f1DebutDone) {
+    S._f1DebutDone = true;
+    cinematicLines = [
+      {text:'FORMULA 1', cls:'bright', ms:1600},
+      {text:'YOU MADE IT', cls:'result-win', ms:2200},
+      {text:(f1team()?.name||'F1').toUpperCase()+'\nWELCOMES YOU', cls:'', ms:2000}
+    ];
+  } else if (fired) {
+    cinematicLines = [
+      {text:'SEASON REVIEW', cls:'bright', ms:1400},
+      {text:'THE TEAM HAS MADE\nA DECISION', cls:'', ms:1800},
+      {text:"YOU'VE BEEN\nRELEASED", cls:'result-lose', ms:2500}
+    ];
+  } else if (isFirstWin) {
+    cinematicLines = [
+      {text:'P1', cls:'bright', ms:1200},
+      {text:'YOUR FIRST WIN', cls:'result-win', ms:2200},
+      {text:S.name.toUpperCase()+'\nTAKES THE FLAG', cls:'', ms:2000}
+    ];
+  } else if (S.gameOver) {
+    cinematicLines = [
+      {text:'YOUR FINAL SEASON', cls:'bright', ms:1800},
+      {text:(S.seasonNum-1)+' SEASONS\n'+S.wins+' WINS', cls:'', ms:2200},
+      {text:'THANK YOU\nFOR RACING', cls:'result-p2', ms:2800}
+    ];
+  }
+
   save();
-  showResults();
+  if (cinematicLines) {
+    showCinematic(cinematicLines, showResults);
+  } else {
+    showResults();
+  }
 }
 
 function assignF1Team() {
@@ -2458,6 +2575,170 @@ function showScreen(name) {
   document.getElementById('screen-gameover').style.display = name==='gameover' ? 'flex' : 'none';
 }
 
+// ─── QUALIFYING ───
+function fmtLapTime(ms) {
+  const m = Math.floor(ms / 60000);
+  const s = Math.floor((ms % 60000) / 1000);
+  const mm = ms % 1000;
+  return `${m}:${String(s).padStart(2,'0')}.${String(mm).padStart(3,'0')}`;
+}
+
+function generateQuali() {
+  const st = stage();
+  let score = (S.Pace*0.40 + S.Racecraft*0.30 + S.Consistency*0.30) / 100;
+  score += (S.Morale - 50) / 400;
+  if (S.stageIdx === 4) {
+    const cr = S.teamCarRating !== null ? S.teamCarRating : 35;
+    score += (cr - 50) / 250;
+  } else {
+    score += S.Reputation / 500;
+  }
+  score = clamp(score + (Math.random() * 0.20 - 0.10), 0, 1);
+  const playerPos = clamp(Math.round((1 - score) * (st.cars - 1)) + 1, 1, st.cars);
+  S.qualiPos = playerPos;
+
+  const aiPool = S.stageIdx === 4 ? F1_AI : FEEDER_AI;
+  const baseTime = S.stageIdx === 4 ? 85000 : S.stageIdx >= 2 ? 95000 : 110000;
+  const MAX = Math.min(st.cars, 10);
+
+  // Build display list: top slots + always include player
+  const showPos = new Set();
+  for (let i = 1; i <= Math.min(MAX - 1, 8); i++) showPos.add(i);
+  showPos.add(playerPos);
+  const posList = [...showPos].sort((a, b) => a - b).slice(0, MAX);
+
+  const aiNames = [...aiPool];
+  let aiIdx = 0;
+  return posList.map(pos => {
+    const isMe = pos === playerPos;
+    const gap = (pos - 1) * rnd(120, 380);
+    const lapMs = baseTime + gap + rnd(-40, 40);
+    const name = isMe ? S.name : aiNames[aiIdx++ % aiNames.length];
+    return { pos, name, time: fmtLapTime(lapMs), me: isMe };
+  });
+}
+
+function showQualifying() {
+  if (S.resolved.length < S.events.length) return;
+  const entries = generateQuali();
+  const circuitName = S.currentCircuit ? S.currentCircuit.name : 'Circuit';
+  document.getElementById('qualify-overlay').classList.remove('hidden');
+  document.getElementById('quali-track-name').textContent = circuitName;
+  document.getElementById('quali-fill').style.width = '0%';
+  document.getElementById('quali-grid').innerHTML = '';
+  document.getElementById('quali-continue-btn').classList.add('hidden');
+  doFlyingLap(entries);
+}
+
+function doFlyingLap(entries) {
+  const fill = document.getElementById('quali-fill');
+  const totalMs = 2800;
+  const start = performance.now();
+  function tick() {
+    const elapsed = performance.now() - start;
+    const pct = Math.min(elapsed / totalMs * 100, 100);
+    fill.style.width = pct + '%';
+    if (pct < 100) { requestAnimationFrame(tick); }
+    else { revealQualiResult(entries); }
+  }
+  requestAnimationFrame(tick);
+}
+
+function revealQualiResult(entries) {
+  const grid = document.getElementById('quali-grid');
+  grid.innerHTML = entries.map(e =>
+    `<div class="quali-row${e.me?' me':''}">
+      <div class="quali-pos${e.pos===1?' p1':''}">${e.pos}</div>
+      <div class="quali-name">${esc(e.name)}</div>
+      <div class="quali-time">${e.time}</div>
+    </div>`).join('');
+  setTimeout(() => { document.getElementById('quali-continue-btn').classList.remove('hidden'); }, 400);
+}
+
+function continueToRace() {
+  document.getElementById('qualify-overlay').classList.add('hidden');
+  raceTheSeason();
+}
+
+// ─── TEAM CHOICE ───
+function buildPromotionOptions(newIdx) {
+  if (newIdx === 4) {
+    const repReqs = [40, 55, 70];
+    return [3, 2, 1].map((tier, i) => {
+      const pool = F1_TEAMS.filter(t => t.tier === tier);
+      const team = pool[rnd(0, pool.length - 1)];
+      const locked = S.Reputation < repReqs[i];
+      return {
+        team: team.name, f1idx: F1_TEAMS.indexOf(team), tier, locked,
+        detail: `${STAGES[newIdx].label} · Tier ${tier} team · ${(team.pay/1000000).toFixed(1)}M salary`,
+        lockMsg: locked ? `Requires ${repReqs[i]} Reputation` : null
+      };
+    });
+  } else {
+    const teams = STAGE_TEAMS[newIdx] || [];
+    const shuffled = [...teams].sort(() => Math.random() - 0.5).slice(0, 3);
+    return shuffled.map(name => ({
+      team: name, f1idx: null, locked: false,
+      detail: STAGES[newIdx].label, lockMsg: null
+    }));
+  }
+}
+
+function renderTeamChoiceScreen() {
+  const newIdx = S.pendingPromotion;
+  const seriesName = STAGES[newIdx].label;
+  document.getElementById('tc-series-name').textContent = `Promoted to ${seriesName}`;
+  const options = buildPromotionOptions(newIdx);
+  window._tcOptions = options;
+  document.getElementById('tc-cards').innerHTML = options.map((opt, i) =>
+    `<div class="tc-card${opt.locked?' locked':''}" onclick="selectTeam(${i})">
+      <div class="tc-team">${esc(opt.team)}</div>
+      <div class="tc-detail">${opt.detail}</div>
+      ${opt.lockMsg ? `<div class="tc-lock">🔒 ${opt.lockMsg}</div>` : ''}
+    </div>`).join('');
+  document.getElementById('team-choice-overlay').classList.remove('hidden');
+}
+
+function selectTeam(i) {
+  const opt = (window._tcOptions || [])[i];
+  if (!opt || opt.locked) return;
+  document.getElementById('team-choice-overlay').classList.add('hidden');
+  S.stageIdx = S.pendingPromotion;
+  S.pendingPromotion = false;
+  if (S.stageIdx === 4) {
+    S.f1TeamIdx = opt.f1idx;
+    const t = F1_TEAMS[opt.f1idx];
+    S.teamCarRating = t.tier===1 ? rnd(72,88) : t.tier===2 ? rnd(50,68) : rnd(28,46);
+  } else {
+    S.feederTeam = opt.team;
+  }
+  save();
+  renderAll();
+}
+
+// ─── GENERIC CINEMATIC ───
+function showCinematic(lines, callback) {
+  const outcome = document.getElementById('champ-outcome');
+  const lapText = document.getElementById('champ-lap-text');
+  if (!outcome || !lapText) { callback(); return; }
+  outcome.classList.remove('hidden');
+  lapText.className = 'champ-lap';
+  lapText.style.opacity = '0';
+  lapText.textContent = '';
+  let idx = 0;
+  function showNext() {
+    if (idx >= lines.length) { outcome.classList.add('hidden'); callback(); return; }
+    const s = lines[idx++];
+    lapText.className = 'champ-lap ' + (s.cls || '');
+    lapText.style.whiteSpace = 'pre-line';
+    lapText.textContent = s.text;
+    lapText.style.opacity = '0';
+    requestAnimationFrame(() => { requestAnimationFrame(() => { lapText.style.opacity = '1'; }); });
+    setTimeout(() => { lapText.style.opacity = '0'; setTimeout(showNext, 600); }, s.ms || 1800);
+  }
+  showNext();
+}
+
 function showResults() {
   if (S.lastResult && S.lastResult.champDeciderUsed) {
     showChampOutcomeCinematic(S.lastResult.champDeciderFinalPos, S.lastResult.champPos, S.lastResult.champDeciderChoice, () => {
@@ -2475,6 +2756,8 @@ function closeResults() {
   if (S.gameOver) {
     showScreen('gameover');
     renderGameOver();
+  } else if (S.pendingPromotion !== false) {
+    renderTeamChoiceScreen();
   } else {
     renderAll();
   }
