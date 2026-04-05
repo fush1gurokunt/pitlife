@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>PitLife — F1 Career Simulator</title>
+<title>PitLife — Motorsport Career Simulator</title>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,
   e._i=[],e.init=function(i,s,a){function g(t,e){
@@ -999,10 +999,10 @@ const NICKNAMES = [
 
 const STAGES = [
   {id:'karting', label:'Karting',   cars:10, rounds:8,  earnings:8000,   promoteTop:3},
-  {id:'f4',      label:'Formula 4', cars:10, rounds:8,  earnings:25000,  promoteTop:3},
-  {id:'f3',      label:'Formula 3', cars:10, rounds:10, earnings:80000,  promoteTop:3},
-  {id:'f2',      label:'Formula 2', cars:10, rounds:12, earnings:250000, promoteTop:3},
-  {id:'f1',      label:'Formula 1', cars:20, rounds:24, earnings:null,   promoteTop:null}
+  {id:'f4',      label:'Series 4', cars:10, rounds:8,  earnings:25000,  promoteTop:3},
+  {id:'f3',      label:'Series 3', cars:10, rounds:10, earnings:80000,  promoteTop:3},
+  {id:'f2',      label:'Series 2', cars:10, rounds:12, earnings:250000, promoteTop:3},
+  {id:'f1',      label:'Premier Series', cars:20, rounds:24, earnings:null,   promoteTop:null}
 ];
 
 const F1_TEAMS = [
@@ -1021,10 +1021,10 @@ const F1_TEAMS = [
 const FEEDER_AI = ['Kowalski','Mercer','Fontaine','De Silva','Okafor',
   'Lindqvist','Thierfelder','Navarro','Nakamura','Bright','Volkov','Ferrara'];
 
-const F1_AI = ['Hamilton Jr','Schumacher III','Alonso II','Verstappen II',
-  'Leclerc II','Russell III','Norris II','Sainz Jr','Piastri II','Perez III',
-  'Hulkenberg II','Bottas Jr','Ocon II','Albon Jr','Zhou II',
-  'Ricciardo III','Tsunoda Jr','Stroll Jr','Magnussen Jr','Sargeant II'];
+const F1_AI = ['Hamiltonian Jr','Schumach III','Alonsev II','Verstark II',
+  'Leclaire II','Russello III','Norrisk II','Sainte Jr','Piastro II','Pereza III',
+  'Hulken II','Bottari Jr','Ocone II','Alboni Jr','Zhen II',
+  'Ricciard III','Tsukoda Jr','Strolla Jr','Magnusen Jr','Sargeant-Klein II'];
 
 const PTS_TABLE = [25,18,15,12,10,8,6,4,2,1];
 
@@ -1048,7 +1048,7 @@ const CIRCUITS = {
   feeder:[
     {id:'fc1',name:'Vallelunga',rain:0.20,special:null},
     {id:'fc2',name:'Misano Adriatico',rain:0.20,special:null},
-    {id:'fc3',name:'Imola Circuit',rain:0.25,special:null},
+    {id:'fc3',name:'Imola Valley Circuit',rain:0.25,special:null},
     {id:'fc4',name:'Pau City Street',rain:0.25,special:'street'},
     {id:'fc5',name:'Hockenheimring',rain:0.25,special:'slipstream'},
     {id:'fc6',name:'Macau Bridge',rain:0.25,special:'dangerous'}
@@ -1101,7 +1101,7 @@ const PERSONAL_EVENTS = [
      {label:'Go — once-in-a-lifetime vibe',     fx:{Morale:5,Consistency:-2}, burnoutChange:5}
    ]},
   {id:'pe_relationship', minAge:22, maxAge:27, icon:'💛', title:'Monaco Night',
-   body:'You\'ve been dating someone long-distance. They flew in for Monaco. Race week or quality time?',
+   body:'You\'ve been dating someone long-distance. They flew in for Monaco Royale. Race week or quality time?',
    choices:[
      {label:'Full focus on race prep',          fx:{Consistency:2,Morale:-3}, burnoutChange:5},
      {label:'Spend real time with them',        fx:{Morale:7}, burnoutChange:-8}
@@ -1172,8 +1172,8 @@ const NAT_EVENTS = {
        {label:'Say nothing — let results talk', fx:{Morale:-3,Reputation:2}},
        {label:'Issue a sharp response',         fx:{Reputation:-3,Morale:4}}
      ]},
-    {id:'nat_gbr2', icon:'🏟️', title:'Silverstone Crowd',
-     body:'The Silverstone grandstands are packed with your fans. The noise on the installation lap is overwhelming.',
+    {id:'nat_gbr2', icon:'🏟️', title:'Silverstone Park Crowd',
+     body:'The Silverstone Park grandstands are packed with your fans. The noise on the installation lap is overwhelming.',
      choices:[
        {label:'Feed off the energy',  fx:{Morale:8,Racecraft:2}},
        {label:'Stay in your bubble',  fx:{Consistency:3}}
@@ -2111,7 +2111,7 @@ function makeCircuitEvent(circuit) {
         {text:'Intermediates — gamble it dries', fx:{Pace:+3,Morale:+2,Consistency:-4}, weatherEffect:0.09},
         {text:'Box and wait — safety car strategy', fx:{Consistency:+4,Morale:-2}, weatherEffect:0.02}
       ]},
-    suzuka:{id:'c_suzuka',cat:'Circuit',icon:'⚙️',title:'Suzuka — The Setup Window',
+    suzuka:{id:'c_suzuka',cat:'Circuit',icon:'⚙️',title:'Suzuka Spiral — The Setup Window',
       desc:'Suzuka Spiral rewards technical perfection above all. Your engineers want to lock in the setup two days early.',
       choices:[
         {text:'Full technical setup — trust the data', fx:{Consistency:+5,Pace:+1}},
@@ -2466,7 +2466,7 @@ function raceTheSeason() {
             S.f1TeamIdx = F1_TEAMS.indexOf(pick);
             newTeamName = pick.name;
             promoted = true;
-            promotedTo = 'Formula 1';
+            promotedTo = 'Premier Series';
           }
         }
       }
@@ -2584,9 +2584,9 @@ function raceTheSeason() {
   } else if (S.stageIdx===4 && S.seasonsInF1===1 && !S._f1DebutDone) {
     S._f1DebutDone = true;
     cinematicLines = [
-      {text:'FORMULA 1', cls:'bright', ms:1600},
+      {text:'PREMIER SERIES', cls:'bright', ms:1600},
       {text:'YOU MADE IT', cls:'result-win', ms:2200},
-      {text:(f1team()?.name||'F1').toUpperCase()+'\nWELCOMES YOU', cls:'', ms:2000}
+      {text:(f1team()?.name||'PREMIER').toUpperCase()+'\nWELCOMES YOU', cls:'', ms:2000}
     ];
   } else if (fired) {
     cinematicLines = [
@@ -2966,7 +2966,7 @@ function renderStats() {
       <div class="cs"><div class="cs-val">${S.championships}</div><div class="cs-lbl">Titles</div></div>
       <div class="cs"><div class="cs-val">${S.wins}</div><div class="cs-lbl">Wins</div></div>
       <div class="cs"><div class="cs-val">${S.podiums}</div><div class="cs-lbl">Podiums</div></div>
-      <div class="cs"><div class="cs-val">${S.seasonsInF1}</div><div class="cs-lbl">F1 Seasons</div></div>
+      <div class="cs"><div class="cs-val">${S.seasonsInF1}</div><div class="cs-lbl">Top Flight Seasons</div></div>
     </div>`;
 }
 
@@ -3405,7 +3405,7 @@ function renderGameOver() {
     {v:S.championships, l:'Championships', g:S.championships>0},
     {v:S.wins,          l:'Race Wins',      g:false},
     {v:S.podiums,       l:'Podiums',        g:false},
-    {v:S.seasonsInF1,   l:'F1 Seasons',     g:false},
+    {v:S.seasonsInF1,   l:'Top Flight Seasons', g:false},
     {v:S.log.length,    l:'Total Seasons',  g:false},
     {v:fmtMoney(S.earnings), l:'Career Earnings', g:true}
   ];
@@ -3468,7 +3468,7 @@ function calcRating() {
   const sc = S.championships*30 + S.wins*5 + S.podiums*2 + S.seasonsInF1*3;
   if (sc>=200) return {grade:'S', label:'All-time Legend'};
   if (sc>=120) return {grade:'A', label:'Championship Contender'};
-  if (sc>=60)  return {grade:'B', label:'Solid F1 Career'};
+  if (sc>=60)  return {grade:'B', label:'Solid Premier Career'};
   if (sc>=25)  return {grade:'C', label:'Journeyman Pro'};
   if (sc>=8)   return {grade:'D', label:'Nearly Made It'};
   return          {grade:'F', label:'Back to Karting'};
@@ -3479,8 +3479,8 @@ function calcLegacyTitle() {
   if (S.championships >= 2) return {title:'Double Champion', desc:'More than once, you conquered the grid. Your legacy is undeniable.'};
   if (S.championships === 1 && S.wins >= 10) return {title:'World Champion', desc:'You reached the summit. Only a handful ever do.'};
   if (S.championships === 1) return {title:'Champion', desc:'Once, the championship was yours. Not everyone gets that moment.'};
-  if (S.seasonsInF1 >= 5 && S.podiums >= 10) return {title:'F1 Veteran', desc:'Years in the top flight, countless battles. A respected name in the paddock.'};
-  if (S.seasonsInF1 >= 3) return {title:'F1 Racer', desc:'You made it to the pinnacle and competed at the highest level.'};
+  if (S.seasonsInF1 >= 5 && S.podiums >= 10) return {title:'Premier Veteran', desc:'Years in the top flight, countless battles. A respected name in the paddock.'};
+  if (S.seasonsInF1 >= 3) return {title:'Premier Racer', desc:'You made it to the pinnacle and competed at the highest level.'};
   if (S.wins >= 5) return {title:'Race Winner', desc:'You stood on the top step. Speed was never your problem.'};
   if (S.podiums >= 3) return {title:'Podium Finisher', desc:'You mixed it with the best and came away with silverware.'};
   if (S.burnoutRetired) return {title:'Burnt Out', desc:"The sport took everything you had. There's no shame in that."};
@@ -3495,16 +3495,16 @@ function calcAchievements() {
   if (S.wins >= 10) ach.push({icon:'🔟', name:'Ten Wins', desc:'10 race victories'});
   if (S.wins >= 25) ach.push({icon:'🌟', name:'25 Wins', desc:'An all-time great record'});
   if (S.podiums >= 10) ach.push({icon:'🥈', name:'Podium Regular', desc:'10 or more podiums'});
-  if (S.seasonsInF1 >= 10) ach.push({icon:'🎖️', name:'F1 Lifer', desc:'10 seasons in Formula 1'});
+  if (S.seasonsInF1 >= 10) ach.push({icon:'🎖️', name:'Premier Lifer', desc:'10 seasons in the Premier Series'});
   if ((S.monacoSeasonWins||0) >= 2) ach.push({icon:'🎰', name:'Monaco Master', desc:'Won at Monaco Royale twice'});
   if ((S.homeSeasonWins||0) >= 1) ach.push({icon:'🏠', name:'Home Hero', desc:'Won the Home Grand Prix'});
   if ((S.runnerUpCount||0) >= 3) ach.push({icon:'😤', name:'The Nearly Man', desc:'Runner-up in championship three times'});
-  if ((S.sameTeamSeasons||0) >= 4) ach.push({icon:'🤝', name:'Loyal', desc:'4+ seasons with the same F1 team'});
-  if (S.recoveredToF1) ach.push({icon:'💪', name:'Comeback', desc:'Returned to F1 after being dropped'});
+  if ((S.sameTeamSeasons||0) >= 4) ach.push({icon:'🤝', name:'Loyal', desc:'4+ seasons with the same Premier Series team'});
+  if (S.recoveredToF1) ach.push({icon:'💪', name:'Comeback', desc:'Returned to the Premier Series after being dropped'});
   if ((S.incidentCount||0) >= 5) ach.push({icon:'💥', name:'Incident Prone', desc:'5 or more on-track incidents'});
   if (S.burnoutRetired) ach.push({icon:'🔥', name:'Burned Out', desc:'Career ended by total burnout'});
   if (S.earnings >= 50000000) ach.push({icon:'💰', name:'Fifty Million', desc:'£50M+ career earnings'});
-  if (ach.length === 0 && S.seasonsInF1 >= 1) ach.push({icon:'🏎️', name:'F1 Driver', desc:'Made it to Formula 1'});
+  if (ach.length === 0 && S.seasonsInF1 >= 1) ach.push({icon:'🏎️', name:'Premier Driver', desc:'Made it to the Premier Series'});
   return ach;
 }
 
