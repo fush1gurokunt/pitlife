@@ -3099,7 +3099,6 @@ function renderLog() {
   </div>`;
   const entries = S.log.map(e => {
     const pc = posClass(e.champPos);
-    const sfx = ordSuffix(e.champPos);
     const teamStr = e.team ? ` — ${e.team}` : '';
     let detail = `Avg P${e.avgPos} · ${fmtMoney(e.earnings)}`;
     if (e.wins) detail += ` · ${e.wins} win${e.wins>1?'s':''}`;
@@ -3110,7 +3109,7 @@ function renderLog() {
     return `<div class="log-entry">
       <div class="log-h">
         <span class="log-stage">S${e.season} · ${e.stage}${teamStr}</span>
-        <span class="log-pos ${pc}">P${e.champPos}${sfx}</span>
+        <span class="log-pos ${pc}">P${e.champPos}</span>
       </div>
       <div class="log-detail">${detail}</div>
     </div>`;
@@ -3138,7 +3137,7 @@ function renderLeague() {
     const formDots = (d.form||[]).map(f=>`<div class="form-dot ${f}"></div>`).join('');
     const tierDot = (d.tier && S.stageIdx===4) ? `<span class="tier-dot t${d.tier}"></span>` : '';
     return `<div class="league-row ${meCls}" style="transition-delay:${i*40}ms">
-      <div class="lg-pos ${pCls}">${i+1}</div>
+      <div class="lg-pos ${pCls}">P${i+1}</div>
       <div class="lg-flag">${d.flag||''}</div>
       <div class="lg-info">
         <div class="lg-name">${d.me?esc(S.name):esc(d.name)}</div>
@@ -3280,8 +3279,6 @@ function renderResultsCard() {
   const r = S.lastResult;
   if (!r) return;
   const pc = posClass(r.champPos);
-  const sfx = ordSuffix(r.champPos);
-  const asfx = ordSuffix(r.avgPos);
   const headline = pickHeadline(r);
 
   // Race report
@@ -3333,8 +3330,8 @@ function renderResultsCard() {
   document.getElementById('res-card').innerHTML = `
     <div style="display:flex;justify-content:center;margin-bottom:8px">${buildHelmetCard(S.helmet||{},S.name,S.natFlag,80)}</div>
     <div class="res-season">${r.stage} · Season ${r.season}</div>
-    <div class="res-pos ${pc}">${r.champPos}${sfx}</div>
-    <div class="res-sublabel">Championship · Avg P${r.avgPos}${asfx} per race</div>
+    <div class="res-pos ${pc}">P${r.champPos}</div>
+    <div class="res-sublabel">Championship · Avg P${r.avgPos} per race</div>
     <div class="res-headline">"${effectiveNickname()}" — ${esc(headline)}</div>
     ${champBanner}${raceWinBanner}${podiumBanner}
     <div class="race-report">"${esc(raceReport)}"</div>
@@ -3421,14 +3418,13 @@ function renderGameOver() {
 
   const logItems = S.log.map(e=>{
     const pc = posClass(e.champPos);
-    const sfx = ordSuffix(e.champPos);
     let d = `Avg P${e.avgPos}`;
     if (e.champWon) d += ' · 🏆';
     if (e.fired) d += ' · 🔴';
     return `<div class="log-entry">
       <div class="log-h">
         <span class="log-stage">${e.stage}${e.team?` — ${e.team}`:''}</span>
-        <span class="log-pos ${pc}">P${e.champPos}${sfx}</span>
+        <span class="log-pos ${pc}">P${e.champPos}</span>
       </div>
       <div class="log-detail">${d} · ${fmtMoney(e.earnings)}</div>
     </div>`;
