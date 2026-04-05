@@ -2,8 +2,30 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>PitLife — F1 Career Simulator</title>
+<script>
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,
+  e._i=[],e.init=function(i,s,a){function g(t,e){
+  var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);
+  t[e]=function(){t.push([e].concat(
+  Array.prototype.slice.call(arguments,0)))}}
+  (p=t.createElement("script")).type="text/javascript",
+  p.async=!0,p.src=s.api_host+"/static/array.js",
+  (r=t.getElementsByTagName("script")[0])
+  .parentNode.insertBefore(p,r);var u=e;for(void 0!==a?
+  u=e[a]=[]:a="posthog",u.people=u.people||[],
+  u.toString=function(t){var e="posthog";
+  return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},
+  u.people.toString=function(){
+  return u.people.toString(1)},
+  o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags".split(" "),n=0;n<o.length;n++)
+  g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}
+  (document,window.posthog||[]);
+  posthog.init('phc_xFWVDs2HxYUzQ9ucGryMVPacN7UtVGXxMrVzJdjv6APT', {
+    api_host: 'https://eu.i.posthog.com'
+  })
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -24,7 +46,8 @@
   --r:        0px;
   --rs:       0px;
 }
-*{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-user-select:none}
+*{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+input{-webkit-user-select:text}
 html{background:var(--bg)}
 body{
   background:var(--bg);
@@ -184,15 +207,18 @@ body{
 #game-header{
   position:sticky;top:0;
   background:#0A0A0A;
-  padding:16px 16px 0;z-index:100;
+  padding:16px 16px 0;
+  padding-top:max(env(safe-area-inset-top),12px);
+  z-index:100;
   width:100%;max-width:480px;
 }
 .hdr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding-bottom:14px}
 .hdr-name{
   font-family:'Bebas Neue',sans-serif;
-  font-size:32px;letter-spacing:1px;
+  font-size:clamp(1.1rem,5vw,32px);letter-spacing:1px;
   color:#fff;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  min-width:0;
 }
 .hdr-team{font-size:14px;color:rgba(255,255,255,.6);margin-top:3px;font-family:'DM Sans',sans-serif;font-weight:500}
 .hdr-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
@@ -202,6 +228,7 @@ body{
   font-family:'Bebas Neue',sans-serif;
   font-size:14px;letter-spacing:1.5px;
   padding:4px 11px;text-transform:uppercase;white-space:nowrap;color:#fff;
+  max-width:fit-content;flex-shrink:0;overflow:hidden;
 }
 .wrap{width:100%;max-width:480px;padding:0 12px 100px}
 .section-title{
@@ -292,7 +319,7 @@ body{
   color:var(--text);
   cursor:pointer;font-family:'DM Sans',sans-serif;
   font-size:13px;font-weight:500;padding:9px 12px;
-  text-align:left;width:100%;
+  text-align:left;width:100%;min-height:44px;
   transition:background .12s,color .12s;
 }
 .choice-btn:hover{background:var(--text);color:#fff}
@@ -464,6 +491,8 @@ body{
 }
 .move-banner.up{border-color:var(--green);color:var(--green)}
 .move-banner.down{border-color:var(--red);color:var(--red)}
+.race-win-banner{background:var(--gold);padding:10px 14px;text-align:center;margin-bottom:14px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:#fff}
+.podium-banner{border:1.5px solid var(--red);color:var(--red);padding:10px 14px;text-align:center;margin-bottom:14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px}
 .standings{width:100%;border-collapse:collapse;margin-bottom:16px}
 .standings th{
   font-family:'DM Sans',sans-serif;font-size:9px;
@@ -535,9 +564,11 @@ body{
   font-size:10px;font-weight:700;letter-spacing:1.5px;
   padding:8px 14px;text-transform:uppercase;
   transition:color .15s,border-bottom-color .15s;
+  min-height:44px;
 }
 .tab-pill.active{color:#fff;border-bottom-color:var(--red)}
 .tab-pill:hover:not(.active){color:rgba(255,255,255,.7)}
+@media(max-width:390px){.tab-pill{font-size:0.6rem;padding:0.4rem 0.3rem}}
 
 /* ─── MY CAR ─── */
 .helmet-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:8px}
@@ -596,7 +627,7 @@ body{
 @keyframes tabFadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
 /* ─── CALENDAR STRIP ─── */
-.calendar-strip{display:flex;gap:5px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none;margin-bottom:4px}
+.calendar-strip{display:flex;gap:5px;overflow-x:auto;padding:4px 1rem 12px;scrollbar-width:none;margin-bottom:4px}
 .calendar-strip::-webkit-scrollbar{display:none}
 .cal-card{flex-shrink:0;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:7px 9px;text-align:center;min-width:86px;transition:opacity .2s;box-shadow:0 2px 6px rgba(0,0,0,.05)}
 .cal-card.past{opacity:.3;background:var(--bg)}
@@ -776,6 +807,7 @@ body{
       <div class="name-input-wrap">
         <input class="name-big-input" id="driver-name" type="text"
           placeholder="YOUR NAME" maxlength="24" autocomplete="off"
+          autocorrect="off" autocapitalize="words" spellcheck="false"
           oninput="onNameInput(this.value)">
       </div>
       <button class="step-btn hidden" id="name-continue-btn" onclick="advanceStep(1)">Continue →</button>
@@ -1039,6 +1071,21 @@ const SPONSOR_DEALS = [
   {id:'broadcaster', icon:'📡', name:'National Broadcaster', bonus:300000,  penalty:0,      bonusBonus:300000,
    condition:'podium', conditionDesc:'Championship podium (P1–P3)'}
 ];
+
+const REASONS = {
+  'pace+':        ['Training sharpened your reactions','Simulator work clicked','A new technique improved your raw speed','Back-to-back sessions paid off'],
+  'pace-':        ['Rust crept in between sessions','Fatigue dulled your sharpest edges','Missed training sessions cost you'],
+  'racecraft+':   ['Wheel to wheel battles hardened you','You learned from watching rivals','Race instincts are sharpening'],
+  'racecraft-':   ['Poor decisions in traffic','Hesitation cost you overtakes','A lack of race miles showing'],
+  'consistency+': ['Clean laps built real confidence','No mistakes across a full stint','You found your rhythm and held it'],
+  'consistency-': ['Laptime swings hurt your average','Too many small errors adding up','Pressure broke your usual discipline'],
+  'fitness+':     ['Conditioning work is showing','You arrived fresh and it showed','Physical prep made the difference'],
+  'fitness-':     ['You pushed through pain to be here','Recovery was rushed','The schedule is taking its toll'],
+  'morale+':      ['A weight lifted off your shoulders','The team atmosphere is electric','Belief is returning'],
+  'morale-':      ['Doubt is creeping in','The pressure is getting to you','Something said in the debrief stung'],
+  'reputation+':  ['The paddock is talking about you','Good press after a strong showing','Respect earned the hard way'],
+  'reputation-':  ['The press turned on you this week','A poor result changed the narrative','That quote went further than intended'],
+};
 
 const PERSONAL_EVENTS = [
   {id:'pe_dad', minAge:17, maxAge:21, icon:'👨', title:'Dad Wants to Talk',
@@ -1707,9 +1754,7 @@ function fmtMoney(n) {
   if (n >= 1000)    return '£' + Math.round(n/1000) + 'k';
   return '£' + n;
 }
-function ordSuffix(n) {
-  if (n===1) return 'st'; if (n===2) return 'nd'; if (n===3) return 'rd'; return 'th';
-}
+function ordSuffix(n) { return ''; }
 function posClass(p) { return p===1?'gold':p<=3?'silver':''; }
 function stage() { return STAGES[S.stageIdx]; }
 function f1team() { return S.f1TeamIdx !== null ? F1_TEAMS[S.f1TeamIdx] : null; }
@@ -1908,6 +1953,7 @@ function onStart() {
   assignFeederTeam();
   genEvents();
   save();
+  posthog.capture('career_started', { nationality: S.nat, driving_style: S.drivingStyle });
   showScreen('game');
   renderAll();
 }
@@ -2183,6 +2229,7 @@ function resolveEvent(ei, ci) {
   if (S.resolved.includes(ei)) return;
   const ev = S.events[ei];
   const ch = ev.choices[ci];
+  posthog.capture('decision_made', { event_type: ev.cat, stage: stage().label });
   const STATS = ['Pace','Racecraft','Consistency','Fitness','Reputation','Morale'];
 
   // Build outcome for the narrative flash
@@ -2466,6 +2513,7 @@ function raceTheSeason() {
   if (S.Burnout >= 100) {
     S.burnoutRetired = true;
     S.gameOver = true;
+    posthog.capture('driver_died', { age: S.age, stage: stage().label });
   }
 
   // Track monaco/home wins
@@ -2490,6 +2538,8 @@ function raceTheSeason() {
   const isFirstWin = playerWins > 0 && winsBeforeRace === 0;
   if (promoted && S.stageIdx < 4) {
     S.pendingPromotion = S.stageIdx + 1;
+    posthog.capture('stage_promoted', { new_stage: STAGES[S.stageIdx + 1].label, season: S.seasonNum, age: S.age });
+    if (S.stageIdx + 1 === 4) posthog.capture('reached_f1', { seasons_taken: S.seasonNum, age: S.age });
     if (S.stageIdx + 1 === 4 && S.firedCount > 0) S.recoveredToF1 = true;
   } else if (fired) {
     S.firedCount++;
@@ -2532,12 +2582,6 @@ function raceTheSeason() {
       {text:'THE TEAM HAS MADE\nA DECISION', cls:'', ms:1800},
       {text:"YOU'VE BEEN\nRELEASED", cls:'result-lose', ms:2500}
     ];
-  } else if (isFirstWin) {
-    cinematicLines = [
-      {text:'P1', cls:'bright', ms:1200},
-      {text:'YOUR FIRST WIN', cls:'result-win', ms:2200},
-      {text:S.name.toUpperCase()+'\nTAKES THE FLAG', cls:'', ms:2000}
-    ];
   } else if (S.gameOver) {
     cinematicLines = [
       {text:'YOUR FINAL SEASON', cls:'bright', ms:1800},
@@ -2546,6 +2590,7 @@ function raceTheSeason() {
     ];
   }
 
+  posthog.capture('season_raced', { season: S.seasonNum, stage: stage().label, age: S.age, position: champPos });
   save();
   if (cinematicLines) {
     showCinematic(cinematicLines, showResults);
@@ -2740,7 +2785,7 @@ function showCinematic(lines, callback) {
 }
 
 function showResults() {
-  if (S.lastResult && S.lastResult.champDeciderUsed) {
+  if (S.lastResult && S.lastResult.champDeciderUsed && S.lastResult.champPos === 1) {
     showChampOutcomeCinematic(S.lastResult.champDeciderFinalPos, S.lastResult.champPos, S.lastResult.champDeciderChoice, () => {
       document.getElementById('results-overlay').classList.remove('hidden');
       renderResultsCard();
@@ -2797,6 +2842,7 @@ function renderAll() {
 
 function switchTab(tab) {
   activeTab = tab;
+  if (tab === 'shop') posthog.capture('shop_opened');
   renderAll();
 }
 
@@ -2955,7 +3001,7 @@ function renderEvents() {
       <div class="tinder-wrap">
         <div class="tinder-dots">${dots}</div>
         <div class="tinder-all-done">
-          <div class="tinder-all-done-icon">✅</div>
+          <div class="tinder-all-done-icon" style="color:var(--green)">✓</div>
           <div class="tinder-all-done-text">All events resolved — ready to race</div>
         </div>
       </div>`;
@@ -2982,10 +3028,7 @@ function renderEvents() {
     <div class="outcome-flash">
       <div class="outcome-flash-lbl">Last decision</div>
       <div class="outcome-flash-choice">"${esc(lastEventOutcome.choiceText)}"</div>
-      ${lastEventOutcome.changes.map(c=>`
-        <div class="outcome-stat-line ${c.v>0?'pos':'neg'}">
-          <span class="osv">${c.v>0?'+':''}${c.v} ${c.k.toUpperCase()}</span>${lastEventOutcome.reason ? ` — ${esc(lastEventOutcome.reason)}` : ''}
-        </div>`).join('')}
+      ${lastEventOutcome.changes.map(c=>{const key=c.k.toLowerCase()+(c.v>0?'+':'-');const pool=REASONS[key]||[];const reason=pool.length?pool[rnd(0,pool.length-1)]:(lastEventOutcome.reason||'');return`<div class="outcome-stat-line ${c.v>0?'pos':'neg'}"><span class="osv">${c.v>0?'+':''}${c.v} ${c.k.toUpperCase()}</span>${reason?` — ${esc(reason)}`:''}</div>`;}).join('')}
     </div>` : (lastEventOutcome && lastEventOutcome.reason ? `
     <div class="outcome-flash">
       <div class="outcome-flash-lbl">Last decision</div>
@@ -3253,6 +3296,8 @@ function renderResultsCard() {
       <h3>${r.stage} Champion!</h3>
       <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.8);margin-top:4px">"${effectiveNickname()}" claims the title</div>
     </div>` : '';
+  const raceWinBanner = (!r.champWon && r.wins > 0) ? `<div class="race-win-banner">RACE WIN 🏆</div>` : '';
+  const podiumBanner = (r.champPos >= 2 && r.champPos <= 3) ? `<div class="podium-banner">PODIUM FINISH</div>` : '';
 
   let moveBanner = '';
   if (r.newTeamName) {
@@ -3279,7 +3324,7 @@ function renderResultsCard() {
     <div class="res-pos ${pc}">${r.champPos}${sfx}</div>
     <div class="res-sublabel">Championship · Avg P${r.avgPos}${asfx} per race</div>
     <div class="res-headline">"${effectiveNickname()}" — ${esc(headline)}</div>
-    ${champBanner}
+    ${champBanner}${raceWinBanner}${podiumBanner}
     <div class="race-report">"${esc(raceReport)}"</div>
     ${deltaHtml ? `<div class="deltas-grid">${deltaHtml}</div>` : ''}
     <div class="earn-banner">
@@ -3303,6 +3348,8 @@ function renderResultsCard() {
       <tbody>${rows}</tbody>
     </table>
     <button class="btn-continue" onclick="closeResults()">${btnLabel}</button>`;
+  const card = document.getElementById('res-card');
+  if (card) card.scrollTop = 0;
 }
 
 function effectiveNickname() {
@@ -3338,6 +3385,9 @@ function renderGameOver() {
   let reason = 'Career ended — no more seats available';
   if (S.age >= 40) reason = 'Retired at 40';
   else if (S.burnoutRetired) reason = 'Retired — burnout forced the end';
+  posthog.capture('career_ended', { reason, age: S.age, stage: stage().label, seasons: S.log.length, titles: S.championships, wins: S.wins });
+  // purchase_attempted — wire when shop is implemented:
+  // posthog.capture('purchase_attempted', { item: itemName, price: price })
   const rating = calcRating();
   const legacy = calcLegacyTitle();
   const achievements = calcAchievements();
