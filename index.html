@@ -1953,7 +1953,13 @@ function onStart() {
   assignFeederTeam();
   genEvents();
   save();
-  posthog.capture('career_started', { nationality: S.nat, driving_style: S.drivingStyle });
+  if (typeof posthog !== 'undefined') {
+    posthog.capture('career_started', {
+      nationality: S.nat,
+      driving_style: S.drivingStyle,
+      race_number: S.raceNumber
+    });
+  }
   showScreen('game');
   renderAll();
 }
