@@ -1956,8 +1956,7 @@ function onStart() {
   if (typeof posthog !== 'undefined') {
     posthog.capture('career_started', {
       nationality: S.nat,
-      driving_style: S.drivingStyle,
-      race_number: S.raceNumber
+      driving_style: S.drivingStyle
     });
   }
   showScreen('game');
@@ -2324,6 +2323,13 @@ function resolveEvent(ei, ci) {
 
 function raceTheSeason() {
   if (S.resolved.length < S.events.length) return;
+  if (typeof posthog !== 'undefined') {
+    posthog.capture('season_raced', {
+      season: S.seasonNum,
+      stage: stage().label,
+      age: S.age
+    });
+  }
   const st = stage();
   const positions = [];
   let playerPts = 0, playerWins = 0, playerPodiums = 0;
@@ -2596,7 +2602,7 @@ function raceTheSeason() {
     ];
   }
 
-  posthog.capture('season_raced', { season: S.seasonNum, stage: stage().label, age: S.age, position: champPos });
+  // season_raced is captured at the top of this function
   save();
   if (cinematicLines) {
     showCinematic(cinematicLines, showResults);
