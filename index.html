@@ -875,16 +875,21 @@ body{
 .sc-stat-lbl{font-size:8px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:2px}
 .sc-rating{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--red);display:inline-block;margin-right:8px}
 .sc-url{font-size:9px;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-align:right;margin-top:4px}
-#ai-race-overlay{position:fixed;inset:0;z-index:300;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
-#ai-race-overlay.hidden{display:none}
-#ai-race-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease}
-#ai-race-bg.loaded{opacity:1}
-#ai-race-text{position:relative;z-index:2;text-align:center;color:#fff;font-family:'Bebas Neue',sans-serif;letter-spacing:4px;font-size:1.3rem;text-shadow:0 2px 24px rgba(0,0,0,.9);white-space:pre-line;line-height:1.4;margin-top:12px}
-.ai-spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:ai-spin .8s linear infinite;position:relative;z-index:2}
-.ai-spinner.hidden{display:none}
-@keyframes ai-spin{to{transform:rotate(360deg)}}
-.ai-toggle-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.6);cursor:pointer;margin-top:18px;letter-spacing:.5px}
-.ai-toggle-btn.on{border-color:rgba(232,0,10,.5);color:var(--red)}
+/* ─── RACE CUTSCENE ─── */
+#race-cutscene{position:fixed;inset:0;z-index:300;background:#000;cursor:pointer}
+#race-cutscene.hidden{display:none}
+.rcs-scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px;transition:opacity .2s}
+.rcs-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:4px;color:#fff;text-align:center;min-height:1.2em}
+.rcs-line-wrap{width:100%;margin-top:18px;height:1px;overflow:hidden;opacity:0;transition:opacity .1s}
+.rcs-line-wrap.show{opacity:1}
+.rcs-line{height:1px;background:#e8000a;width:0;transition:width .7s linear}
+.rcs-line.grow{width:100%}
+.rcs-count{font-family:'Bebas Neue',sans-serif;font-size:100px;color:#fff;line-height:1;letter-spacing:4px}
+.rcs-count-label{font-family:'Bebas Neue',sans-serif;font-size:11px;color:#e8000a;letter-spacing:3px;margin-top:8px}
+.rcs-stat-label{font-family:monospace;font-size:9px;color:rgba(255,255,255,.4);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.rcs-stat-bar{font-family:monospace;font-size:22px;color:#fff;letter-spacing:3px}
+.rcs-pos{font-family:'Bebas Neue',sans-serif;font-size:120px;line-height:1;letter-spacing:4px}
+.rcs-pos-label{font-family:'Bebas Neue',sans-serif;font-size:13px;color:#e8000a;letter-spacing:4px;margin-top:10px}
 .hdr-coins{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;color:#fbbf24;letter-spacing:.5px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.4);border-radius:20px;padding:4px 10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .shop-section-hd{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:2px;color:rgba(255,255,255,.85);margin:20px 0 9px}
 .shop-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:13px;margin-bottom:9px;display:flex;align-items:center;gap:10px}
@@ -1103,12 +1108,8 @@ posthog.init('phc_xFWVDs2HxYUzQ9ucGryMVPacN7UtVGXxMrVzJdjv6APT',{api_host:'https
   <div id="champ-lap-text" class="champ-lap"></div>
 </div>
 
-<!-- ═══════ AI RACE CUTSCENE ═══════ -->
-<div id="ai-race-overlay" class="hidden">
-  <div id="ai-race-bg"></div>
-  <div class="ai-spinner" id="ai-race-spinner"></div>
-  <div id="ai-race-text"></div>
-</div>
+<!-- ═══════ RACE CUTSCENE ═══════ -->
+<div id="race-cutscene" class="hidden"></div>
 
 <!-- ═══════ TOAST NOTIFICATIONS ═══════ -->
 <div id="toast-container"></div>
@@ -1155,8 +1156,6 @@ posthog.init('phc_xFWVDs2HxYUzQ9ucGryMVPacN7UtVGXxMrVzJdjv6APT',{api_host:'https
 </div>
 
 <script>
-let AI_GRAPHICS = localStorage.getItem('ai_graphics_enabled') === 'true';
-
 // ══════════════════════════════════════════════
 // DATA
 // ══════════════════════════════════════════════
@@ -3188,88 +3187,140 @@ function selectTeam(i) {
   renderAll();
 }
 
-// ─── AI GRAPHICS ───
-async function generateImage(prompt, cacheKey) {
-  const k = 'ai_img_' + cacheKey;
-  const cached = sessionStorage.getItem(k);
-  if (cached) return cached;
-  try {
-    const res = await fetch('/api/generate-image', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({prompt, size: '1792x1024'})
-    });
-    const data = await res.json();
-    if (data.url) { sessionStorage.setItem(k, data.url); return data.url; }
-  } catch(e) {}
-  return null;
-}
-
-function toggleAIGraphics() {
-  AI_GRAPHICS = !AI_GRAPHICS;
-  localStorage.setItem('ai_graphics_enabled', AI_GRAPHICS ? 'true' : 'false');
-  if (!AI_GRAPHICS) {
-    for (const k of Object.keys(sessionStorage)) {
-      if (k.startsWith('ai_img_')) sessionStorage.removeItem(k);
-    }
-  }
-  renderAll();
-}
-
-async function showRaceCutscene(callback) {
-  if (!AI_GRAPHICS) { callback(); return; }
-  const overlay = document.getElementById('ai-race-overlay');
-  const bg = document.getElementById('ai-race-bg');
-  const spinner = document.getElementById('ai-race-spinner');
-  const textEl = document.getElementById('ai-race-text');
+// ─── RACE CUTSCENE ───
+function showRaceCutscene(callback) {
+  const overlay = document.getElementById('race-cutscene');
   if (!overlay) { callback(); return; }
 
   const st = stage();
-  const circuit = S.currentCircuit ? S.currentCircuit.name : 'a racing circuit';
-  const prompt = `Dramatic ${st.label} race scene at ${circuit}, cinematic action photography, racing cars at high speed, motion blur, atmospheric lighting, wide angle, photorealistic`;
-  const cacheKey = ('race_' + S.stageIdx + '_' + (S.currentCircuit ? S.currentCircuit.id : 'generic')).replace(/[^a-z0-9_]/gi,'_');
+  const circuitName = S.currentCircuit ? S.currentCircuit.name : 'Grand Circuit';
+  const stageLaps = [12, 20, 25, 32, 58];
+  const laps = stageLaps[S.stageIdx] || 20;
+  const pos = (S.lastResult && S.lastResult.champPos) || 1;
 
-  overlay.classList.remove('hidden');
-  spinner.classList.remove('hidden');
-  bg.style.backgroundImage = '';
-  bg.classList.remove('loaded');
-  textEl.textContent = st.label.toUpperCase() + '\nRACE DAY';
-
-  const url = await generateImage(prompt, cacheKey);
-  if (url) {
-    const img = new Image();
-    img.onload = () => { bg.style.backgroundImage = 'url(' + url + ')'; bg.classList.add('loaded'); spinner.classList.add('hidden'); };
-    img.src = url;
-  } else {
-    spinner.classList.add('hidden');
+  let done = false;
+  function finish() {
+    if (done) return;
+    done = true;
+    overlay.classList.add('hidden');
+    overlay.innerHTML = '';
+    callback();
   }
 
+  overlay.innerHTML = '';
+  overlay.classList.remove('hidden');
+  overlay.onclick = finish;
+
+  // ── SCENE 1: title + red line ──
+  const scene1 = document.createElement('div');
+  scene1.className = 'rcs-scene';
+  scene1.innerHTML =
+    '<div id="rcs-title" class="rcs-title"></div>' +
+    '<div id="rcs-line-wrap" class="rcs-line-wrap"><div id="rcs-line" class="rcs-line"></div></div>';
+  overlay.appendChild(scene1);
+
+  const titleText = ('SEASON ' + S.seasonNum + ' · ' + st.label + ' · ' + circuitName).toUpperCase();
+  let ci = 0;
+  function typeLetter() {
+    if (done) return;
+    const el = document.getElementById('rcs-title');
+    if (el) el.textContent = titleText.slice(0, ci);
+    ci++;
+    if (ci <= titleText.length) setTimeout(typeLetter, 36);
+  }
+  typeLetter();
+
   setTimeout(() => {
-    overlay.classList.add('hidden');
-    callback();
-  }, 6000);
-}
+    if (done) return;
+    const lw = document.getElementById('rcs-line-wrap');
+    if (lw) lw.classList.add('show');
+    requestAnimationFrame(() => {
+      const ln = document.getElementById('rcs-line');
+      if (ln) ln.classList.add('grow');
+    });
+  }, 800);
 
-async function updateAIHelmet() {
-  if (!AI_GRAPHICS) return;
-  const hc = (S.helmetColor || '#e8000a').replace('#','');
-  const cacheKey = 'helmet_' + hc;
-  const prompt = `Motorsport racing helmet, primary color #${hc}, glossy visor, product photography, white background, close-up, photorealistic`;
-  const url = await generateImage(prompt, cacheKey);
-  if (!url) return;
-  const el = document.getElementById('hdr-helmet');
-  if (el) el.innerHTML = '<img src="' + url + '" style="width:50px;height:50px;border-radius:50%;object-fit:cover" onerror="this.style.display=\'none\'">';
-}
+  // ── SCENE 2: lap counter ──
+  setTimeout(() => {
+    if (done) return;
+    scene1.style.opacity = '0';
+    setTimeout(() => {
+      if (done) return;
+      scene1.remove();
+      const scene2 = document.createElement('div');
+      scene2.className = 'rcs-scene';
+      scene2.innerHTML =
+        '<div id="rcs-count" class="rcs-count">0</div>' +
+        '<div class="rcs-count-label">LAPS COMPLETED</div>';
+      overlay.appendChild(scene2);
 
-async function updateAICarPreview() {
-  if (!AI_GRAPHICS) return;
-  const cacheKey = 'car_' + (S.livery || 'default') + '_' + (S.helmetColor || 'red').replace('#','');
-  const liveryName = (S.livery || 'default').replace(/_/g,' ');
-  const prompt = `${stage().label} racing car, ${liveryName} livery paint scheme, studio shot, side view, dramatic lighting, photorealistic, motorsport`;
-  const url = await generateImage(prompt, cacheKey);
-  if (!url) return;
-  const el = document.getElementById('car-preview');
-  if (el) el.innerHTML = '<img src="' + url + '" style="width:100%;border-radius:12px;object-fit:cover" onerror="this.parentElement.innerHTML=\'' + buildCarSVG().replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'') + '\'">';
+      let frame = 0;
+      const totalFrames = 28;
+      function countUp() {
+        if (done) return;
+        frame++;
+        const countEl = document.getElementById('rcs-count');
+        if (countEl) countEl.textContent = frame < totalFrames ? Math.round((frame / totalFrames) * laps) : laps;
+        if (frame < totalFrames) requestAnimationFrame(countUp);
+      }
+      requestAnimationFrame(countUp);
+
+      // ── SCENE 3: stat flashes ──
+      setTimeout(() => {
+        if (done) return;
+        scene2.style.opacity = '0';
+        setTimeout(() => {
+          if (done) return;
+          scene2.remove();
+          const scene3 = document.createElement('div');
+          scene3.className = 'rcs-scene';
+          scene3.style.opacity = '0';
+          overlay.appendChild(scene3);
+
+          const stats = [
+            {label: 'PACE', val: S.Pace || 50},
+            {label: 'CONSISTENCY', val: S.Consistency || 50},
+            {label: 'FITNESS', val: S.Fitness || 50}
+          ];
+          let si = 0;
+          function showStat() {
+            if (done) return;
+            if (si >= stats.length) {
+              scene3.style.opacity = '0';
+              setTimeout(() => { if (!done) { scene3.remove(); showScene4(); } }, 200);
+              return;
+            }
+            const s = stats[si++];
+            const filled = Math.max(0, Math.min(10, Math.round(s.val / 10)));
+            const bar = '█'.repeat(filled) + '░'.repeat(10 - filled);
+            scene3.innerHTML =
+              '<div class="rcs-stat-label">' + s.label + '</div>' +
+              '<div class="rcs-stat-bar">' + bar + '</div>';
+            scene3.style.opacity = '0';
+            requestAnimationFrame(() => requestAnimationFrame(() => { scene3.style.opacity = '1'; }));
+            setTimeout(showStat, 400);
+          }
+          showStat();
+        }, 200);
+      }, 1300);
+    }, 200);
+  }, 1500);
+
+  // ── SCENE 4: final position ──
+  function showScene4() {
+    if (done) return;
+    const posColor = pos === 1 ? '#F5C518' : pos <= 3 ? '#ffffff' : pos <= 10 ? '#a0a0a0' : '#505050';
+    const posLabel = pos === 1 ? 'RACE WIN' : pos <= 3 ? 'PODIUM' : pos <= 10 ? 'POINTS FINISH' : 'OUTSIDE THE POINTS';
+    const scene4 = document.createElement('div');
+    scene4.className = 'rcs-scene';
+    scene4.style.opacity = '0';
+    scene4.innerHTML =
+      '<div class="rcs-pos" style="color:' + posColor + '">P' + pos + '</div>' +
+      '<div class="rcs-pos-label">' + posLabel + '</div>';
+    overlay.appendChild(scene4);
+    requestAnimationFrame(() => requestAnimationFrame(() => { scene4.style.opacity = '1'; }));
+    setTimeout(finish, 1500);
+  }
 }
 
 // ─── GENERIC CINEMATIC ───
@@ -3861,7 +3912,6 @@ function renderAll() {
     renderShop();
   } else {
     renderCarTab();
-    updateAICarPreview();
   }
   // Tab fade
   const wrap = document.querySelector('.wrap');
@@ -3918,7 +3968,6 @@ function renderHeader() {
   if (S.stageIdx===4 && t) {
     hdr.classList.add(t.tier===1?'tier-top':t.tier===2?'tier-mid':'tier-back');
   }
-  updateAIHelmet();
 }
 
 function renderStats() {
@@ -4835,7 +4884,6 @@ function buildCarSVG() {
 function updateCarPreview() {
   const el = document.getElementById('car-preview');
   if (el) el.innerHTML = buildCarSVG();
-  updateAICarPreview();
 }
 
 function renderCarTab() {
@@ -4855,10 +4903,6 @@ function renderCarTab() {
 
   document.getElementById('car-sec').innerHTML = `
     <div id="car-preview" style="overflow:hidden;margin-bottom:16px">${buildCarSVG()}</div>
-
-    <button class="ai-toggle-btn${AI_GRAPHICS?' on':''}" onclick="toggleAIGraphics()">
-      ${AI_GRAPHICS ? '🤖 AI Graphics: ON' : '🎨 AI Graphics: OFF'}
-    </button>
 
     <div class="section-title" style="margin-top:18px">Helmet Colour</div>
     <div class="helmet-grid">${swatches}</div>
