@@ -846,6 +846,16 @@ body{
 .sc-stat-lbl{font-size:8px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:2px}
 .sc-rating{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--red);display:inline-block;margin-right:8px}
 .sc-url{font-size:9px;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-align:right;margin-top:4px}
+#ai-race-overlay{position:fixed;inset:0;z-index:300;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+#ai-race-overlay.hidden{display:none}
+#ai-race-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease}
+#ai-race-bg.loaded{opacity:1}
+#ai-race-text{position:relative;z-index:2;text-align:center;color:#fff;font-family:'Bebas Neue',sans-serif;letter-spacing:4px;font-size:1.3rem;text-shadow:0 2px 24px rgba(0,0,0,.9);white-space:pre-line;line-height:1.4;margin-top:12px}
+.ai-spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:ai-spin .8s linear infinite;position:relative;z-index:2}
+.ai-spinner.hidden{display:none}
+@keyframes ai-spin{to{transform:rotate(360deg)}}
+.ai-toggle-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.6);cursor:pointer;margin-top:18px;letter-spacing:.5px}
+.ai-toggle-btn.on{border-color:rgba(232,0,10,.5);color:var(--red)}
 </style>
 </head>
 <body>
@@ -992,6 +1002,13 @@ body{
   <div id="champ-lap-text" class="champ-lap"></div>
 </div>
 
+<!-- ═══════ AI RACE CUTSCENE ═══════ -->
+<div id="ai-race-overlay" class="hidden">
+  <div id="ai-race-bg"></div>
+  <div class="ai-spinner" id="ai-race-spinner"></div>
+  <div id="ai-race-text"></div>
+</div>
+
 <!-- ═══════ DAILY CHALLENGE MODAL ═══════ -->
 <div id="daily-modal" class="daily-modal hidden">
   <div class="daily-card">
@@ -1022,6 +1039,8 @@ body{
 </div>
 
 <script>
+let AI_GRAPHICS = localStorage.getItem('ai_graphics_enabled') !== 'false';
+
 // ══════════════════════════════════════════════
 // DATA
 // ══════════════════════════════════════════════
@@ -2698,11 +2717,13 @@ function raceTheSeason() {
   }
 
   save();
-  if (cinematicLines) {
-    showCinematic(cinematicLines, showResults);
-  } else {
-    showResults();
-  }
+  showRaceCutscene(() => {
+    if (cinematicLines) {
+      showCinematic(cinematicLines, showResults);
+    } else {
+      showResults();
+    }
+  });
 }
 
 function assignF1Team() {
@@ -2867,6 +2888,90 @@ function selectTeam(i) {
   renderAll();
 }
 
+// ─── AI GRAPHICS ───
+async function generateImage(prompt, cacheKey) {
+  const k = 'ai_img_' + cacheKey;
+  const cached = sessionStorage.getItem(k);
+  if (cached) return cached;
+  try {
+    const res = await fetch('/api/generate-image', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt, size: '1792x1024'})
+    });
+    const data = await res.json();
+    if (data.url) { sessionStorage.setItem(k, data.url); return data.url; }
+  } catch(e) {}
+  return null;
+}
+
+function toggleAIGraphics() {
+  AI_GRAPHICS = !AI_GRAPHICS;
+  localStorage.setItem('ai_graphics_enabled', AI_GRAPHICS ? 'true' : 'false');
+  if (!AI_GRAPHICS) {
+    for (const k of Object.keys(sessionStorage)) {
+      if (k.startsWith('ai_img_')) sessionStorage.removeItem(k);
+    }
+  }
+  renderAll();
+}
+
+async function showRaceCutscene(callback) {
+  if (!AI_GRAPHICS) { callback(); return; }
+  const overlay = document.getElementById('ai-race-overlay');
+  const bg = document.getElementById('ai-race-bg');
+  const spinner = document.getElementById('ai-race-spinner');
+  const textEl = document.getElementById('ai-race-text');
+  if (!overlay) { callback(); return; }
+
+  const st = stage();
+  const circuit = S.currentCircuit ? S.currentCircuit.name : 'a racing circuit';
+  const prompt = `Dramatic ${st.label} race scene at ${circuit}, cinematic action photography, racing cars at high speed, motion blur, atmospheric lighting, wide angle, photorealistic`;
+  const cacheKey = ('race_' + S.stageIdx + '_' + (S.currentCircuit ? S.currentCircuit.id : 'generic')).replace(/[^a-z0-9_]/gi,'_');
+
+  overlay.classList.remove('hidden');
+  spinner.classList.remove('hidden');
+  bg.style.backgroundImage = '';
+  bg.classList.remove('loaded');
+  textEl.textContent = st.label.toUpperCase() + '\nRACE DAY';
+
+  const url = await generateImage(prompt, cacheKey);
+  if (url) {
+    const img = new Image();
+    img.onload = () => { bg.style.backgroundImage = 'url(' + url + ')'; bg.classList.add('loaded'); spinner.classList.add('hidden'); };
+    img.src = url;
+  } else {
+    spinner.classList.add('hidden');
+  }
+
+  setTimeout(() => {
+    overlay.classList.add('hidden');
+    callback();
+  }, 6000);
+}
+
+async function updateAIHelmet() {
+  if (!AI_GRAPHICS) return;
+  const hc = (S.helmetColor || '#e8000a').replace('#','');
+  const cacheKey = 'helmet_' + hc;
+  const prompt = `Motorsport racing helmet, primary color #${hc}, glossy visor, product photography, white background, close-up, photorealistic`;
+  const url = await generateImage(prompt, cacheKey);
+  if (!url) return;
+  const el = document.getElementById('hdr-helmet');
+  if (el) el.innerHTML = '<img src="' + url + '" style="width:50px;height:50px;border-radius:50%;object-fit:cover" onerror="this.style.display=\'none\'">';
+}
+
+async function updateAICarPreview() {
+  if (!AI_GRAPHICS) return;
+  const cacheKey = 'car_' + (S.livery || 'default') + '_' + (S.helmetColor || 'red').replace('#','');
+  const liveryName = (S.livery || 'default').replace(/_/g,' ');
+  const prompt = `${stage().label} racing car, ${liveryName} livery paint scheme, studio shot, side view, dramatic lighting, photorealistic, motorsport`;
+  const url = await generateImage(prompt, cacheKey);
+  if (!url) return;
+  const el = document.getElementById('car-preview');
+  if (el) el.innerHTML = '<img src="' + url + '" style="width:100%;border-radius:12px;object-fit:cover" onerror="this.parentElement.innerHTML=\'' + buildCarSVG().replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'') + '\'">';
+}
+
 // ─── GENERIC CINEMATIC ───
 function showCinematic(lines, callback) {
   const outcome = document.getElementById('champ-outcome');
@@ -2940,6 +3045,7 @@ function renderAll() {
     renderLog();
   } else {
     renderCarTab();
+    updateAICarPreview();
   }
   // Tab fade
   const wrap = document.querySelector('.wrap');
@@ -2965,7 +3071,7 @@ function renderHeader() {
         <button class="btn-home" onclick="goHome()">🏠</button>
         <div style="min-width:0">
           <div class="hdr-name">
-            <span style="display:inline-block;vertical-align:middle;margin-right:7px;flex-shrink:0;line-height:0">${buildHelmet(S.helmet||{}, 50)}</span>${esc(S.natFlag)} ${esc(S.name)}${numBadge}
+            <span id="hdr-helmet" style="display:inline-block;vertical-align:middle;margin-right:7px;flex-shrink:0;line-height:0">${buildHelmet(S.helmet||{}, 50)}</span>${esc(S.natFlag)} ${esc(S.name)}${numBadge}
           </div>
           <div class="hdr-team">${esc(teamStr)} · Season ${S.seasonNum}</div>
           ${S.currentCircuit ? `<div class="circuit-badge">🏁 ${esc(S.currentCircuit.name)}${S.weatherRainForecast?'<span class="rain-tag">· 🌧️ Rain</span>':''}</div>` : ''}
@@ -2990,6 +3096,7 @@ function renderHeader() {
   if (S.stageIdx===4 && t) {
     hdr.classList.add(t.tier===1?'tier-top':t.tier===2?'tier-mid':'tier-back');
   }
+  updateAIHelmet();
 }
 
 function renderStats() {
@@ -3894,6 +4001,7 @@ function buildCarSVG() {
 function updateCarPreview() {
   const el = document.getElementById('car-preview');
   if (el) el.innerHTML = buildCarSVG();
+  updateAICarPreview();
 }
 
 function renderCarTab() {
@@ -3914,7 +4022,11 @@ function renderCarTab() {
   document.getElementById('car-sec').innerHTML = `
     <div id="car-preview" style="overflow:hidden;margin-bottom:16px">${buildCarSVG()}</div>
 
-    <div class="section-title">Helmet Colour</div>
+    <button class="ai-toggle-btn${AI_GRAPHICS?' on':''}" onclick="toggleAIGraphics()">
+      ${AI_GRAPHICS ? '🤖 AI Graphics: ON' : '🎨 AI Graphics: OFF'}
+    </button>
+
+    <div class="section-title" style="margin-top:18px">Helmet Colour</div>
     <div class="helmet-grid">${swatches}</div>
 
     <div class="section-title" style="margin-top:18px">Race Number</div>
