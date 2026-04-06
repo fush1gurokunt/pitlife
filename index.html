@@ -884,6 +884,37 @@ body{
 .boost-stat-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;color:#fbbf24;margin-bottom:4px}
 .boost-stat-sub{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.5);margin-bottom:18px;text-align:center}
 .boost-stat-btn{width:100%;max-width:300px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;padding:13px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;margin-bottom:8px}
+/* ─── MANAGER MODE ─── */
+#retire-choice-overlay{position:fixed;inset:0;z-index:350;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;overflow-y:auto}
+#retire-choice-overlay.hidden{display:none}
+.retire-choice-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:18px;margin-bottom:10px;cursor:pointer;transition:border-color .2s,background .2s;text-align:left}
+.retire-choice-card:active{border-color:var(--red);background:rgba(232,0,10,.05)}
+.retire-choice-card.disabled{opacity:.38;cursor:default;pointer-events:none}
+.retire-choice-title{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:2px;color:rgba(255,255,255,.9)}
+.retire-choice-sub{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.4);margin-top:4px;line-height:1.5}
+#screen-manager{display:none;flex-direction:column;min-height:100vh;background:var(--bg)}
+#mgr-header{position:sticky;top:0;z-index:10;background:#0a0a0a;border-bottom:1px solid rgba(255,255,255,.07);padding:14px 16px 10px}
+.mgr-principal-pill{font-family:'Bebas Neue',sans-serif;font-size:9px;letter-spacing:2px;color:#000;background:#d4af37;border-radius:5px;padding:2px 7px;vertical-align:middle}
+.mgr-phase-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px;color:rgba(255,255,255,.9);margin-bottom:4px}
+.mgr-phase-sub{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:18px;line-height:1.5}
+.mgr-alloc-row{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.mgr-alloc-label{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,.65);width:128px;flex-shrink:0}
+.mgr-alloc-slider{flex:1;accent-color:var(--red)}
+.mgr-alloc-val{font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fbbf24;width:36px;text-align:right;flex-shrink:0}
+.mgr-alloc-spend{font-family:'DM Sans',sans-serif;font-size:10px;color:rgba(255,255,255,.28);padding-left:138px;margin-bottom:14px}
+.mgr-confirm-btn{width:100%;font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:2px;padding:14px;border-radius:12px;border:none;background:var(--red);color:#fff;cursor:pointer;margin-top:10px}
+.mgr-confirm-btn:disabled{background:rgba(255,255,255,.07);color:rgba(255,255,255,.2);cursor:default}
+.driver-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:13px;margin-bottom:9px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s,background .2s}
+.driver-card:active,.driver-card.selected{border-color:#d4af37;background:rgba(212,175,55,.07)}
+.driver-card.locked{opacity:.32;cursor:default;pointer-events:none}
+.driver-rating{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:rgba(255,255,255,.85);width:34px;text-align:center;flex-shrink:0}
+.driver-name{font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;color:rgba(255,255,255,.9)}
+.driver-salary{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.38);margin-top:2px}
+.mgr-standings{width:100%;border-collapse:collapse;margin-top:12px}
+.mgr-standings th{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,.3);text-transform:uppercase;padding:6px 0;text-align:left}
+.mgr-standings td{font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(255,255,255,.75);padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.mgr-standings .player-row td{color:#fff;font-weight:700}
+.mgr-pos{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;width:28px}
 </style>
 <script>
 !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.people.toString(1)},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -1027,6 +1058,15 @@ posthog.init('phc_xFWVDs2HxYUzQ9ucGryMVPacN7UtVGXxMrVzJdjv6APT',{api_host:'https
 
 <!-- ═══════ GAME OVER SCREEN ═══════ -->
 <div id="screen-gameover"></div>
+
+<!-- ═══════ MANAGER MODE SCREEN ═══════ -->
+<div id="screen-manager">
+  <div id="mgr-header"></div>
+  <div id="mgr-content" class="wrap"></div>
+</div>
+
+<!-- ═══════ RETIRE CHOICE OVERLAY ═══════ -->
+<div id="retire-choice-overlay" class="hidden"></div>
 
 <!-- ═══════ CHAMPIONSHIP DECIDER OVERLAY ═══════ -->
 <div id="champ-overlay" class="hidden">
@@ -1211,6 +1251,9 @@ const SHOP_BOOSTS = [
   {id:'pr_blitz',      name:'PR Blitz',      desc:'+15 Reputation applied immediately',     price:120},
   {id:'second_chance', name:'Second Chance', desc:'Avoid one firing — auto-used when fired',price:500}
 ];
+
+const MGR_PRIZE = [80e6,60e6,44e6,32e6,24e6,18e6,12e6,8e6,5e6,3e6];
+const MGR_AI_TEAMS = ['Silver Arrow','Scuderia Rossa','Papaya Racing','Red Serpent','Aston Blue','Grove Racing','Haas Factory','Visa Cash Racing','Kick Sauber','RB Academy'];
 
 const PTS_TABLE = [25,18,15,12,10,8,6,4,2,1];
 
@@ -1909,7 +1952,20 @@ function defaultState() {
     ownedFeatures: [],
     ownedBoosts: {},
     lastLoginDate: '',
-    _premierBonusPaid: false
+    _premierBonusPaid: false,
+    _mgrActive: false,
+    _mgrTeamName: '',
+    _mgrCarRating: 40,
+    _mgrBudget: 30000000,
+    _mgrSeason: 1,
+    _mgrPhase: 'budget',
+    _mgrDrivers: [],
+    _mgrAllocCar: 34,
+    _mgrAllocDrv: 33,
+    _mgrDriverBudget: 0,
+    _mgrInfraBank: 0,
+    _mgrLastResult: null,
+    _mgrHistory: []
   };
 }
 
@@ -2842,6 +2898,7 @@ function showScreen(name) {
   document.getElementById('screen-start').classList.toggle('hidden', name!=='start');
   document.getElementById('screen-game').classList.toggle('hidden', name!=='game');
   document.getElementById('screen-gameover').style.display = name==='gameover' ? 'flex' : 'none';
+  document.getElementById('screen-manager').style.display = name==='manager' ? 'flex' : 'none';
 }
 
 // ─── QUALIFYING ───
@@ -3108,13 +3165,354 @@ function showResults() {
 function closeResults() {
   document.getElementById('results-overlay').classList.add('hidden');
   if (S.gameOver) {
-    showScreen('gameover');
-    renderGameOver();
+    showRetireChoice();
   } else if (S.pendingPromotion !== false) {
     renderTeamChoiceScreen();
   } else {
     renderAll();
   }
+}
+
+// ══════════════════════════════════════════════
+// MANAGER MODE
+// ══════════════════════════════════════════════
+
+function showRetireChoice() {
+  const overlay = document.getElementById('retire-choice-overlay');
+  if (!overlay) { showScreen('gameover'); renderGameOver(); return; }
+  const earnings = S.earnings || 0;
+  const hasFeature = (S.ownedFeatures || []).includes('manager_mode');
+  const canBuy = earnings >= 50000000 || hasFeature;
+  const amtStr = fmtMoney(earnings);
+
+  if (!canBuy) {
+    overlay.innerHTML = `<div style="max-width:360px;width:100%;text-align:center">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:4px;color:rgba(255,255,255,.85);margin-bottom:6px">CAREER OVER</div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(255,255,255,.38);margin-bottom:28px">The engines fall silent. The paddock moves on.</div>
+      <div class="retire-choice-card disabled">
+        <div class="retire-choice-title">🏢 Buy a Team — £50m</div>
+        <div class="retire-choice-sub">Requires £50m. You retired with ${amtStr}. Not enough.<br><span style="color:rgba(255,255,255,.2);font-size:10px">Unlock Manager Mode in the Shop (800🪙) to bypass the minimum.</span></div>
+      </div>
+      <button class="mgr-confirm-btn" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.45)" onclick="proceedToGameOver()">VIEW CAREER SUMMARY →</button>
+    </div>`;
+  } else {
+    overlay.innerHTML = `<div style="max-width:360px;width:100%;text-align:center">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:4px;color:rgba(255,255,255,.85);margin-bottom:6px">CAREER OVER</div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(255,255,255,.38);margin-bottom:28px">You retired with ${amtStr} in the bank. The paddock has one more move to offer.</div>
+      <div class="retire-choice-card" onclick="startManagerMode()">
+        <div class="retire-choice-title">🏢 Buy a Team — £50m</div>
+        <div class="retire-choice-sub">Step into the Team Principal role. Build a constructor. Win the Constructors' Championship.</div>
+      </div>
+      <div class="retire-choice-card" onclick="proceedToGameOver()" style="margin-top:8px">
+        <div class="retire-choice-title">🚪 Walk Away</div>
+        <div class="retire-choice-sub">View your career summary and legacy.</div>
+      </div>
+    </div>`;
+  }
+  overlay.classList.remove('hidden');
+}
+
+function proceedToGameOver() {
+  document.getElementById('retire-choice-overlay').classList.add('hidden');
+  showScreen('gameover');
+  renderGameOver();
+}
+
+function startManagerMode() {
+  document.getElementById('retire-choice-overlay').classList.add('hidden');
+  S._mgrActive = true;
+  S._mgrTeamName = S.name + ' Racing';
+  S._mgrCarRating = 40;
+  S._mgrBudget = 30000000;
+  S._mgrSeason = 1;
+  S._mgrPhase = 'budget';
+  S._mgrDrivers = [];
+  S._mgrAllocCar = 34;
+  S._mgrAllocDrv = 33;
+  S._mgrDriverBudget = 0;
+  S._mgrInfraBank = 0;
+  S._mgrLastResult = null;
+  S._mgrHistory = [];
+  save();
+  showScreen('manager');
+  renderManagerScreen();
+}
+
+function renderManagerScreen() {
+  renderMgrHeader();
+  const phase = S._mgrPhase || 'budget';
+  if (phase === 'budget') renderBudgetPhase();
+  else if (phase === 'drivers') renderDriversPhase();
+  else renderResultPhase();
+}
+
+function renderMgrHeader() {
+  const hdr = document.getElementById('mgr-header');
+  if (!hdr) return;
+  hdr.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:2px;color:#fff">${esc(S._mgrTeamName)}</div>
+        <div style="margin-top:2px">
+          <span class="mgr-principal-pill">TEAM PRINCIPAL</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.38);margin-left:8px">Season ${S._mgrSeason}</span>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.15rem;color:#d4af37">${fmtMoney(S._mgrBudget)}</div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:10px;color:rgba(255,255,255,.3)">Season Budget</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-family:'DM Sans',sans-serif;font-size:10px;color:rgba(255,255,255,.35)">Car Rating</span>
+      <div style="flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden">
+        <div style="width:${S._mgrCarRating}%;height:100%;background:var(--red);border-radius:2px"></div>
+      </div>
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:rgba(255,255,255,.8)">${S._mgrCarRating}</span>
+    </div>`;
+}
+
+function renderBudgetPhase() {
+  const content = document.getElementById('mgr-content');
+  if (!content) return;
+  const budget = S._mgrBudget || 0;
+  const car = S._mgrAllocCar;
+  const drv = S._mgrAllocDrv;
+  const inf = 100 - car - drv;
+  const valid = inf >= 0;
+  const carAmt = Math.round(budget * car / 100);
+  const drvAmt = Math.round(budget * drv / 100);
+  const infAmt = Math.round(budget * Math.max(0, inf) / 100);
+
+  content.innerHTML = `
+    <div class="mgr-phase-title">BUDGET ALLOCATION</div>
+    <div class="mgr-phase-sub">Distribute ${fmtMoney(budget)} across three areas. Car + Drivers must leave room for Infrastructure.</div>
+
+    <div class="mgr-alloc-row">
+      <div class="mgr-alloc-label">🔧 Car Dev</div>
+      <input type="range" class="mgr-alloc-slider" min="0" max="80" value="${car}" id="mgr-car-sl" oninput="onAllocChange()">
+      <div class="mgr-alloc-val" id="mgr-car-val">${car}%</div>
+    </div>
+    <div class="mgr-alloc-spend" id="mgr-car-spend">${fmtMoney(carAmt)} → car rating +${Math.max(0,Math.round(carAmt/4e6))}</div>
+
+    <div class="mgr-alloc-row">
+      <div class="mgr-alloc-label">🏎️ Driver Pay</div>
+      <input type="range" class="mgr-alloc-slider" min="0" max="80" value="${drv}" id="mgr-drv-sl" oninput="onAllocChange()">
+      <div class="mgr-alloc-val" id="mgr-drv-val">${drv}%</div>
+    </div>
+    <div class="mgr-alloc-spend" id="mgr-drv-spend">${fmtMoney(drvAmt)} → unlocks higher-rated drivers</div>
+
+    <div class="mgr-alloc-row">
+      <div class="mgr-alloc-label">🏗️ Infrastructure</div>
+      <div style="flex:1;font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:${!valid?'var(--red)':'rgba(255,255,255,.45)'}" id="mgr-inf-val">${inf}%</div>
+      <div class="mgr-alloc-val" style="color:rgba(255,255,255,.28)">${valid ? fmtMoney(infAmt) : '—'}</div>
+    </div>
+    <div class="mgr-alloc-spend" id="mgr-inf-spend">${valid && infAmt > 0 ? fmtMoney(infAmt) + ' → saves ' + fmtMoney(Math.round(infAmt*0.5)) + ' next season' : 'auto-calculated · reduces costs next season'}</div>
+
+    ${!valid ? '<div style="font-family:\'DM Sans\',sans-serif;font-size:12px;color:var(--red);margin-bottom:6px">⚠ Car Dev + Driver Pay exceeds 100%. Reduce one.</div>' : ''}
+    <button class="mgr-confirm-btn" id="mgr-budget-btn" ${valid?'':'disabled'} onclick="confirmBudget()">CONFIRM ALLOCATION →</button>
+    ${(S._mgrHistory||[]).length > 0 ? `<div style="margin-top:16px"><div style="font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:8px">History</div>${(S._mgrHistory).map(h=>`<div style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:4px">Season ${h.season} — P${h.pos} Constructors</div>`).join('')}</div>` : ''}
+  `;
+}
+
+function onAllocChange() {
+  const carSl = document.getElementById('mgr-car-sl');
+  const drvSl = document.getElementById('mgr-drv-sl');
+  if (!carSl || !drvSl) return;
+  S._mgrAllocCar = parseInt(carSl.value);
+  S._mgrAllocDrv = parseInt(drvSl.value);
+  const inf = 100 - S._mgrAllocCar - S._mgrAllocDrv;
+  const budget = S._mgrBudget || 0;
+  const carAmt = Math.round(budget * S._mgrAllocCar / 100);
+  const drvAmt = Math.round(budget * S._mgrAllocDrv / 100);
+  const infAmt = Math.round(budget * Math.max(0, inf) / 100);
+  const valid = inf >= 0;
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const setColor = (id, c) => { const el = document.getElementById(id); if (el) el.style.color = c; };
+  set('mgr-car-val', S._mgrAllocCar + '%');
+  set('mgr-drv-val', S._mgrAllocDrv + '%');
+  set('mgr-inf-val', inf + '%');
+  setColor('mgr-inf-val', valid ? 'rgba(255,255,255,.45)' : 'var(--red)');
+  set('mgr-car-spend', fmtMoney(carAmt) + ' → car rating +' + Math.max(0, Math.round(carAmt/4e6)));
+  set('mgr-drv-spend', fmtMoney(drvAmt) + ' → unlocks higher-rated drivers');
+  set('mgr-inf-spend', valid && infAmt > 0 ? fmtMoney(infAmt) + ' → saves ' + fmtMoney(Math.round(infAmt*0.5)) + ' next season' : 'auto-calculated · reduces costs next season');
+  const btn = document.getElementById('mgr-budget-btn');
+  if (btn) btn.disabled = !valid;
+}
+
+function confirmBudget() {
+  const car = S._mgrAllocCar;
+  const drv = S._mgrAllocDrv;
+  const inf = 100 - car - drv;
+  if (inf < 0) return;
+  const budget = S._mgrBudget;
+  const carSpend = budget * car / 100;
+  const drvSpend = budget * drv / 100;
+  const infSpend = budget * inf / 100;
+  S._mgrCarRating = Math.min(95, S._mgrCarRating + Math.round(carSpend / 4000000));
+  S._mgrDriverBudget = drvSpend;
+  S._mgrInfraBank = Math.round(infSpend * 0.5);
+  S._mgrPhase = 'drivers';
+  S._mgrDrivers = [];
+  save();
+  renderManagerScreen();
+}
+
+let _mgrPool = [];
+function renderDriversPhase() {
+  const content = document.getElementById('mgr-content');
+  if (!content) return;
+  if (!_mgrPool.length) {
+    const names = [...FEEDER_AI, ...F1_AI.map(n => n.split(' ')[0])].sort(() => Math.random()-0.5).slice(0, 6);
+    _mgrPool = names.map(name => {
+      const rating = clamp(Math.round(25 + Math.random() * 65), 25, 90);
+      const salary = Math.round(rating * 200000);
+      return {name, flag: RIVAL_FLAGS[Math.floor(Math.random()*RIVAL_FLAGS.length)], rating, salary};
+    }).sort((a,b) => b.rating - a.rating);
+  }
+  const drvBudget = S._mgrDriverBudget || 0;
+  const selected = S._mgrDrivers || [];
+  const totalSalary = selected.reduce((s,d) => s + d.salary, 0);
+  const canConfirm = selected.length === 2;
+
+  const cards = _mgrPool.map((d, i) => {
+    const isSel = selected.some(s => s.name === d.name);
+    const overBudget = d.salary > drvBudget && !isSel;
+    const carReq = d.rating >= 78 && S._mgrCarRating < 65;
+    const locked = (overBudget || carReq) && !isSel;
+    const lockNote = carReq ? 'Requires car rating 65+' : 'Over driver budget';
+    return `<div class="driver-card${isSel?' selected':''}${locked?' locked':''}" onclick="${locked?'':'toggleMgrDriver('+i+')'}" >
+      <div class="driver-rating" style="color:${d.rating>=75?'#d4af37':d.rating>=55?'rgba(255,255,255,.85)':'rgba(255,255,255,.5)'}">${d.rating}</div>
+      <div style="flex:1;min-width:0">
+        <div class="driver-name">${d.flag} ${esc(d.name)}</div>
+        <div class="driver-salary">${fmtMoney(d.salary)}/season${locked?' · '+lockNote:''}</div>
+      </div>
+      ${isSel ? '<span style="color:#d4af37;font-size:20px;flex-shrink:0">✓</span>' : ''}
+    </div>`;
+  }).join('');
+
+  content.innerHTML = `
+    <div class="mgr-phase-title">DRIVER MARKET</div>
+    <div class="mgr-phase-sub">Pick 2 drivers. Driver budget: ${fmtMoney(drvBudget)}<br>${selected.length}/2 selected · Salaries: ${fmtMoney(totalSalary)}</div>
+    ${cards}
+    <button class="mgr-confirm-btn" ${canConfirm?'':'disabled'} onclick="confirmDrivers()">CONFIRM LINE-UP →</button>
+  `;
+}
+
+function toggleMgrDriver(idx) {
+  const d = _mgrPool[idx];
+  if (!d) return;
+  if (!S._mgrDrivers) S._mgrDrivers = [];
+  const existing = S._mgrDrivers.findIndex(s => s.name === d.name);
+  if (existing >= 0) {
+    S._mgrDrivers.splice(existing, 1);
+  } else {
+    if (S._mgrDrivers.length >= 2) { showToast('Already have 2 drivers — deselect one first'); return; }
+    S._mgrDrivers.push(d);
+  }
+  renderDriversPhase();
+}
+
+function confirmDrivers() {
+  if ((S._mgrDrivers || []).length !== 2) return;
+  _mgrPool = [];
+  S._mgrPhase = 'result';
+  S._mgrLastResult = simulateMgrSeason();
+  save();
+  renderManagerScreen();
+}
+
+function simulateMgrSeason() {
+  const drivers = S._mgrDrivers || [];
+  const avgDrv = drivers.length === 2 ? (drivers[0].rating + drivers[1].rating) / 2 : 40;
+  const score = clamp(S._mgrCarRating * 0.5 + avgDrv * 0.5 + (Math.random() * 30 - 15), 1, 99);
+  const aiScores = MGR_AI_TEAMS.map(name => ({name, score: clamp(rnd(20,88) + (Math.random()*10-5), 1, 99)}));
+  const all = [{name: S._mgrTeamName, score, isPlayer: true}, ...aiScores];
+  all.sort((a,b) => b.score - a.score);
+  const ptsList = [178,154,130,110,92,76,62,50,40,32];
+  const standings = all.slice(0, 10).map((t, i) => ({name: t.name, isPlayer: !!t.isPlayer, pts: ptsList[i] || 0}));
+  const pos = standings.findIndex(s => s.isPlayer) + 1 || 10;
+  return {pos, standings};
+}
+
+function renderResultPhase() {
+  const content = document.getElementById('mgr-content');
+  if (!content) return;
+  const result = S._mgrLastResult;
+  if (!result) { renderBudgetPhase(); return; }
+  const prize = MGR_PRIZE[Math.min(result.pos-1, MGR_PRIZE.length-1)] || 0;
+  const isChamp = result.pos === 1;
+  const drivers = S._mgrDrivers || [];
+
+  const rows = result.standings.map((t, i) => `
+    <tr class="${t.isPlayer?'player-row':''}">
+      <td class="mgr-pos" style="color:${i===0?'#d4af37':'rgba(255,255,255,.5)'}">${i+1}</td>
+      <td>${t.isPlayer ? '🟥 ' : ''}${esc(t.name)}</td>
+      <td style="text-align:right;font-family:'DM Sans',sans-serif;font-size:11px">${t.pts}</td>
+    </tr>`).join('');
+
+  content.innerHTML = `
+    <div class="mgr-phase-title">SEASON ${S._mgrSeason} RESULT</div>
+    <div style="text-align:center;margin-bottom:18px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:3.5rem;letter-spacing:2px;color:${isChamp?'#d4af37':'rgba(255,255,255,.85)'}">P${result.pos}</div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.4)">Constructors' Championship</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#4ade80;margin-top:6px">+${fmtMoney(prize)} prize money</div>
+      ${drivers.length ? `<div style="font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.35);margin-top:4px">Drivers: ${drivers.map(d=>d.flag+' '+d.name+' ('+d.rating+')').join(' · ')}</div>` : ''}
+    </div>
+    <table class="mgr-standings">
+      <thead><tr><th>Pos</th><th>Constructor</th><th style="text-align:right">Pts</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <button class="mgr-confirm-btn" style="margin-top:22px" onclick="advanceMgrSeason()">${isChamp ? "🏆 YOU'RE CHAMPIONS! NEXT SEASON →" : 'NEXT SEASON →'}</button>
+    <button class="mgr-confirm-btn" style="margin-top:8px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.4)" onclick="proceedToGameOver()">Retire from Management</button>
+  `;
+}
+
+function advanceMgrSeason() {
+  const result = S._mgrLastResult;
+  if (!result) return;
+  const prize = MGR_PRIZE[Math.min(result.pos-1, MGR_PRIZE.length-1)] || 0;
+  const newBudget = prize + (S._mgrInfraBank || 0);
+
+  if (result.pos === 1) {
+    const lines = [
+      {text:'CONSTRUCTORS\'\nCHAMPIONS', cls:'result-win', ms:2400},
+      {text:'YOU BUILT A\nCHAMPION TEAM', cls:'bright', ms:2600},
+      {text:esc(S._mgrTeamName).toUpperCase()+'\nSEASON '+S._mgrSeason, cls:'', ms:2000}
+    ];
+    S._mgrHistory = [...(S._mgrHistory||[]), {season: S._mgrSeason, pos: result.pos}];
+    S._mgrSeason++;
+    S._mgrLastResult = null;
+    S._mgrPhase = 'budget';
+    S._mgrBudget = newBudget;
+    S._mgrInfraBank = 0;
+    S._mgrDrivers = [];
+    save();
+    showCinematic(lines, () => { showScreen('manager'); renderManagerScreen(); });
+    return;
+  }
+
+  if (newBudget < 2000000) {
+    const lines = [
+      {text:'THE FACTORY\nGOES QUIET', cls:'result-lose', ms:2400},
+      {text:'THE DREAM\nIS OVER', cls:'result-p2', ms:2600}
+    ];
+    S._mgrHistory = [...(S._mgrHistory||[]), {season: S._mgrSeason, pos: result.pos}];
+    save();
+    showCinematic(lines, () => { proceedToGameOver(); });
+    return;
+  }
+
+  S._mgrHistory = [...(S._mgrHistory||[]), {season: S._mgrSeason, pos: result.pos}];
+  S._mgrSeason++;
+  S._mgrLastResult = null;
+  S._mgrPhase = 'budget';
+  S._mgrBudget = newBudget;
+  S._mgrInfraBank = 0;
+  S._mgrDrivers = [];
+  save();
+  showScreen('manager');
+  renderManagerScreen();
 }
 
 // ══════════════════════════════════════════════
@@ -4016,6 +4414,8 @@ function restartGame() {
   selectedStyle = 'consistent';
   activeTab = 'season';
   document.getElementById('screen-gameover').style.display = 'none';
+  document.getElementById('screen-manager').style.display = 'none';
+  document.getElementById('retire-choice-overlay').classList.add('hidden');
   showScreen('start');
   // Reset step flow
   for (let i = 0; i < 4; i++) {
@@ -4514,7 +4914,10 @@ document.addEventListener('DOMContentLoaded', () => {
       save();
       setTimeout(() => showToast('🪙 Daily bonus: +20 PitCoins!', 3000), 800);
     }
-    if (S.gameOver) {
+    if (S._mgrActive) {
+      showScreen('manager');
+      renderManagerScreen();
+    } else if (S.gameOver) {
       showScreen('gameover');
       renderGameOver();
     } else {
