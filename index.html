@@ -3749,7 +3749,7 @@ function renderHeader() {
         </div>
       </div>
       <div class="hdr-right">
-        <span class="hdr-coins">🪙 ${S.pitcoins||0}</span>
+        ${/* SHOP HIDDEN — enable when ready to monetise */ false ? `<span class="hdr-coins">🪙 ${S.pitcoins||0}</span>` : ''}
         <span class="hdr-age">Age ${S.age}</span>
         ${S.age > 33 ? '<span class="veteran-badge">Veteran</span>' : ''}
         <span class="stage-pill">${st.label}</span>
@@ -3760,7 +3760,7 @@ function renderHeader() {
       <button class="tab-pill${activeTab==='car'?' active':''}" onclick="switchTab('car')">🚗 My Car</button>
       <button class="tab-pill${activeTab==='league'?' active':''}" onclick="switchTab('league')">🏆 League</button>
       <button class="tab-pill${activeTab==='log'?' active':''}" onclick="switchTab('log')">📋 Log</button>
-      <button class="tab-pill${activeTab==='shop'?' active':''}" onclick="switchTab('shop')">🛒 Shop</button>
+      ${/* SHOP HIDDEN — enable when ready to monetise */ false ? `<button class="tab-pill${activeTab==='shop'?' active':''}" onclick="switchTab('shop')">🛒 Shop</button>` : ''}
     </div>
     <div class="season-progress"><div class="season-progress-fill" style="width:${Math.round((S.resolved||[]).length/Math.max(1,(S.events||[]).length)*100)}%"></div></div>`;
   // Apply tier glow
