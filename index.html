@@ -688,17 +688,46 @@ body{
 .quali-continue-btn{margin-top:28px;padding:12px 36px;background:var(--red);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;border:none;cursor:pointer}
 
 /* ─── TEAM CHOICE ─── */
-#team-choice-overlay{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+#team-choice-overlay{position:fixed;inset:0;background:#000;z-index:200;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch}
 #team-choice-overlay.hidden{display:none}
-.tc-title{font-family:'Bebas Neue',sans-serif;font-size:30px;color:#fff;letter-spacing:3px;margin-bottom:4px}
-.tc-series{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:22px;font-family:'DM Sans',sans-serif}
-.tc-cards{width:100%;max-width:400px;display:flex;flex-direction:column;gap:10px}
-.tc-card{padding:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:border-color .15s,background .15s}
-.tc-card:hover{border-color:var(--red);background:rgba(232,0,10,.08)}
-.tc-card.locked{opacity:.42;cursor:not-allowed;pointer-events:none}
-.tc-team{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;letter-spacing:1px}
-.tc-detail{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;font-family:'DM Sans',sans-serif}
-.tc-lock{font-size:11px;color:#E8000A;margin-top:4px;font-family:'DM Sans',sans-serif}
+.tc-inner{width:100%;max-width:420px;margin:0 auto;padding:20px 16px 40px;display:flex;flex-direction:column;gap:0}
+.tc-eyebrow{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:6px}
+.tc-headline{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:3px;color:#fff;line-height:1;margin-bottom:4px}
+.tc-sub{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:20px}
+.tc-current{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);padding:12px 14px;margin-bottom:20px}
+.tc-current-label{font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:6px}
+.tc-current-val{font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;font-weight:600}
+.tc-current-detail{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+.tc-offers-label{font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:10px}
+.tc-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.tc-card{padding:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);cursor:pointer;transition:border-color .15s,background .15s,opacity .15s;opacity:0;transform:translateY(18px);transition:opacity .3s ease,transform .3s ease,border-color .15s,background .15s}
+.tc-card.visible{opacity:1;transform:translateY(0)}
+.tc-card:active{background:rgba(232,0,10,.12);border-color:var(--red)}
+.tc-card.locked{opacity:.35!important;cursor:not-allowed}
+.tc-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.tc-team{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;letter-spacing:1px;line-height:1}
+.tc-tier-badge{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:3px}
+.tc-tier-badge.t1{background:rgba(212,175,55,.18);color:#d4af37;border:1px solid rgba(212,175,55,.3)}
+.tc-tier-badge.t2{background:rgba(192,192,192,.12);color:#c0c0c0;border:1px solid rgba(192,192,192,.25)}
+.tc-tier-badge.t3{background:rgba(205,127,50,.1);color:#cd7f32;border:1px solid rgba(205,127,50,.2)}
+.tc-tier-badge.feeder{background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.12)}
+.tc-flavour{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.4);margin-bottom:10px;line-height:1.4;font-style:italic}
+.tc-bars{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.tc-bar-row{display:flex;align-items:center;gap:8px}
+.tc-bar-label{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.35);width:52px;flex-shrink:0}
+.tc-bar-track{flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+.tc-bar-fill{height:100%;border-radius:2px;transition:width .5s ease .1s}
+.tc-bar-val{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;color:rgba(255,255,255,.5);width:28px;text-align:right;flex-shrink:0}
+.tc-lock{display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:11px;color:#E8000A;margin-top:4px}
+.tc-sign-btn{width:100%;padding:13px;background:var(--red);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;border:none;cursor:pointer;margin-top:4px;opacity:0;transition:opacity .2s}
+.tc-sign-btn:not(:disabled){opacity:1}
+.tc-sign-btn:disabled{opacity:.3;cursor:not-allowed}
+.tc-stay-card{padding:14px;background:transparent;border:1px solid rgba(255,255,255,.08);cursor:pointer;opacity:0;transform:translateY(12px);transition:opacity .3s ease,transform .3s ease,border-color .15s}
+.tc-stay-card.visible{opacity:1;transform:translateY(0)}
+.tc-stay-card:active{border-color:rgba(255,255,255,.3)}
+.tc-stay-label{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.35);text-align:center}
+@keyframes tcShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.tc-card.shake{animation:tcShake .35s ease}
 
 /* ─── DRIVING STYLE ─── */
 .style-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px}
@@ -856,7 +885,7 @@ body{
 @keyframes ai-spin{to{transform:rotate(360deg)}}
 .ai-toggle-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.6);cursor:pointer;margin-top:18px;letter-spacing:.5px}
 .ai-toggle-btn.on{border-color:rgba(232,0,10,.5);color:var(--red)}
-.hdr-coins{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:#fbbf24;letter-spacing:.5px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:20px;padding:3px 9px}
+.hdr-coins{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;color:#fbbf24;letter-spacing:.5px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.4);border-radius:20px;padding:4px 10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .shop-section-hd{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:2px;color:rgba(255,255,255,.85);margin:20px 0 9px}
 .shop-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:13px;margin-bottom:9px;display:flex;align-items:center;gap:10px}
 .shop-card-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
@@ -1045,11 +1074,7 @@ posthog.init('phc_xFWVDs2HxYUzQ9ucGryMVPacN7UtVGXxMrVzJdjv6APT',{api_host:'https
   <div class="quali-grid" id="quali-grid"></div>
   <button class="quali-continue-btn hidden" id="quali-continue-btn" onclick="continueToRace()">START RACE →</button>
 </div>
-<div id="team-choice-overlay" class="hidden">
-  <div class="tc-title">CHOOSE YOUR TEAM</div>
-  <div class="tc-series" id="tc-series-name"></div>
-  <div class="tc-cards" id="tc-cards"></div>
-</div>
+<div id="team-choice-overlay" class="hidden"></div>
 
 <!-- ═══════ RESULTS OVERLAY ═══════ -->
 <div id="results-overlay" class="hidden">
@@ -1130,7 +1155,7 @@ posthog.init('phc_xFWVDs2HxYUzQ9ucGryMVPacN7UtVGXxMrVzJdjv6APT',{api_host:'https
 </div>
 
 <script>
-let AI_GRAPHICS = localStorage.getItem('ai_graphics_enabled') !== 'false';
+let AI_GRAPHICS = localStorage.getItem('ai_graphics_enabled') === 'true';
 
 // ══════════════════════════════════════════════
 // DATA
@@ -2989,40 +3014,161 @@ function continueToRace() {
 // ─── TEAM CHOICE ───
 function buildPromotionOptions(newIdx) {
   if (newIdx === 4) {
-    const repReqs = [40, 55, 70];
+    const repReqs = [30, 50, 75]; // tier3, tier2, tier1
+    const flavours = {
+      1: ['The works team. Every resource at your disposal.','Factory backing. You get the real car.','The team that wins championships.'],
+      2: ['Solid machinery and a real development budget.','Midfield warriors who punch above their weight.','Proven points scorers. Build your reputation here.'],
+      3: ['Low budget, high ceiling if you deliver.','They need a superstar. Could be you.','The door is open — make them regret not picking you sooner.']
+    };
     return [3, 2, 1].map((tier, i) => {
       const pool = F1_TEAMS.filter(t => t.tier === tier);
       const team = pool[rnd(0, pool.length - 1)];
       const locked = S.Reputation < repReqs[i];
+      const fl = flavours[tier];
+      const carRating = tier===1 ? rnd(72,88) : tier===2 ? rnd(50,68) : rnd(28,46);
+      const prestige = tier===1 ? rnd(82,97) : tier===2 ? rnd(52,72) : rnd(24,44);
       return {
         team: team.name, f1idx: F1_TEAMS.indexOf(team), tier, locked,
-        detail: `${STAGES[newIdx].label} · Tier ${tier} team · ${(team.pay/1000000).toFixed(1)}M salary`,
+        carRating, prestige, wage: team.pay,
+        flavour: fl[rnd(0, fl.length-1)],
         lockMsg: locked ? `Requires ${repReqs[i]} Reputation` : null
       };
     });
   } else {
+    const repReq = newIdx === 3 ? 40 : 0;
     const teams = STAGE_TEAMS[newIdx] || [];
     const shuffled = [...teams].sort(() => Math.random() - 0.5).slice(0, 3);
-    return shuffled.map(name => ({
-      team: name, f1idx: null, locked: false,
-      detail: STAGES[newIdx].label, lockMsg: null
-    }));
+    const feederFlavours = [
+      'A proven programme with academy connections.',
+      'Rising team — hungry for results.',
+      'Small team, big opportunities if you perform.'
+    ];
+    return shuffled.map((name, i) => {
+      const locked = repReq > 0 && S.Reputation < repReq;
+      return {
+        team: name, f1idx: null, tier: null, locked,
+        carRating: rnd(38, 74), prestige: rnd(28, 68), wage: null,
+        flavour: feederFlavours[i % feederFlavours.length],
+        lockMsg: locked ? `Requires ${repReq} Reputation` : null
+      };
+    });
   }
 }
 
 function renderTeamChoiceScreen() {
   const newIdx = S.pendingPromotion;
-  const seriesName = STAGES[newIdx].label;
-  document.getElementById('tc-series-name').textContent = `Promoted to ${seriesName}`;
+  const seriesLabel = STAGES[newIdx].label;
+  const currentSeriesLabel = STAGES[S.stageIdx].label;
+  const currentTeam = S.stageIdx === 4 ? (f1team()||{}).name : (S.feederTeam || currentSeriesLabel);
   const options = buildPromotionOptions(newIdx);
   window._tcOptions = options;
-  document.getElementById('tc-cards').innerHTML = options.map((opt, i) =>
-    `<div class="tc-card${opt.locked?' locked':''}" onclick="selectTeam(${i})">
-      <div class="tc-team">${esc(opt.team)}</div>
-      <div class="tc-detail">${opt.detail}</div>
-      ${opt.lockMsg ? `<div class="tc-lock">🔒 ${opt.lockMsg}</div>` : ''}
-    </div>`).join('');
-  document.getElementById('team-choice-overlay').classList.remove('hidden');
+  window._tcSelected = null;
+
+  function barHtml(label, val, maxVal, color) {
+    const pct = Math.min(100, Math.round(val / maxVal * 100));
+    return `<div class="tc-bar-row">
+      <div class="tc-bar-label">${label}</div>
+      <div class="tc-bar-track"><div class="tc-bar-fill" style="width:0%;background:${color}" data-pct="${pct}"></div></div>
+      <div class="tc-bar-val">${val}</div>
+    </div>`;
+  }
+
+  function wageBarHtml(wageVal) {
+    if (!wageVal) return '';
+    const wageM = +(wageVal/1000000).toFixed(1);
+    const pct = Math.min(100, Math.round(wageVal / 30000000 * 100));
+    return `<div class="tc-bar-row">
+      <div class="tc-bar-label">Wage</div>
+      <div class="tc-bar-track"><div class="tc-bar-fill" style="width:0%;background:#4ade80" data-pct="${pct}"></div></div>
+      <div class="tc-bar-val" style="font-size:9px">${wageM}M</div>
+    </div>`;
+  }
+
+  const cardsHtml = options.map((opt, i) => {
+    const tierBadge = opt.tier
+      ? `<span class="tc-tier-badge t${opt.tier}">Tier ${opt.tier}</span>`
+      : `<span class="tc-tier-badge feeder">${seriesLabel}</span>`;
+    const lockEl = opt.lockMsg ? `<div class="tc-lock">🔒 ${opt.lockMsg}</div>` : '';
+    const signBtn = !opt.locked
+      ? `<button class="tc-sign-btn" onclick="selectTeam(${i})">SIGN CONTRACT</button>`
+      : `<button class="tc-sign-btn" disabled>SIGN CONTRACT</button>`;
+    return `<div class="tc-card${opt.locked?' locked':''}" id="tc-card-${i}" onclick="${opt.locked?`shakeLockedCard(${i})`:`selectTeam(${i})`}">
+      <div class="tc-card-header">
+        <div class="tc-team">${esc(opt.team)}</div>
+        ${tierBadge}
+      </div>
+      <div class="tc-flavour">${opt.flavour}</div>
+      <div class="tc-bars">
+        ${barHtml('Car', opt.carRating, 100, '#e8000a')}
+        ${barHtml('Prestige', opt.prestige, 100, '#d4af37')}
+        ${wageBarHtml(opt.wage)}
+      </div>
+      ${lockEl}
+      ${signBtn}
+    </div>`;
+  }).join('');
+
+  const stayHtml = newIdx < 4 ? `
+    <div class="tc-stay-card" id="tc-stay-card" onclick="stayWithTeam()">
+      <div class="tc-stay-label">⬇️ Decline promotion — stay in ${currentSeriesLabel}</div>
+    </div>` : '';
+
+  const overlay = document.getElementById('team-choice-overlay');
+  overlay.innerHTML = `<div class="tc-inner">
+    <div class="tc-eyebrow">Transfer Window</div>
+    <div class="tc-headline">Choose Your Team</div>
+    <div class="tc-sub">Promoted to ${seriesLabel}</div>
+    <div class="tc-current">
+      <div class="tc-current-label">Current Situation</div>
+      <div class="tc-current-val">${esc(currentTeam)}</div>
+      <div class="tc-current-detail">${currentSeriesLabel} · Rep ${S.Reputation}</div>
+    </div>
+    <div class="tc-offers-label">Offers on the Table</div>
+    <div class="tc-cards">${cardsHtml}</div>
+    ${stayHtml}
+  </div>`;
+
+  overlay.classList.remove('hidden');
+
+  // Stagger animate cards in
+  requestAnimationFrame(() => {
+    options.forEach((_, i) => {
+      setTimeout(() => {
+        const card = document.getElementById(`tc-card-${i}`);
+        if (card) card.classList.add('visible');
+      }, 80 + i * 100);
+    });
+    const stayCard = document.getElementById('tc-stay-card');
+    if (stayCard) setTimeout(() => stayCard.classList.add('visible'), 80 + options.length * 100);
+    // Animate bars after cards visible
+    setTimeout(() => {
+      overlay.querySelectorAll('.tc-bar-fill').forEach(fill => {
+        fill.style.width = fill.dataset.pct + '%';
+      });
+    }, 300);
+  });
+}
+
+function shakeLockedCard(i) {
+  const card = document.getElementById(`tc-card-${i}`);
+  if (!card) return;
+  card.classList.remove('shake');
+  void card.offsetWidth; // reflow
+  card.classList.add('shake');
+  const opt = (window._tcOptions || [])[i];
+  if (opt && opt.lockMsg) showToast('🔒 ' + opt.lockMsg);
+}
+
+function stayWithTeam() {
+  document.getElementById('team-choice-overlay').classList.add('hidden');
+  S.pendingPromotion = false;
+  // Pick a random team from the current stage
+  const currentTeams = STAGE_TEAMS[S.stageIdx] || [];
+  if (currentTeams.length) {
+    S.feederTeam = currentTeams[rnd(0, currentTeams.length - 1)];
+  }
+  save();
+  renderAll();
 }
 
 function selectTeam(i) {
@@ -3033,8 +3179,7 @@ function selectTeam(i) {
   S.pendingPromotion = false;
   if (S.stageIdx === 4) {
     S.f1TeamIdx = opt.f1idx;
-    const t = F1_TEAMS[opt.f1idx];
-    S.teamCarRating = t.tier===1 ? rnd(72,88) : t.tier===2 ? rnd(50,68) : rnd(28,46);
+    S.teamCarRating = opt.carRating;
     if (!S._premierBonusPaid) { S._premierBonusPaid = true; awardPitcoins(150, 'Reached Premier Series!'); }
   } else {
     S.feederTeam = opt.team;
@@ -3446,7 +3591,7 @@ function renderResultPhase() {
 
   const rows = result.standings.map((t, i) => `
     <tr class="${t.isPlayer?'player-row':''}">
-      <td class="mgr-pos" style="color:${i===0?'#d4af37':'rgba(255,255,255,.5)'}">${i+1}</td>
+      <td class="mgr-pos" style="color:${i===0?'#d4af37':'rgba(255,255,255,.5)'}">P${i+1}</td>
       <td>${t.isPlayer ? '🟥 ' : ''}${esc(t.name)}</td>
       <td style="text-align:right;font-family:'DM Sans',sans-serif;font-size:11px">${t.pts}</td>
     </tr>`).join('');
@@ -3728,6 +3873,10 @@ function switchTab(tab) {
   renderAll();
 }
 
+function openShopOrToast() {
+  showToast('🛒 Shop coming soon!');
+}
+
 function renderHeader() {
   const st = stage();
   const t = f1team();
@@ -3749,7 +3898,7 @@ function renderHeader() {
         </div>
       </div>
       <div class="hdr-right">
-        ${/* SHOP HIDDEN — enable when ready to monetise */ false ? `<span class="hdr-coins">🪙 ${S.pitcoins||0}</span>` : ''}
+        <span class="hdr-coins" onclick="openShopOrToast()">🪙 ${S.pitcoins||0}</span>
         <span class="hdr-age">Age ${S.age}</span>
         ${S.age > 33 ? '<span class="veteran-badge">Veteran</span>' : ''}
         <span class="stage-pill">${st.label}</span>
@@ -3986,7 +4135,6 @@ function renderLog() {
   </div>`;
   const entries = S.log.map(e => {
     const pc = posClass(e.champPos);
-    const sfx = ordSuffix(e.champPos);
     const teamStr = e.team ? ` — ${e.team}` : '';
     let detail = `Avg P${e.avgPos} · ${fmtMoney(e.earnings)}`;
     if (e.wins) detail += ` · ${e.wins} win${e.wins>1?'s':''}`;
@@ -3997,7 +4145,7 @@ function renderLog() {
     return `<div class="log-entry">
       <div class="log-h">
         <span class="log-stage">S${e.season} · ${e.stage}${teamStr}</span>
-        <span class="log-pos ${pc}">P${e.champPos}${sfx}</span>
+        <span class="log-pos ${pc}">P${e.champPos}</span>
       </div>
       <div class="log-detail">${detail}</div>
     </div>`;
@@ -4025,7 +4173,7 @@ function renderLeague() {
     const formDots = (d.form||[]).map(f=>`<div class="form-dot ${f}"></div>`).join('');
     const tierDot = (d.tier && S.stageIdx===4) ? `<span class="tier-dot t${d.tier}"></span>` : '';
     return `<div class="league-row ${meCls}" style="transition-delay:${i*40}ms">
-      <div class="lg-pos ${pCls}">${i+1}</div>
+      <div class="lg-pos ${pCls}">P${i+1}</div>
       <div class="lg-flag">${d.flag||''}</div>
       <div class="lg-info">
         <div class="lg-name">${d.me?esc(S.name):esc(d.name)}</div>
@@ -4167,8 +4315,6 @@ function renderResultsCard() {
   const r = S.lastResult;
   if (!r) return;
   const pc = posClass(r.champPos);
-  const sfx = ordSuffix(r.champPos);
-  const asfx = ordSuffix(r.avgPos);
   const headline = pickHeadline(r);
 
   // Race report
@@ -4219,7 +4365,7 @@ function renderResultsCard() {
 
   const rows = r.standings.map((d,i) => {
     return `<tr class="${d.me?'me':''}">
-      <td>${i+1}</td>
+      <td>P${i+1}</td>
       <td>${d.me?esc(S.name):d.name}</td>
       <td class="pts">${d.pts}</td>
     </tr>`;
@@ -4230,8 +4376,8 @@ function renderResultsCard() {
   document.getElementById('res-card').innerHTML = `
     <div style="display:flex;justify-content:center;margin-bottom:8px">${buildHelmetCard(S.helmet||{},S.name,S.natFlag,80)}</div>
     <div class="res-season">${r.stage} · Season ${r.season}</div>
-    <div class="res-pos ${pc}">${r.champPos}${sfx}</div>
-    <div class="res-sublabel">Championship · Avg P${r.avgPos}${asfx} per race</div>
+    <div class="res-pos ${pc}">P${r.champPos}</div>
+    <div class="res-sublabel">Championship · Avg P${r.avgPos} per race</div>
     <div class="res-headline">"${effectiveNickname()}" — ${esc(headline)}</div>
     ${champBanner}${raceWinBanner}${podiumBanner}${streakBanner}
     <div class="race-report">"${esc(raceReport)}"</div>
@@ -4315,14 +4461,13 @@ function renderGameOver() {
 
   const logItems = S.log.map(e=>{
     const pc = posClass(e.champPos);
-    const sfx = ordSuffix(e.champPos);
     let d = `Avg P${e.avgPos}`;
     if (e.champWon) d += ' · 🏆';
     if (e.fired) d += ' · 🔴';
     return `<div class="log-entry">
       <div class="log-h">
         <span class="log-stage">${e.stage}${e.team?` — ${e.team}`:''}</span>
-        <span class="log-pos ${pc}">P${e.champPos}${sfx}</span>
+        <span class="log-pos ${pc}">P${e.champPos}</span>
       </div>
       <div class="log-detail">${d} · ${fmtMoney(e.earnings)}</div>
     </div>`;
