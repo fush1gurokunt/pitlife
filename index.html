@@ -856,7 +856,39 @@ body{
 @keyframes ai-spin{to{transform:rotate(360deg)}}
 .ai-toggle-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:rgba(255,255,255,.6);cursor:pointer;margin-top:18px;letter-spacing:.5px}
 .ai-toggle-btn.on{border-color:rgba(232,0,10,.5);color:var(--red)}
+.hdr-coins{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:#fbbf24;letter-spacing:.5px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:20px;padding:3px 9px}
+.shop-section-hd{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:2px;color:rgba(255,255,255,.85);margin:20px 0 9px}
+.shop-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:13px;margin-bottom:9px;display:flex;align-items:center;gap:10px}
+.shop-card-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.shop-card-info{flex:1;min-width:0}
+.shop-card-name{font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;color:rgba(255,255,255,.9)}
+.shop-card-desc{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+.shop-card-price{font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fbbf24;letter-spacing:1px;white-space:nowrap}
+.shop-buy-btn{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;border:none;background:var(--red);color:#fff;cursor:pointer;white-space:nowrap}
+.shop-buy-btn:disabled{background:rgba(255,255,255,.08);color:rgba(255,255,255,.25);cursor:default}
+.shop-owned-badge{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;padding:4px 9px;border-radius:6px;background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(74,222,128,.25);white-space:nowrap}
+.shop-premium-badge{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;padding:4px 9px;border-radius:6px;background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.25);white-space:nowrap}
+.shop-helmet-dot{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.15);flex-shrink:0}
+.boost-card{background:rgba(251,191,36,.05);border:1px solid rgba(251,191,36,.18);border-radius:10px;padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:10px}
+.boost-card-info{flex:1;min-width:0}
+.boost-card-name{font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;color:#fbbf24}
+.boost-card-desc{font-family:'DM Sans',sans-serif;font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
+.boost-use-btn{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;padding:6px 10px;border-radius:8px;border:none;background:#fbbf24;color:#000;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.ad-banner-btn{width:100%;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:9px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.45);cursor:pointer;margin-bottom:8px}
+.ad-banner-btn:disabled{opacity:.35;cursor:default}
+#toast-container{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column-reverse;align-items:center;gap:6px;pointer-events:none}
+.toast{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:8px 16px;border-radius:20px;background:rgba(20,20,20,.96);border:1px solid rgba(255,255,255,.12);color:#fff;opacity:0;transition:opacity .3s ease;white-space:nowrap}
+.toast.show{opacity:1}
+#boost-stat-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+#boost-stat-overlay.hidden{display:none}
+.boost-stat-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;color:#fbbf24;margin-bottom:4px}
+.boost-stat-sub{font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.5);margin-bottom:18px;text-align:center}
+.boost-stat-btn{width:100%;max-width:300px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;padding:13px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;margin-bottom:8px}
 </style>
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.people.toString(1)},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_xFWVDs2HxYUzQ9ucGryMVPacN7UtVGXxMrVzJdjv6APT',{api_host:'https://eu.i.posthog.com'});
+</script>
 </head>
 <body>
 
@@ -963,8 +995,12 @@ body{
     <div id="log-sec"></div>
     <div id="car-sec" class="hidden"></div>
     <div id="league-sec" class="hidden"></div>
+    <div id="shop-sec" class="hidden"></div>
   </div>
   <div id="bottom-bar">
+    <div id="ad-banner">
+      <button class="ad-banner-btn" id="ad-btn" onclick="watchAd()">📺 Watch an ad for 75 PitCoins</button>
+    </div>
     <button id="race-btn" onclick="showQualifying()" disabled>
       Race the Season
       <span class="sub" id="race-sub">Resolve all events first</span>
@@ -1007,6 +1043,21 @@ body{
   <div id="ai-race-bg"></div>
   <div class="ai-spinner" id="ai-race-spinner"></div>
   <div id="ai-race-text"></div>
+</div>
+
+<!-- ═══════ TOAST NOTIFICATIONS ═══════ -->
+<div id="toast-container"></div>
+
+<!-- ═══════ BOOST STAT PICKER ═══════ -->
+<div id="boost-stat-overlay" class="hidden">
+  <div class="boost-stat-title">TRAINING CAMP</div>
+  <div class="boost-stat-sub">Choose a stat to improve by +8</div>
+  <button class="boost-stat-btn" onclick="applyTrainingCamp('Pace')">Pace</button>
+  <button class="boost-stat-btn" onclick="applyTrainingCamp('Racecraft')">Racecraft</button>
+  <button class="boost-stat-btn" onclick="applyTrainingCamp('Consistency')">Consistency</button>
+  <button class="boost-stat-btn" onclick="applyTrainingCamp('Fitness')">Fitness</button>
+  <button class="boost-stat-btn" onclick="applyTrainingCamp('Morale')">Morale</button>
+  <button class="boost-stat-btn" style="color:rgba(255,255,255,.3);margin-top:8px" onclick="document.getElementById('boost-stat-overlay').classList.add('hidden')">Cancel</button>
 </div>
 
 <!-- ═══════ DAILY CHALLENGE MODAL ═══════ -->
@@ -1140,6 +1191,26 @@ const F1_AI = ['Hamilton Jr','Schumacher III','Alonso II','Verstappen II',
   'Leclerc II','Russell III','Norris II','Sainz Jr','Piastri II','Perez III',
   'Hulkenberg II','Bottas Jr','Ocon II','Albon Jr','Zhou II',
   'Ricciardo III','Tsunoda Jr','Stroll Jr','Magnussen Jr','Sargeant II'];
+
+const SHOP_HELMETS = [
+  {id:'stealth',   name:'Stealth',   desc:'Matte black, gold visor',        price:250, color:'#111111'},
+  {id:'tricolore', name:'Tricolore', desc:'Flag-inspired paint scheme',      price:150, color:'#002395'},
+  {id:'carbon',    name:'Carbon',    desc:'Carbon fibre graphic effect',     price:300, color:'#1a1a1a'},
+  {id:'aurora',    name:'Aurora',    desc:'Teal and purple fade',            price:350, color:'#0d9488'},
+  {id:'inferno',   name:'Inferno',   desc:'Red and orange flame design',     price:200, color:'#dc2626'},
+  {id:'champion',  name:'Champion',  desc:'Gold and white — premium only',   price:null,color:'#d97706'}
+];
+const SHOP_FEATURES = [
+  {id:'manager_mode',     name:'Manager Mode',     desc:'Buy a team after retirement and continue your legacy',       price:800},
+  {id:'legacy_dynasty',   name:'Legacy Dynasty',   desc:'Play up to 3-generation family careers',                    price:600},
+  {id:'rival_intel',      name:'Rival Intel',      desc:'See rival driver stat ratings during the season',           price:300},
+  {id:'weather_forecast', name:'Weather Forecast', desc:'Preview the rain probability before committing to events',  price:200}
+];
+const SHOP_BOOSTS = [
+  {id:'training_camp', name:'Training Camp', desc:'+8 to a stat of your choice (one use)',  price:150},
+  {id:'pr_blitz',      name:'PR Blitz',      desc:'+15 Reputation applied immediately',     price:120},
+  {id:'second_chance', name:'Second Chance', desc:'Avoid one firing — auto-used when fired',price:500}
+];
 
 const PTS_TABLE = [25,18,15,12,10,8,6,4,2,1];
 
@@ -1832,7 +1903,13 @@ function defaultState() {
     qualiPos: null,
     pendingPromotion: false,
     _debutDone: false,
-    _f1DebutDone: false
+    _f1DebutDone: false,
+    pitcoins: 100,
+    ownedHelmets: [],
+    ownedFeatures: [],
+    ownedBoosts: {},
+    lastLoginDate: '',
+    _premierBonusPaid: false
   };
 }
 
@@ -2069,6 +2146,7 @@ function onStart() {
   assignFeederTeam();
   genEvents();
   save();
+  if (typeof posthog !== 'undefined') posthog.capture('career_started', { nationality: S.nat, driving_style: S.drivingStyle });
   showScreen('game');
   renderAll();
 }
@@ -2416,6 +2494,7 @@ function resolveEvent(ei, ci) {
   lastEventOutcome = {choiceText: ch.text, changes: outcomeChanges, reason: ch.reason || ''};
   S.resolved.push(ei);
   save();
+  if (typeof posthog !== 'undefined') posthog.capture('decision_made', { category: ev.cat || 'general', stage: stage().label });
   const card = document.getElementById('tinder-card');
   if (card) {
     card.classList.remove('enter');
@@ -2432,6 +2511,7 @@ function resolveEvent(ei, ci) {
 
 function raceTheSeason() {
   if (S.resolved.length < S.events.length) return;
+  if (typeof posthog !== 'undefined') posthog.capture('season_raced', { season: S.seasonNum, stage: stage().label, age: S.age });
   const st = stage();
   const positions = [];
   let playerPts = 0, playerWins = 0, playerPodiums = 0;
@@ -2527,6 +2607,11 @@ function raceTheSeason() {
   S.wins += playerWins;
   S.podiums += playerPodiums;
   if (champPos===1) S.championships++;
+
+  // PitCoin awards
+  awardPitcoins(50, 'Season completed');
+  if (playerWins > 0) awardPitcoins(playerWins * 25, playerWins + (playerWins > 1 ? ' wins' : ' win'));
+  if (champPos===1) awardPitcoins(200, 'Championship!');
 
   // Stat changes from season performance
   const deltas = {};
@@ -2667,23 +2752,34 @@ function raceTheSeason() {
   if (promoted && S.stageIdx < 4) {
     S.pendingPromotion = S.stageIdx + 1;
     if (S.stageIdx + 1 === 4 && S.firedCount > 0) S.recoveredToF1 = true;
+    if (typeof posthog !== 'undefined') posthog.capture('stage_promoted', { new_stage: STAGES[S.stageIdx+1].label });
   } else if (fired) {
-    S.firedCount++;
-    if (S.stageIdx === 4) {
-      if (S.firedCount >= 2) {
-        S.gameOver = true;
-      } else {
-        const back = F1_TEAMS.filter(t=>t.tier===3);
-        S.f1TeamIdx = F1_TEAMS.indexOf(back[rnd(0,back.length-1)]);
-      }
+    const hasSecondChance = (S.ownedBoosts || {}).second_chance > 0;
+    if (hasSecondChance) {
+      S.ownedBoosts.second_chance--;
+      S._secondChanceUsed = true;
     } else {
-      if (S.firedCount >= 3) S.gameOver = true;
+      S.firedCount++;
+      if (S.stageIdx === 4) {
+        if (S.firedCount >= 2) {
+          S.gameOver = true;
+        } else {
+          const back = F1_TEAMS.filter(t=>t.tier===3);
+          S.f1TeamIdx = F1_TEAMS.indexOf(back[rnd(0,back.length-1)]);
+        }
+      } else {
+        if (S.firedCount >= 3) S.gameOver = true;
+      }
     }
   } else {
     S.firedCount = 0;
   }
 
   if (S.age >= 40) S.gameOver = true;
+  if (S.gameOver && typeof posthog !== 'undefined') {
+    const endReason = S.burnoutRetired ? 'burnout' : S.age >= 40 ? 'age' : 'fired';
+    posthog.capture('career_ended', { reason: endReason, age: S.age, titles: S.championships });
+  }
   if (!S.gameOver) genEvents();
 
   // Pick cinematic (priority order: debut > f1debut > fired > first win > retirement)
@@ -2717,6 +2813,7 @@ function raceTheSeason() {
   }
 
   save();
+  if (S._secondChanceUsed) { S._secondChanceUsed = false; showToast('🛡️ Second Chance used — firing avoided!', 3500); }
   showRaceCutscene(() => {
     if (cinematicLines) {
       showCinematic(cinematicLines, showResults);
@@ -2881,6 +2978,7 @@ function selectTeam(i) {
     S.f1TeamIdx = opt.f1idx;
     const t = F1_TEAMS[opt.f1idx];
     S.teamCarRating = t.tier===1 ? rnd(72,88) : t.tier===2 ? rnd(50,68) : rnd(28,46);
+    if (!S._premierBonusPaid) { S._premierBonusPaid = true; awardPitcoins(150, 'Reached Premier Series!'); }
   } else {
     S.feederTeam = opt.team;
   }
@@ -3020,6 +3118,177 @@ function closeResults() {
 }
 
 // ══════════════════════════════════════════════
+// PITCOINS & SHOP
+// ══════════════════════════════════════════════
+
+function showToast(msg, duration) {
+  const tc = document.getElementById('toast-container');
+  if (!tc) return;
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  tc.appendChild(el);
+  requestAnimationFrame(() => { requestAnimationFrame(() => { el.classList.add('show'); }); });
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, duration || 2800);
+}
+
+function awardPitcoins(amount, reason) {
+  if (!S) return;
+  S.pitcoins = (S.pitcoins || 0) + amount;
+  showToast('🪙 +' + amount + ' PitCoins' + (reason ? ' — ' + reason : ''));
+}
+
+let _adCooldown = false;
+function watchAd() {
+  if (_adCooldown) return;
+  _adCooldown = true;
+  const btn = document.getElementById('ad-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '📺 Ad playing… 5'; }
+  let t = 5;
+  const iv = setInterval(() => {
+    t--;
+    if (btn) btn.textContent = t > 0 ? '📺 Ad playing… ' + t : '✅ Reward earned!';
+    if (t <= 0) {
+      clearInterval(iv);
+      awardPitcoins(75, 'Rewarded ad');
+      save();
+      if (btn) { btn.disabled = false; btn.textContent = '📺 Watch an ad for 75 PitCoins'; }
+      // Cooldown 60 seconds to prevent spam
+      setTimeout(() => { _adCooldown = false; }, 60000);
+      // Update header coins
+      renderHeader();
+    }
+  }, 1000);
+}
+
+function renderShop() {
+  const owned = S.ownedHelmets || [];
+  const features = S.ownedFeatures || [];
+  const boosts = S.ownedBoosts || {};
+  const coins = S.pitcoins || 0;
+
+  const helmetCards = SHOP_HELMETS.map(h => {
+    const isOwned = owned.includes(h.id);
+    const isPremium = h.price === null;
+    const canAfford = !isPremium && coins >= h.price;
+    const right = isPremium
+      ? `<div class="shop-card-right"><span class="shop-premium-badge">💎 Premium</span></div>`
+      : isOwned
+        ? `<div class="shop-card-right"><span class="shop-owned-badge">✓ Owned</span><button class="shop-buy-btn" onclick="useHelmet('${h.id}')">USE</button></div>`
+        : `<div class="shop-card-right"><span class="shop-card-price">${h.price}🪙</span><button class="shop-buy-btn"${canAfford?'':' disabled'} onclick="buyHelmet('${h.id}')">UNLOCK</button></div>`;
+    return `<div class="shop-card">
+      <div class="shop-helmet-dot" style="background:${h.color}"></div>
+      <div class="shop-card-info"><div class="shop-card-name">${h.name}</div><div class="shop-card-desc">${h.desc}</div></div>
+      ${right}</div>`;
+  }).join('');
+
+  const featureCards = SHOP_FEATURES.map(f => {
+    const isOwned = features.includes(f.id);
+    const canAfford = coins >= f.price;
+    const right = isOwned
+      ? `<div class="shop-card-right"><span class="shop-owned-badge">✓ Unlocked</span></div>`
+      : `<div class="shop-card-right"><span class="shop-card-price">${f.price}🪙</span><button class="shop-buy-btn"${canAfford?'':' disabled'} onclick="buyFeature('${f.id}')">UNLOCK</button></div>`;
+    return `<div class="shop-card">
+      <div class="shop-card-info"><div class="shop-card-name">${f.name}</div><div class="shop-card-desc">${f.desc}</div></div>
+      ${right}</div>`;
+  }).join('');
+
+  const boostCards = SHOP_BOOSTS.map(b => {
+    const qty = boosts[b.id] || 0;
+    const canAfford = coins >= b.price;
+    return `<div class="shop-card">
+      <div class="shop-card-info"><div class="shop-card-name">${b.name}${qty > 0 ? ' <span style="color:#fbbf24">×'+qty+'</span>' : ''}</div><div class="shop-card-desc">${b.desc}</div></div>
+      <div class="shop-card-right"><span class="shop-card-price">${b.price}🪙</span><button class="shop-buy-btn"${canAfford?'':' disabled'} onclick="buyBoost('${b.id}')">BUY</button></div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('shop-sec').innerHTML = `
+    <div style="text-align:center;margin:12px 0 4px">
+      <span class="hdr-coins" style="font-size:15px;padding:6px 14px">🪙 ${coins} PitCoins</span>
+    </div>
+    <div class="shop-section-hd">🪖 Helmet Designs</div>
+    ${helmetCards}
+    <div class="shop-section-hd">⚙️ Features</div>
+    ${featureCards}
+    <div class="shop-section-hd">⚡ Career Boosts</div>
+    ${boostCards}
+  `;
+}
+
+function buyHelmet(id) {
+  const h = SHOP_HELMETS.find(x => x.id === id);
+  if (!h || h.price === null) return;
+  if ((S.pitcoins || 0) < h.price) { showToast('❌ Not enough PitCoins'); return; }
+  S.pitcoins -= h.price;
+  S.ownedHelmets = [...(S.ownedHelmets || []), id];
+  save();
+  showToast('✅ ' + h.name + ' helmet unlocked!');
+  renderShop();
+  renderHeader();
+}
+
+function useHelmet(id) {
+  const h = SHOP_HELMETS.find(x => x.id === id);
+  if (!h) return;
+  S.helmetColor = h.color;
+  save();
+  showToast('🪖 ' + h.name + ' helmet equipped!');
+  renderAll();
+}
+
+function buyFeature(id) {
+  const f = SHOP_FEATURES.find(x => x.id === id);
+  if (!f) return;
+  if ((S.pitcoins || 0) < f.price) { showToast('❌ Not enough PitCoins'); return; }
+  S.pitcoins -= f.price;
+  S.ownedFeatures = [...(S.ownedFeatures || []), id];
+  save();
+  showToast('✅ ' + f.name + ' unlocked!');
+  renderShop();
+  renderHeader();
+}
+
+function buyBoost(id) {
+  const b = SHOP_BOOSTS.find(x => x.id === id);
+  if (!b) return;
+  if ((S.pitcoins || 0) < b.price) { showToast('❌ Not enough PitCoins'); return; }
+  S.pitcoins -= b.price;
+  S.ownedBoosts = S.ownedBoosts || {};
+  S.ownedBoosts[id] = (S.ownedBoosts[id] || 0) + 1;
+  save();
+  showToast('✅ ' + b.name + ' added to inventory!');
+  renderShop();
+  renderHeader();
+}
+
+function useBoost(id) {
+  const boosts = S.ownedBoosts || {};
+  if (!boosts[id] || boosts[id] <= 0) return;
+  if (id === 'training_camp') {
+    document.getElementById('boost-stat-overlay').classList.remove('hidden');
+  } else if (id === 'pr_blitz') {
+    S.ownedBoosts[id]--;
+    S.Reputation = Math.min(100, (S.Reputation || 0) + 15);
+    save();
+    showToast('📣 PR Blitz! +15 Reputation');
+    renderAll();
+  } else if (id === 'second_chance') {
+    showToast('🛡️ Second Chance is auto-used when you get fired');
+  }
+}
+
+function applyTrainingCamp(stat) {
+  document.getElementById('boost-stat-overlay').classList.add('hidden');
+  const boosts = S.ownedBoosts || {};
+  if (!boosts.training_camp || boosts.training_camp <= 0) return;
+  boosts.training_camp--;
+  S[stat] = Math.min(100, (S[stat] || 0) + 8);
+  save();
+  showToast('💪 Training Camp: +8 ' + stat);
+  renderAll();
+}
+
+// ══════════════════════════════════════════════
 // RENDERING
 // ══════════════════════════════════════════════
 
@@ -3029,12 +3298,14 @@ function renderAll() {
   const onCar    = activeTab === 'car';
   const onLeague = activeTab === 'league';
   const onLog    = activeTab === 'log';
+  const onShop   = activeTab === 'shop';
   document.getElementById('stats-sec').classList.toggle('hidden', !onSeason);
   document.getElementById('events-sec').classList.toggle('hidden', !onSeason);
   document.getElementById('log-sec').classList.toggle('hidden', !onLog);
   document.getElementById('bottom-bar').classList.toggle('hidden', !onSeason);
   document.getElementById('car-sec').classList.toggle('hidden', !onCar);
   document.getElementById('league-sec').classList.toggle('hidden', !onLeague);
+  document.getElementById('shop-sec').classList.toggle('hidden', !onShop);
   if (onSeason) {
     renderStats();
     renderEvents();
@@ -3043,6 +3314,8 @@ function renderAll() {
     renderLeague();
   } else if (onLog) {
     renderLog();
+  } else if (onShop) {
+    renderShop();
   } else {
     renderCarTab();
     updateAICarPreview();
@@ -3078,6 +3351,7 @@ function renderHeader() {
         </div>
       </div>
       <div class="hdr-right">
+        <span class="hdr-coins">🪙 ${S.pitcoins||0}</span>
         <span class="hdr-age">Age ${S.age}</span>
         ${S.age > 33 ? '<span class="veteran-badge">Veteran</span>' : ''}
         <span class="stage-pill">${st.label}</span>
@@ -3088,6 +3362,7 @@ function renderHeader() {
       <button class="tab-pill${activeTab==='car'?' active':''}" onclick="switchTab('car')">🚗 My Car</button>
       <button class="tab-pill${activeTab==='league'?' active':''}" onclick="switchTab('league')">🏆 League</button>
       <button class="tab-pill${activeTab==='log'?' active':''}" onclick="switchTab('log')">📋 Log</button>
+      <button class="tab-pill${activeTab==='shop'?' active':''}" onclick="switchTab('shop')">🛒 Shop</button>
     </div>
     <div class="season-progress"><div class="season-progress-fill" style="width:${Math.round((S.resolved||[]).length/Math.max(1,(S.events||[]).length)*100)}%"></div></div>`;
   // Apply tier glow
@@ -3199,6 +3474,18 @@ function renderEvents() {
     </div>`).join('');
   if (pending.length) { S.pendingUnlocks = []; save(); }
 
+  // Active boosts in inventory
+  const boosts = S.ownedBoosts || {};
+  const boostHtml = SHOP_BOOSTS
+    .filter(b => (boosts[b.id] || 0) > 0)
+    .map(b => `<div class="boost-card">
+      <div class="boost-card-info">
+        <div class="boost-card-name">${b.name} <span style="font-weight:400;color:rgba(255,255,255,.4)">×${boosts[b.id]}</span></div>
+        <div class="boost-card-desc">${b.desc}</div>
+      </div>
+      <button class="boost-use-btn" onclick="useBoost('${b.id}')">USE</button>
+    </div>`).join('');
+
   const dots = S.events.map((ev, i) => {
     const isDone = S.resolved.includes(i);
     const firstUnresolved = S.events.findIndex((_, j) => !S.resolved.includes(j));
@@ -3210,6 +3497,7 @@ function renderEvents() {
     document.getElementById('events-sec').innerHTML = `
       ${calStrip}
       ${unlockHtml}
+      ${boostHtml}
       <div class="tinder-wrap">
         <div class="tinder-dots">${dots}</div>
         <div class="tinder-all-done">
@@ -3270,6 +3558,7 @@ function renderEvents() {
   document.getElementById('events-sec').innerHTML = `
     ${calStrip}
     ${unlockHtml}
+    ${boostHtml}
     ${outcomeHtml}
     <div class="tinder-wrap">
       <div class="tinder-dots">${dots}</div>
@@ -4217,6 +4506,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   if (load() && S) {
+    // Daily login bonus
+    const today = new Date().toDateString();
+    if ((S.lastLoginDate || '') !== today) {
+      S.pitcoins = (S.pitcoins || 0) + 20;
+      S.lastLoginDate = today;
+      save();
+      setTimeout(() => showToast('🪙 Daily bonus: +20 PitCoins!', 3000), 800);
+    }
     if (S.gameOver) {
       showScreen('gameover');
       renderGameOver();
